@@ -1,0 +1,84 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e6]:
+        - link "Enigma IT pocetna" [ref=e7] [cursor=pointer]:
+          - /url: "#"
+          - img "Enigma IT" [ref=e8]
+        - navigation "Glavna navigacija" [ref=e9]:
+          - generic [ref=e10]:
+            - button "Usluge" [ref=e11]:
+              - generic [ref=e12]: Usluge
+              - img [ref=e13]
+            - generic:
+              - link "WEBSAJTOVI":
+                - /url: /usluge/websajtovi
+                - generic: WEBSAJTOVI
+              - link "WEB-SHOPOVI":
+                - /url: /usluge/web-shopovi
+                - generic: WEB-SHOPOVI
+              - link "DIGITALNI SISTEMI":
+                - /url: /usluge/digitalni-sistemi
+                - generic: DIGITALNI SISTEMI
+              - link "MOBILNE APLIKACIJE":
+                - /url: /usluge/mobilne-aplikacije
+                - generic: MOBILNE APLIKACIJE
+          - link "Proces" [ref=e15] [cursor=pointer]:
+            - /url: /proces
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Kontakt" [ref=e17] [cursor=pointer]:
+            - /url: /kontakt
+        - generic [ref=e18]:
+          - link "TikTok" [ref=e19] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e20]
+          - link "Instagram" [ref=e23] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e24]
+          - link "Facebook" [ref=e28] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e29]
+          - link "Email" [ref=e31] [cursor=pointer]:
+            - /url: "#kontakt"
+            - img [ref=e32]
+          - link "Telefon" [ref=e35] [cursor=pointer]:
+            - /url: "#kontakt"
+            - img [ref=e36]
+      - generic [ref=e39]:
+        - img "Enigma IT" [ref=e41]
+        - heading "Gradimo digitalne proizvode koji pokreću rast." [level=1] [ref=e42]:
+          - generic [ref=e43]: Gradimo digitalne
+          - generic [ref=e44]: proizvode koji
+          - generic [ref=e45]: pokreću rast.
+        - paragraph [ref=e46]: Enigma IT kreira vrhunske websajtove, web-shopove, digitalne sisteme i mobilne aplikacije koji pojednostavljuju procese, jačaju brendove i donose merljiv rast.
+        - generic [ref=e47]:
+          - link "Zakažite konsultacije" [ref=e48] [cursor=pointer]:
+            - /url: "#kontakt"
+            - generic [ref=e49]:
+              - generic [ref=e50]: Zakažite konsultacije
+              - img [ref=e51]
+          - link "Pogledajte naš rad" [ref=e53] [cursor=pointer]:
+            - /url: "#portfolio"
+            - generic [ref=e54]:
+              - img [ref=e56]
+              - generic [ref=e58]: Pogledajte naš rad
+        - generic [ref=e59]:
+          - 'link "Usluga: WEBSAJTOVI" [ref=e60] [cursor=pointer]':
+            - /url: /usluge/websajtovi
+            - img [ref=e61]
+            - generic [ref=e64]: WEBSAJTOVI
+          - 'link "Usluga: WEB-SHOPOVI" [ref=e65] [cursor=pointer]':
+            - /url: /usluge/web-shopovi
+            - img [ref=e66]
+            - generic [ref=e70]: WEB-SHOPOVI
+          - 'link "Usluga: DIGITALNI SISTEMI" [ref=e71] [cursor=pointer]':
+            - /url: /usluge/digitalni-sistemi
+            - img [ref=e72]
+            - generic [ref=e76]: DIGITALNI SISTEMI
+          - 'link "Usluga: MOBILNE APLIKACIJE" [ref=e77] [cursor=pointer]':
+            - /url: /usluge/mobilne-aplikacije
+            - img [ref=e78]
+            - generic [ref=e80]: MOBILNE APLIKACIJE
+  - button "Open Next.js Dev Tools" [ref=e86] [cursor=pointer]:
+    - img [ref=e87]

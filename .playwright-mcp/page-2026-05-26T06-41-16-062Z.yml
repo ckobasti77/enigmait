@@ -1,0 +1,159 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e7]:
+      - generic [ref=e9]:
+        - link "Enigma IT pocetna" [ref=e10] [cursor=pointer]:
+          - /url: "#"
+          - img "Enigma IT" [ref=e11]
+        - navigation "Glavna navigacija" [ref=e12]:
+          - generic [ref=e13]:
+            - button "Usluge" [ref=e14]:
+              - generic [ref=e15]: Usluge
+              - img [ref=e16]
+            - generic:
+              - link "WEBSAJTOVI":
+                - /url: /usluge/websajtovi
+                - generic: WEBSAJTOVI
+              - link "WEB-SHOPOVI":
+                - /url: /usluge/web-shopovi
+                - generic: WEB-SHOPOVI
+              - link "DIGITALNI SISTEMI":
+                - /url: /usluge/digitalni-sistemi
+                - generic: DIGITALNI SISTEMI
+              - link "MOBILNE APLIKACIJE":
+                - /url: /usluge/mobilne-aplikacije
+                - generic: MOBILNE APLIKACIJE
+          - link "Proces" [ref=e18] [cursor=pointer]:
+            - /url: /proces
+          - link "Portfolio" [ref=e19] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Kontakt" [ref=e20] [cursor=pointer]:
+            - /url: /kontakt
+        - generic [ref=e21]:
+          - link "TikTok" [ref=e22] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e23]
+          - link "Instagram" [ref=e26] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e27]
+          - link "Facebook" [ref=e31] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e32]
+          - link "Email" [ref=e34] [cursor=pointer]:
+            - /url: "#kontakt"
+            - img [ref=e35]
+          - link "Telefon" [ref=e38] [cursor=pointer]:
+            - /url: "#kontakt"
+            - img [ref=e39]
+      - generic [ref=e42]:
+        - img "Enigma IT" [ref=e44]
+        - heading "Gradimo digitalne proizvode koji pokreću rast." [level=1] [ref=e45]:
+          - generic [ref=e46]: Gradimo digitalne
+          - generic [ref=e47]: proizvode koji
+          - generic [ref=e48]: pokreću rast.
+        - paragraph [ref=e49]: Enigma IT kreira vrhunske websajtove, web-shopove, digitalne sisteme i mobilne aplikacije koji pojednostavljuju procese, jačaju brendove i donose merljiv rast.
+        - generic [ref=e50]:
+          - link "Zakažite konsultacije" [ref=e51] [cursor=pointer]:
+            - /url: "#kontakt"
+            - generic [ref=e52]:
+              - generic [ref=e53]: Zakažite konsultacije
+              - img [ref=e54]
+          - link "Pogledajte naš rad" [ref=e56] [cursor=pointer]:
+            - /url: "#portfolio"
+            - generic [ref=e57]:
+              - img [ref=e59]
+              - generic [ref=e61]: Pogledajte naš rad
+        - generic [ref=e62]:
+          - 'link "Usluga: WEBSAJTOVI" [ref=e63] [cursor=pointer]':
+            - /url: /usluge/websajtovi
+            - img [ref=e64]
+            - generic [ref=e67]: WEBSAJTOVI
+          - 'link "Usluga: WEB-SHOPOVI" [ref=e68] [cursor=pointer]':
+            - /url: /usluge/web-shopovi
+            - img [ref=e69]
+            - generic [ref=e73]: WEB-SHOPOVI
+          - 'link "Usluga: DIGITALNI SISTEMI" [ref=e74] [cursor=pointer]':
+            - /url: /usluge/digitalni-sistemi
+            - img [ref=e75]
+            - generic [ref=e79]: DIGITALNI SISTEMI
+          - 'link "Usluga: MOBILNE APLIKACIJE" [ref=e80] [cursor=pointer]':
+            - /url: /usluge/mobilne-aplikacije
+            - img [ref=e81]
+            - generic [ref=e83]: MOBILNE APLIKACIJE
+    - generic [ref=e84]:
+      - generic [ref=e85]: TEHNOLOGIJE KOJE KORISTIMO
+      - generic [ref=e87]:
+        - img "NextJS" [ref=e89] [cursor=pointer]
+        - img "Convex DB" [ref=e91] [cursor=pointer]
+        - img "Tailwindcss" [ref=e93] [cursor=pointer]
+        - img "GSAP" [ref=e95] [cursor=pointer]
+        - img "Framer Motion" [ref=e97] [cursor=pointer]
+        - img "React" [ref=e99] [cursor=pointer]
+        - img "AstroJS" [ref=e101] [cursor=pointer]
+        - img "Figma" [ref=e103] [cursor=pointer]
+        - img "NextJS" [ref=e105] [cursor=pointer]
+        - img "Convex DB" [ref=e107] [cursor=pointer]
+        - img "Tailwindcss" [ref=e109] [cursor=pointer]
+        - img "GSAP" [ref=e111] [cursor=pointer]
+        - img "Framer Motion" [ref=e113] [cursor=pointer]
+        - img "React" [ref=e115] [cursor=pointer]
+        - img "AstroJS" [ref=e117] [cursor=pointer]
+        - img "Figma" [ref=e119] [cursor=pointer]
+    - generic [ref=e120]:
+      - generic:
+        - img
+      - generic [ref=e121]:
+        - generic [ref=e122]:
+          - generic [ref=e123]:
+            - generic [ref=e124]: NAŠ PROCES
+            - generic [ref=e125]: ✦
+          - heading "Od ideje do gotovog rešenja." [level=2] [ref=e126]:
+            - text: Od ideje do
+            - text: gotovog rešenja.
+          - paragraph [ref=e127]: Pratimo jasan i proveren proces koji obezbeđuje kvalitet, transparentnost i rezultate koji prave stvarnu razliku za vaš biznis.
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - img [ref=e140]
+            - generic [ref=e142]: "01"
+            - heading "IDEJA & ANALIZA" [level=3] [ref=e143]:
+              - text: IDEJA &
+              - text: ANALIZA
+            - paragraph [ref=e145]: Razumemo vaš biznis, ciljeve i korisnike. Analiziramo potrebe i pretvaramo ideju u jasan plan.
+          - generic [ref=e146]:
+            - img [ref=e153]
+            - generic [ref=e156]: "02"
+            - heading "PLANIRANJE & DIZAJN" [level=3] [ref=e157]:
+              - text: PLANIRANJE &
+              - text: DIZAJN
+            - paragraph [ref=e159]: Kreiramo strategiju, strukturu i dizajn koji spajaju funkcionalnost i vrhunsko korisničko iskustvo.
+          - generic [ref=e160]:
+            - img [ref=e167]
+            - generic [ref=e170]: "03"
+            - heading "RAZVOJ & IMPLEMENTACIJA" [level=3] [ref=e171]:
+              - text: RAZVOJ &
+              - text: IMPLEMENTACIJA
+            - paragraph [ref=e173]: Gradimo brzo, sigurno i skalabilno rešenje koristeći moderne tehnologije i najbolje prakse.
+          - generic [ref=e174]:
+            - img [ref=e181]
+            - generic [ref=e184]: "04"
+            - heading "TESTIRANJE & OPTIMIZACIJA" [level=3] [ref=e185]:
+              - text: TESTIRANJE &
+              - text: OPTIMIZACIJA
+            - paragraph [ref=e187]: Temeljno testiramo svaki detalj i optimizujemo performanse za besprekorno iskustvo.
+          - generic [ref=e188]:
+            - img [ref=e195]
+            - generic [ref=e200]: "05"
+            - heading "LAUNCH & PODRŠKA" [level=3] [ref=e201]:
+              - text: LAUNCH &
+              - text: PODRŠKA
+            - paragraph [ref=e203]: Pokrećemo projekat i ostajemo uz vas kroz podršku, održavanje i dalji razvoj.
+        - generic [ref=e204]:
+          - generic:
+            - img
+          - generic [ref=e207]:
+            - img [ref=e211]
+            - generic [ref=e213]:
+              - heading "Vaš uspeh je naš cilj." [level=3] [ref=e214]
+              - paragraph [ref=e215]: Ne gradimo samo proizvode — gradimo partnerstva.
+  - button "Open Next.js Dev Tools" [ref=e221] [cursor=pointer]:
+    - img [ref=e222]

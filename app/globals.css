@@ -1,0 +1,255 @@
+@import "tailwindcss";
+
+:root {
+  --background: #02030a;
+  --foreground: #f5f7fa;
+  --soft-silver: #d7dce5;
+  --muted-text: rgba(255, 255, 255, 0.65);
+  --very-muted-text: rgba(255, 255, 255, 0.45);
+  --panel-navy: #070b18;
+  --soft-border: rgba(255, 255, 255, 0.08);
+  --enigma-cyan: #00b7ff;
+  --enigma-blue: #006dff;
+  --enigma-violet: #6b37ff;
+  --enigma-purple: #8b35ff;
+  --enigma-gradient: linear-gradient(
+    135deg,
+    #00b7ff 0%,
+    #006dff 46%,
+    #6b37ff 60%,
+    #8b35ff 100%
+  );
+  --enigma-classic-gradient: linear-gradient(
+    135deg,
+    #00b7ff 0%,
+    #006dff 35%,
+    #4b32ff 68%,
+    #8b35ff 100%
+  );
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-microgramma);
+  --font-accent: var(--font-orbitron);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: rgba(0, 183, 255, 0.32);
+  color: #ffffff;
+}
+
+.enigma-gradient {
+  background: var(--enigma-gradient);
+}
+
+.enigma-gradient-text {
+  background: var(--enigma-classic-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-reveal {
+  --reveal-delay: 0ms;
+  animation: heroReveal 450ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay)
+    both;
+  will-change: opacity, transform, filter;
+}
+
+.hero-reveal-navbar {
+  animation-name: heroNavbarReveal;
+}
+
+.hero-reveal-delay-0 {
+  --reveal-delay: 0ms;
+}
+
+.hero-reveal-delay-1 {
+  --reveal-delay: 90ms;
+}
+
+.hero-reveal-delay-2 {
+  --reveal-delay: 180ms;
+}
+
+.hero-reveal-delay-3 {
+  --reveal-delay: 270ms;
+}
+
+.hero-reveal-delay-4 {
+  --reveal-delay: 360ms;
+}
+
+.hero-reveal-delay-5 {
+  --reveal-delay: 450ms;
+}
+
+.cta-pulse {
+  animation: ctaPulse 4.8s ease-in-out infinite;
+}
+
+@keyframes heroReveal {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translate3d(0, 18px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroNavbarReveal {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(0, -14px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ctaPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 24px rgba(0, 183, 255, 0.2),
+      0 0 62px rgba(107, 55, 255, 0.18);
+  }
+
+  50% {
+    box-shadow:
+      0 0 30px rgba(0, 183, 255, 0.28),
+      0 0 76px rgba(139, 53, 255, 0.24);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused !important;
+}
+
+@keyframes processDotPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes processParticleFade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes showcaseScan {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.showcase-scan {
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 48%,
+    transparent 62%
+  );
+  animation: showcaseScan 6.5s ease-in-out infinite;
+}
+
+@keyframes showcaseNodePulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translateX(-4.5px) scale(1) rotate(45deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateX(-4.5px) scale(1.45) rotate(45deg);
+  }
+}
+
+.showcase-node-pulse {
+  animation: showcaseNodePulse 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .cta-pulse {
+    animation: none !important;
+  }
+
+  .hero-reveal {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .animate-marquee {
+    animation: none !important;
+  }
+
+  .showcase-scan,
+  .showcase-node-pulse {
+    animation: none !important;
+  }
+}

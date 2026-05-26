@@ -1,0 +1,8 @@
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          21752
+- Dir:          C:\Users\admin\Desktop\Web Dev Projects\enigmait
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 21752 /F to stop it.

@@ -1,0 +1,1454 @@
+[     269ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     295ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[   74537ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[   74639ms] [LOG] [Fast Refresh] done in 209ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  126369ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  126830ms] [LOG] [Fast Refresh] done in 525ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  129825ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  129862ms] [LOG] [Fast Refresh] done in 139ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  139287ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  139430ms] [LOG] [Fast Refresh] done in 249ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  274761ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  274857ms] [LOG] [Fast Refresh] done in 202ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  312642ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  312985ms] [LOG] [Fast Refresh] done in 137ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  403764ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  406073ms] [LOG] [Fast Refresh] done in 2410ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1084945ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1086636ms] [LOG] [Fast Refresh] done in 1780ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1086817ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1087041ms] [LOG] [Fast Refresh] done in 328ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1088208ms] [WARNING] Image with src "/images/mobile-hero-background.avif" has "fill" prop and "sizes" prop of "100vw", but image is not rendered at full viewport width. Please adjust "sizes" to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1088326ms] [WARNING] Image with src "/images/tablet-hero-background.avif" has "fill" prop and "sizes" prop of "100vw", but image is not rendered at full viewport width. Please adjust "sizes" to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1088347ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1088460ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1350189ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1350376ms] [LOG] [Fast Refresh] done in 290ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1351090ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1351202ms] [LOG] [Fast Refresh] done in 212ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1468705ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1469889ms] [LOG] [Fast Refresh] done in 1283ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1470028ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1470459ms] [LOG] [Fast Refresh] done in 532ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1472232ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1472246ms] [LOG] [Fast Refresh] done in 122ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1472529ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1472531ms] [LOG] [Fast Refresh] done in 105ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1634512ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 1634699ms] [LOG] [Fast Refresh] done in 289ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3219418ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3219570ms] [LOG] [Fast Refresh] done in 254ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3255533ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3256154ms] [LOG] [Fast Refresh] done in 702ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3279251ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3279593ms] [LOG] [Fast Refresh] done in 397ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3285997ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3286108ms] [LOG] [Fast Refresh] done in 222ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3289970ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3291624ms] [LOG] [Fast Refresh] done in 1744ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3291807ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3292472ms] [LOG] [Fast Refresh] done in 776ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3292626ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3293202ms] [LOG] [Fast Refresh] done in 677ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3293344ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3293516ms] [LOG] [Fast Refresh] done in 274ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3814475ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3815922ms] [LOG] [Fast Refresh] done in 1483ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3816172ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3817341ms] [LOG] [Fast Refresh] done in 1278ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3828638ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3828655ms] [LOG] [Fast Refresh] done in 117ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3990589ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3990719ms] [LOG] [Fast Refresh] done in 232ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3998556ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 3998898ms] [LOG] [Fast Refresh] done in 400ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4009021ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4009482ms] [LOG] [Fast Refresh] done in 523ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4009647ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4010867ms] [LOG] [Fast Refresh] done in 1324ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4011236ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4011240ms] [LOG] [Fast Refresh] done in 107ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4243800ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4243977ms] [LOG] [Fast Refresh] done in 107ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4577843ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4577922ms] [LOG] [Fast Refresh] done in 182ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4614033ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4614113ms] [LOG] [Fast Refresh] done in 181ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4993208ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4993306ms] [LOG] [Fast Refresh] done in 199ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5819886ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5820107ms] [LOG] [Fast Refresh] done in 253ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5832722ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5832956ms] [LOG] [Fast Refresh] done in 275ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5835831ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5835927ms] [LOG] [Fast Refresh] done in 207ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5840168ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5841529ms] [LOG] [Fast Refresh] done in 1454ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5841738ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5842435ms] [LOG] [Fast Refresh] done in 803ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5842557ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5842714ms] [LOG] [Fast Refresh] done in 258ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5843175ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5843227ms] [LOG] [Fast Refresh] done in 155ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5843363ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5843421ms] [LOG] [Fast Refresh] done in 163ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5843544ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5843724ms] [LOG] [Fast Refresh] done in 286ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5855326ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5855585ms] [LOG] [Fast Refresh] done in 360ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5864646ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5864649ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5897460ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5897604ms] [LOG] [Fast Refresh] done in 221ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5897759ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5898230ms] [LOG] [Fast Refresh] done in 572ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5899585ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5899597ms] [LOG] [Fast Refresh] done in 115ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5901241ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5901440ms] [LOG] [Fast Refresh] done in 284ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5901579ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5902043ms] [LOG] [Fast Refresh] done in 569ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5902463ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5902507ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5907549ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5907721ms] [LOG] [Fast Refresh] done in 245ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5907831ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5908255ms] [LOG] [Fast Refresh] done in 527ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6037484ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6037639ms] [LOG] [Fast Refresh] done in 99ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6047293ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6047496ms] [LOG] [Fast Refresh] done in 123ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6053331ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6053485ms] [LOG] [Fast Refresh] done in 135ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6053599ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6053617ms] [LOG] [Fast Refresh] done in 124ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6059175ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6059316ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6066716ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6066870ms] [LOG] [Fast Refresh] done in 66ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6074451ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6074512ms] [LOG] [Fast Refresh] done in 72ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6277360ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6277675ms] [LOG] [Fast Refresh] done in 385ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6277809ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6278440ms] [LOG] [Fast Refresh] done in 733ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6280237ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6280278ms] [LOG] [Fast Refresh] done in 145ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6280383ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6280510ms] [LOG] [Fast Refresh] done in 231ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6350036ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6350543ms] [LOG] [Fast Refresh] done in 554ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6350713ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6351304ms] [LOG] [Fast Refresh] done in 694ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6354930ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6355752ms] [LOG] [Fast Refresh] done in 927ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6669186ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6669463ms] [LOG] [Fast Refresh] done in 325ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6669569ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6670177ms] [LOG] [Fast Refresh] done in 711ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6746379ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6746686ms] [LOG] [Fast Refresh] done in 372ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6746805ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6747203ms] [LOG] [Fast Refresh] done in 500ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6747567ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 6747632ms] [LOG] [Fast Refresh] done in 165ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 7120330ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 7120412ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 7120415ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 7120512ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/?_rsc=q3mOO9BClNZHexY7:0
+[ 7120518ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/?_rsc=q3mOO9BClNZHexY7:0
+[ 7120534ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/?_rsc=q3mOO9BClNZHexY7:0
+[ 7120584ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/?_rsc=q3mOO9BClNZHexY7:0
+[ 7120606ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 7120631ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/:0
+[ 7120930ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 7121135ms] Error: ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./app/page.tsx:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file://C:\Users\admin\Desktop\Web Dev Projects\enigmait\node_modules\next\dist\server\dev\hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file://C:\Users\admin\Desktop\Web Dev Projects\enigmait\node_modules\next\dist\server\lib\dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file://C:\Users\admin\Desktop\Web Dev Projects\enigmait\node_modules\next\dist\server\dev\next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file://C:\Users\admin\Desktop\Web Dev Projects\enigmait\node_modules\next\dist\server\dev\next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file://C:\Users\admin\Desktop\Web Dev Projects\enigmait\node_modules\next\dist\server\base-server.js:1753:26)
+[ 7121078ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 7121086ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121168ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121249ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121308ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121371ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121433ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121494ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121571ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121634ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121698ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121759ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121822ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121883ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7121975ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122039ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122101ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122162ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122225ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122287ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122350ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122413ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122475ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122584ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122598ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 7122660ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122723ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122783ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122848ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122910ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7122973ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123037ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123098ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123161ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123222ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123284ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123346ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123409ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123472ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123535ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123598ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123659ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123723ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123787ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123848ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123910ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7123971ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124034ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124096ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124157ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124220ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124283ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124346ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124408ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124470ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124531ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124594ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124654ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124717ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124779ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124841ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124904ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7124967ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125030ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125090ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125153ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125216ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125278ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125341ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125403ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125466ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125527ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125590ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125654ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125715ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125778ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125839ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125900ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7125962ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126024ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126087ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126149ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126212ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126274ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126337ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126400ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126463ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126526ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126588ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126652ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126715ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126778ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126839ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126899ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7126961ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7127023ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7127086ms] [ERROR] ./app/page.tsx:3:1
+Module not found: Can't resolve '@/components/sections/process'
+  1 | import { Hero } from "@/components/sections/hero";
+  2 | import { TechSection } from "@/components/sections/tech";
+> 3 | import { ProcessSection } from "@/components/sections/process";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 |
+  5 | export default function Home() {
+  6 |   return (
+
+Import map: aliased to relative './components/sections/process' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 7127148ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 7127393ms] [LOG] [Fast Refresh] done in 46ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 7127995ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 7128042ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 7128354ms] [WARNING] Image with src "/images/mobile-hero-background.avif" has "fill" prop and "sizes" prop of "100vw", but image is not rendered at full viewport width. Please adjust "sizes" to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 7128404ms] [WARNING] Image with src "/images/tablet-hero-background.avif" has "fill" prop and "sizes" prop of "100vw", but image is not rendered at full viewport width. Please adjust "sizes" to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
