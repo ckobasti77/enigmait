@@ -1,7 +1,8 @@
 import { processSteps } from "./processData";
 import { ProcessCard } from "./ProcessCard";
-import { ProcessConnector } from "./ProcessConnector";
 import { ProcessBottomPanel } from "./ProcessBottomPanel";
+
+const processCardPositions = ["center", "left", "right", "left", "center"] as const;
 
 export function ProcessSection() {
   return (
@@ -239,26 +240,78 @@ export function ProcessSection() {
           </div>
         </div>
 
-        {/* ── Process Cards Grid ── */}
-        <div className="relative mt-12 sm:mt-14 lg:mt-16">
-          {/* Desktop connector line */}
-          <ProcessConnector />
-
-          {/* Cards grid */}
-          <div className="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-5 lg:gap-[14px] xl:gap-[18px]">
-            {processSteps.map((step, index) => (
-              <ProcessCard index={index} key={step.number} step={step} />
-            ))}
+        {/* ── Scroll-unlock Process Timeline ── */}
+        <div className="relative mx-auto mt-14 max-w-6xl sm:mt-16 lg:mt-20">
+          <div className="pointer-events-none absolute left-1/2 top-4 bottom-4 z-0 w-px -translate-x-1/2 overflow-hidden bg-gradient-to-b from-transparent via-white/[0.09] to-transparent">
+            <div className="process-rail-flow absolute left-0 top-0 h-28 w-px bg-gradient-to-b from-transparent via-[#00B7FF] to-transparent" />
           </div>
 
-          {/* Ambient glow layer behind card row */}
           <div
-            className="pointer-events-none absolute inset-0 z-0 -mx-8 -my-6 hidden lg:block"
+            className="pointer-events-none absolute inset-x-0 top-1/2 z-0 hidden h-[760px] -translate-y-1/2 lg:block"
             style={{
               background:
-                "radial-gradient(ellipse 90% 70% at center, rgba(0,109,255,0.04) 0%, rgba(107,55,255,0.03) 40%, transparent 70%)",
+                "radial-gradient(ellipse 48% 58% at center, rgba(0,109,255,0.075) 0%, rgba(107,55,255,0.045) 38%, transparent 72%)",
             }}
           />
+
+          <div className="relative z-10 space-y-7 sm:space-y-9 lg:space-y-12">
+            {processSteps.map((step, index) => {
+              const position = processCardPositions[index] ?? "center";
+              const isLeft = position === "left";
+              const isRight = position === "right";
+
+              return (
+                <div
+                  className={[
+                    "relative flex w-full",
+                    position === "center"
+                      ? "justify-center"
+                      : isLeft
+                        ? "justify-center lg:justify-start"
+                        : "justify-center lg:justify-end",
+                  ].join(" ")}
+                  key={step.number}
+                >
+                  <div
+                    aria-hidden="true"
+                    className="absolute left-1/2 top-1/2 z-20 hidden h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[3px] border border-white/15 bg-[#02030A] lg:block"
+                    style={{
+                      boxShadow: `0 0 18px ${step.glowColor.replace(/[\d.]+\)$/, "0.35)")}`,
+                    }}
+                  >
+                    <div
+                      className="absolute inset-[3px] rounded-[2px]"
+                      style={{
+                        background: `linear-gradient(135deg, ${step.accentColor}, rgba(139,53,255,0.95))`,
+                      }}
+                    />
+                  </div>
+
+                  {(isLeft || isRight) && (
+                    <div
+                      aria-hidden="true"
+                      className={[
+                        "absolute top-1/2 z-0 hidden h-px -translate-y-1/2 lg:block",
+                        isLeft
+                          ? "left-[calc(50%_-_5rem)] right-1/2"
+                          : "left-1/2 right-[calc(50%_-_5rem)]",
+                      ].join(" ")}
+                      style={{
+                        background: `linear-gradient(90deg, transparent, ${step.accentColor}70, transparent)`,
+                        boxShadow: `0 0 18px ${step.glowColor.replace(/[\d.]+\)$/, "0.22)")}`,
+                      }}
+                    />
+                  )}
+
+                  <ProcessCard
+                    index={index}
+                    position={position}
+                    step={step}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* ── Bottom CTA Panel ── */}

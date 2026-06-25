@@ -216,13 +216,14 @@ export function HeroNavbar() {
       <div className="mx-auto grid min-h-12 w-full max-w-[1690px] grid-cols-[auto_1fr_auto] lg:grid-cols-3 items-center gap-4 lg:min-h-[3.25rem]">
         <a aria-label="Enigma IT pocetna" className="col-start-1 inline-flex items-center justify-self-start" href="#">
           <Image
-            alt="Enigma IT"
-            className="h-auto w-[74px] sm:w-[88px] lg:w-[102px]"
-            height={362}
+            alt="Enigma IT emblem"
+            className="h-auto w-[42px] drop-shadow-[0_0_16px_rgba(0,183,255,0.26)] sm:w-[48px] lg:w-[54px]"
+            height={1024}
             priority
+            sizes="(min-width: 1024px) 54px, (min-width: 640px) 48px, 42px"
             src="/logos/logo-emblem.png"
             style={{ height: "auto" }}
-            width={689}
+            width={1024}
           />
         </a>
 

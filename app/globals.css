@@ -192,6 +192,68 @@ body {
   }
 }
 
+.process-scroll-card {
+  transform-style: preserve-3d;
+}
+
+@keyframes processRailFlow {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -120%, 0);
+  }
+
+  18%,
+  72% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 620%, 0);
+  }
+}
+
+.process-rail-flow {
+  animation: processRailFlow 5.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes processLockPulse {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.035);
+  }
+}
+
+.process-lock-pulse {
+  animation: processLockPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes processUnlockSweep {
+  0% {
+    opacity: 0;
+    transform: translate3d(-40%, 0, 0) skewX(-16deg);
+  }
+
+  32% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(420%, 0, 0) skewX(-16deg);
+  }
+}
+
+.process-card-unlocked .process-unlock-sweep {
+  animation: processUnlockSweep 950ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+
 @keyframes showcaseScan {
   0% {
     transform: translateX(-120%);
@@ -250,6 +312,16 @@ body {
 
   .showcase-scan,
   .showcase-node-pulse {
+    animation: none !important;
+  }
+
+  .process-scroll-card {
+    transition: none !important;
+  }
+
+  .process-rail-flow,
+  .process-lock-pulse,
+  .process-card-unlocked .process-unlock-sweep {
     animation: none !important;
   }
 }
