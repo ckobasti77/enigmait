@@ -8,6 +8,10 @@ import { serviceLinks } from "@/constants/services";
 
 type SocialIconName = (typeof socialLinks)[number]["icon"];
 
+type HeroNavbarProps = {
+  forceVisible?: boolean;
+};
+
 function ChevronIcon({ isOpen }: { isOpen: boolean }) {
   return (
     <svg
@@ -149,7 +153,7 @@ function ServiceMarker() {
   );
 }
 
-export function HeroNavbar() {
+export function HeroNavbar({ forceVisible = false }: HeroNavbarProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -157,6 +161,11 @@ export function HeroNavbar() {
   const servicesMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (forceVisible) {
+      lastScrollY.current = window.scrollY;
+      return;
+    }
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const delta = currentScrollY - lastScrollY.current;
@@ -178,7 +187,7 @@ export function HeroNavbar() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [forceVisible]);
 
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent) => {
@@ -210,7 +219,7 @@ export function HeroNavbar() {
   return (
     <header
       className={`hero-reveal hero-reveal-navbar hero-reveal-delay-0 fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#050816]/64 px-4 py-2 shadow-[0_18px_60px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-2xl transition-transform duration-300 ease-out sm:px-7 lg:px-10 xl:px-12 ${
-        isVisible || isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+        isVisible || isMobileMenuOpen || forceVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
       <div className="mx-auto grid min-h-12 w-full max-w-[1690px] grid-cols-[auto_1fr_auto] lg:grid-cols-3 items-center gap-4 lg:min-h-[3.25rem]">

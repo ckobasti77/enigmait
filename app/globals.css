@@ -168,6 +168,74 @@ body {
   animation-play-state: paused !important;
 }
 
+.scroll-story-hero {
+  --scroll-story-side-gap: 0px;
+}
+
+.scroll-story-canvas {
+  display: block;
+  background: #02030a;
+}
+
+.scroll-story-edge-fade {
+  pointer-events: none;
+}
+
+.scroll-story-edge-fade::before,
+.scroll-story-edge-fade::after {
+  bottom: 0;
+  content: "";
+  opacity: 0.95;
+  position: absolute;
+  top: 0;
+  width: max(42px, calc(var(--scroll-story-side-gap, 0px) + 48px));
+}
+
+.scroll-story-edge-fade::before {
+  background: linear-gradient(
+    90deg,
+    #02030a 0%,
+    rgba(2, 3, 10, 0.82) 58%,
+    rgba(2, 3, 10, 0) 100%
+  );
+  left: 0;
+}
+
+.scroll-story-edge-fade::after {
+  background: linear-gradient(
+    270deg,
+    #02030a 0%,
+    rgba(2, 3, 10, 0.82) 58%,
+    rgba(2, 3, 10, 0) 100%
+  );
+  right: 0;
+}
+
+@media (max-width: 767px) {
+  .scroll-story-edge-fade {
+    display: none;
+  }
+}
+
+.scroll-story-copy {
+  animation: scrollStoryCopyIn 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform, filter;
+}
+
+@keyframes scrollStoryCopyIn {
+  0% {
+    filter: blur(8px);
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  100% {
+    filter: blur(0);
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @keyframes processDotPulse {
   0%,
   100% {
@@ -304,6 +372,15 @@ body {
     animation: none !important;
     opacity: 1;
     transform: none;
+  }
+
+  .scroll-story-copy,
+  .scroll-story-intro-reveal {
+    animation: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 
   .animate-marquee {
