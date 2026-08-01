@@ -1,0 +1,379 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e3]:
+    - generic [ref=f2e5]:
+      - link "Enigma Digital — početna" [ref=f2e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f2e7]:
+        - link "Početna" [ref=f2e9] [cursor=pointer]:
+          - /url: /
+        - link "Usluge" [ref=f2e12] [cursor=pointer]:
+          - /url: /services
+        - link "Projekti" [ref=f2e17] [cursor=pointer]:
+          - /url: /projects
+        - link "Kontakt" [ref=f2e20] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f2e22]:
+        - generic [ref=f2e23]:
+          - button "Otvori social linkove" [ref=f2e24]
+          - menu:
+            - generic:
+              - menuitem "Instagram"
+              - menuitem "TikTok"
+              - menuitem "Facebook"
+              - menuitem "Email"
+              - menuitem "Telefon"
+        - generic "Prebaci jezik sajta" [ref=f2e31]:
+          - button "Prikaži sajt na srpskom" [pressed] [ref=f2e32]: SR
+          - button "Prikaži sajt na engleskom" [ref=f2e33]: EN
+        - button "Promeni temu" [pressed] [ref=f2e34]
+    - generic [ref=f2e42]:
+      - generic [ref=f2e47]:
+        - generic [ref=f2e48]:
+          - generic [ref=f2e49]: Inženjerska izvrsnost
+          - heading "Web platforme projektovane za rast i otpornost" [level=1] [ref=f2e50]
+          - paragraph [ref=f2e52]: Od marketing sajtova koji konvertuju do kompleksnih SaaS tokova rada, arhitektujemo održiva iskustva sa performansama, observability-jem i skalabilnošću od prvog sprinta.
+          - generic [ref=f2e53]:
+            - link "Pokrenite izradu" [ref=f2e54] [cursor=pointer]:
+              - /url: /contact
+            - link "Pogledajte inženjerske radove" [ref=f2e55] [cursor=pointer]:
+              - /url: /projects
+          - generic [ref=f2e56]:
+            - generic [ref=f2e57]:
+              - generic [ref=f2e58]: <2s
+              - generic [ref=f2e59]: Cilj za prvi prikaz
+            - generic [ref=f2e60]:
+              - generic [ref=f2e61]: 99.9%
+              - generic [ref=f2e62]: SLO dostupnosti
+            - generic [ref=f2e63]:
+              - generic [ref=f2e64]: 4 wks
+              - generic [ref=f2e65]: Rok za MVP lansiranje
+          - paragraph [ref=f2e66]: "Tehnologije koje biramo: Next.js, Remix, Astro, Playwright, GraphQL, Edge funkcije i platforme koje najbolje odgovaraju vašim ciljevima."
+        - generic [ref=f2e67]:
+          - article [ref=f2e68]:
+            - generic [ref=f2e75]:
+              - heading "Stack prilagođen vašoj mapi puta" [level=3] [ref=f2e77]
+              - paragraph [ref=f2e78]: TypeScript-first arhitektura, biblioteke komponenti i CI/CD pipeline-i oblikovani prema znanju i ograničenjima vašeg tima. Dokumentujemo odluke, kodifikujemo obrasce i održavamo čiste handoff-e.
+          - article [ref=f2e79]:
+            - generic [ref=f2e85]:
+              - heading "Performanse podešene od prvog dana" [level=3] [ref=f2e87]
+              - paragraph [ref=f2e88]: Opsesivno pratimo Core Web Vitals, keširanje i otpornu infrastrukturu kako bi platforma delovala trenutno svakom posetiocu. Budžeti, alerti i provere regresija su deo svakog sprinta.
+          - article [ref=f2e89]:
+            - generic [ref=f2e95]:
+              - heading "Bezbedni i merljivi temelji" [level=3] [ref=f2e97]
+              - paragraph [ref=f2e98]: Autentifikacija, logovanje i automatizovani QA zaštitni mehanizmi deo su razvoja kako biste skalirali sa poverenjem. Tracing, audit tragove i incident playbook-e uvodimo rano.
+      - generic [ref=f2e100]:
+        - generic [ref=f2e101]:
+          - text: Opseg ukratko
+          - heading "Izrada weba koja pokriva svaku fazu vaše platforme" [level=2] [ref=f2e102]
+          - paragraph [ref=f2e103]: Od marketing sajtova do mission-critical SaaS rešenja, sastavljamo tačan miks frontend, backend i infrastructure ekspertize da vaša mapa puta nastavi da se kreće.
+        - generic [ref=f2e104]:
+          - article [ref=f2e105]:
+            - generic [ref=f2e112]:
+              - heading "Sajtovi i marketing platforme" [level=3] [ref=f2e113]
+              - paragraph [ref=f2e114]: Composable CMS temelji koji growth timovima omogućavaju objavljivanje bez trenja.
+          - article [ref=f2e115]:
+            - generic [ref=f2e121]:
+              - heading "SaaS proizvod i arhitektura" [level=3] [ref=f2e122]
+              - paragraph [ref=f2e123]: TypeScript-first platforme koje ostaju održive dok se korisnička putovanja šire.
+          - article [ref=f2e124]:
+            - generic [ref=f2e131]:
+              - heading "Edge i serverless funkcije" [level=3] [ref=f2e132]
+              - paragraph [ref=f2e133]: Brzo deploy-ujte i pametno skalirajte latency-sensitive compute tamo gde je važan.
+          - article [ref=f2e134]:
+            - generic [ref=f2e140]:
+              - heading "Performanse i observability" [level=3] [ref=f2e141]
+              - paragraph [ref=f2e142]: Vitals, tracing i alerti su povezani tako da problemi isplivaju pre nego što ih korisnici primete.
+          - article [ref=f2e143]:
+            - generic [ref=f2e149]:
+              - heading "Automatizacija i CI/CD alati" [level=3] [ref=f2e150]
+              - paragraph [ref=f2e151]: Pipeline-i, QA zaštitni mehanizmi i DX unapređenja skraćuju svaki release ciklus.
+          - article [ref=f2e152]:
+            - generic [ref=f2e156]:
+              - heading "Bezbedne integracije podataka" [level=3] [ref=f2e157]
+              - paragraph [ref=f2e158]: Ojačani API-ji, zero-trust autentifikacija i privacy-first analitika odmah iz kutije.
+      - generic [ref=f2e160]:
+        - generic [ref=f2e161]:
+          - generic [ref=f2e162]:
+            - text: Tehnologija i metodologija
+            - heading "Kako gradimo" [level=2] [ref=f2e163]
+            - paragraph [ref=f2e164]: Donosimo skalabilan stack koji balansira developer experience, budžete performansi i vidljivost za stakeholder-e. Rezultat je remote engineering tim koji isporučuje sigurno, čak i pod pritiskom brzog rasta.
+            - generic [ref=f2e165]:
+              - generic [ref=f2e166]: Next.js
+              - generic [ref=f2e167]: Remix
+              - generic [ref=f2e168]: GraphQL
+              - generic [ref=f2e169]: Edge functions
+              - generic [ref=f2e170]: TypeScript first
+              - generic [ref=f2e171]: CI/CD automation
+          - generic [ref=f2e172]:
+            - article [ref=f2e173]:
+              - heading "TypeScript-first isporuka" [level=3] [ref=f2e174]
+              - list [ref=f2e178]:
+                - listitem [ref=f2e179]:
+                  - generic [ref=f2e183]: Next.js, Remix, Astro i Edge runtime-i podešeni su prema opterećenju.
+                - listitem [ref=f2e184]:
+                  - generic [ref=f2e188]: Deljene biblioteke komponenti i dokumentacija spremna za Storybook.
+            - article [ref=f2e189]:
+              - heading "Opsesija performansama" [level=3] [ref=f2e190]
+              - list [ref=f2e194]:
+                - listitem [ref=f2e195]:
+                  - generic [ref=f2e199]: Core Web Vitals budžeti sa automatizovanim Lighthouse ili Calibre proverama.
+                - listitem [ref=f2e200]:
+                  - generic [ref=f2e204]: Real user monitoring hook-ovi i edge keširanje svesno troškova.
+            - article [ref=f2e205]:
+              - heading "Observability ugrađen" [level=3] [ref=f2e206]
+              - list [ref=f2e210]:
+                - listitem [ref=f2e211]:
+                  - generic [ref=f2e215]: Telemetrija kroz OpenTelemetry, Logtail, Datadog ili vaš stack.
+                - listitem [ref=f2e216]:
+                  - generic [ref=f2e220]: Incident runbook-ovi i alert routing usklađeni su sa vašim on-call modelom.
+        - generic [ref=f2e221]:
+          - generic [ref=f2e223]:
+            - heading "Preuzmite brief za usluge izrade weba" [level=3] [ref=f2e224]
+            - paragraph [ref=f2e225]: Dobijte kompletan okvir arhitektonskog blueprint-a, primer roadmap-a i remote squad playbook. Idealno za stakeholder-e koji žele detalje pre kickoff poziva.
+          - generic [ref=f2e226]:
+            - generic [ref=f2e227]:
+              - generic [ref=f2e228]: Naš tok izrade
+              - generic [ref=f2e229]: Prevucite da istražite svaku fazu isporuke
+            - generic [ref=f2e231]:
+              - generic [ref=f2e232]:
+                - generic [ref=f2e233]:
+                  - generic [ref=f2e234]: KI
+                  - generic [ref=f2e235]: Kickoff
+                - paragraph [ref=f2e236]: Discovery radionice i arhitektonski blueprint
+              - generic [ref=f2e237]:
+                - generic [ref=f2e238]:
+                  - generic [ref=f2e239]: DI
+                  - generic [ref=f2e240]: Dizajn
+                - paragraph [ref=f2e241]: Tokovi iskustva, specifikacije komponenti, usklađivanje developera
+              - generic [ref=f2e242]:
+                - generic [ref=f2e243]:
+                  - generic [ref=f2e244]: IZ
+                  - generic [ref=f2e245]: Izrada
+                - paragraph [ref=f2e246]: Agilni timovi isporučuju nedeljno uz stabilan CI/CD
+              - generic [ref=f2e247]:
+                - generic [ref=f2e248]:
+                  - generic [ref=f2e249]: IT
+                  - generic [ref=f2e250]: Iteracija
+                - paragraph [ref=f2e251]: Optimizacije zasnovane na podacima i roadmap grooming
+              - generic [ref=f2e252]:
+                - generic [ref=f2e253]:
+                  - generic [ref=f2e254]: SK
+                  - generic [ref=f2e255]: Skaliranje
+                - paragraph [ref=f2e256]: Production hardening, edge podešavanja, kontrola troškova
+      - generic [ref=f2e258]:
+        - generic [ref=f2e259]:
+          - text: Zašto izabrati nas
+          - heading "Remote timovi za izradu weba projektovani za skaliranje" [level=2] [ref=f2e260]
+          - paragraph [ref=f2e261]: Spajamo product strategiju, inženjersku disciplinu i kontinuiranu optimizaciju da vaša skalabilna web platforma ostane ispred potražnje.
+        - generic [ref=f2e262]:
+          - article [ref=f2e263]:
+            - heading "Građeno za rast" [level=3] [ref=f2e264]
+            - paragraph [ref=f2e265]: Engineering-led timovi sarađuju sa product-om od roadmap-a do release-a, držeći akviziciju, aktivaciju i retenciju u fokusu.
+          - article [ref=f2e266]:
+            - heading "Održivo od prvog sprinta" [level=3] [ref=f2e267]
+            - paragraph [ref=f2e268]: Čista arhitektura, tipizovani API-ji i jasni putevi za contributore znače da svaka nova funkcija stiže bez gomilanja duga.
+          - article [ref=f2e269]:
+            - heading "Performanse ugrađene" [level=3] [ref=f2e270]
+            - paragraph [ref=f2e271]: Strategije keširanja, CDN pravila i profiling rade se tokom razvoja, kako biste pogodili 99%+ pouzdanosti prvog prikaza.
+          - article [ref=f2e272]:
+            - heading "Remote-first, usklađeno kroz vremenske zone" [level=3] [ref=f2e273]
+            - paragraph [ref=f2e274]: Distribuirani inženjeri širom EMEA regiona i Severne Amerike rade uz vaš tim, pokrivajući ključne sate bez praznina u predaji.
+      - generic [ref=f2e276]:
+        - generic [ref=f2e277]:
+          - generic [ref=f2e278]: Dokazi kojima možete verovati
+          - heading "Ključne metrike i društveni dokaz" [level=2] [ref=f2e279]
+        - generic [ref=f2e280]:
+          - generic [ref=f2e281]:
+            - generic [ref=f2e282]: 99%+
+            - generic [ref=f2e283]: Stopa uspešnog prvog prikaza kroz lansiranja
+          - generic [ref=f2e284]:
+            - generic [ref=f2e285]: 4 weeks
+            - generic [ref=f2e286]: Najbrži growth-stage MVP do produkcije
+          - generic [ref=f2e287]:
+            - generic [ref=f2e288]: EMEA / NA
+            - generic [ref=f2e289]: Ugrađeni remote engineering timovi
+          - generic [ref=f2e290]:
+            - generic [ref=f2e291]: 40%
+            - generic [ref=f2e292]: Prosečan rast konverzije posle angažmana
+        - generic [ref=f2e293]:
+          - generic [ref=f2e294]: Remote engineering timovi
+          - generic [ref=f2e298]: Partnerstva sa growth-stage timovima
+          - generic [ref=f2e305]: Dizajn i inženjering u istom ritmu
+      - generic [ref=f2e310]:
+        - generic [ref=f2e311]:
+          - text: Proces / putanja
+          - heading "Put od ideje do otporne platforme" [level=2] [ref=f2e312]
+          - paragraph [ref=f2e313]: Transparentne prekretnice drže stakeholder-e uključene i obezbeđuju da remote engineering tim ostane usklađen sa poslovnim ishodima.
+        - list [ref=f2e314]:
+          - listitem [ref=f2e315]:
+            - generic [ref=f2e316]: "01"
+            - heading "1. Discovery i roadmap" [level=3] [ref=f2e317]
+            - paragraph [ref=f2e318]: Auditujemo trenutni stack, mapiramo KPI-jeve i usklađujemo merljive ishode.
+            - paragraph [ref=f2e319]: "Isporučujemo: Arhitektonski brief i prioritizovani backlog"
+          - listitem [ref=f2e320]:
+            - generic [ref=f2e321]: "02"
+            - heading "2. Dizajn i prototipovanje" [level=3] [ref=f2e322]
+            - paragraph [ref=f2e323]: Postavljamo UX tokove, sistematizujemo UI i validiramo putanje sa product owner-ima.
+            - paragraph [ref=f2e324]: "Isporučujemo: Komponentni kit sa loop-ovima povratnih informacija na prototip"
+          - listitem [ref=f2e325]:
+            - generic [ref=f2e326]: "03"
+            - heading "3. Inženjering i izrada" [level=3] [ref=f2e327]
+            - paragraph [ref=f2e328]: Implementiramo funkcije u nedeljnim inkrementima uz CI/CD i QA zaštitne mehanizme.
+            - paragraph [ref=f2e329]: "Isporučujemo: Production-ready inkrementi i release notes"
+          - listitem [ref=f2e330]:
+            - generic [ref=f2e331]: "04"
+            - heading "4. Lansiranje i iteracija" [level=3] [ref=f2e332]
+            - paragraph [ref=f2e333]: Koordiniramo release-e, instrumentujemo analitiku i aktiviramo marketing automatizaciju.
+            - paragraph [ref=f2e334]: "Isporučujemo: Go-live checklist-a i tracking dashboard-i"
+          - listitem [ref=f2e335]:
+            - generic [ref=f2e336]: "05"
+            - heading "5. Monitoring i skaliranje" [level=3] [ref=f2e337]
+            - paragraph [ref=f2e338]: Pratimo vitals, podešavamo infrastrukturu i isporučujemo unapređenja na osnovu podataka.
+            - paragraph [ref=f2e339]: "Isporučujemo: Mesečni pregled performansi i backlog optimizacije"
+      - generic [ref=f2e341]:
+        - generic [ref=f2e342]:
+          - text: Održavanje i rast
+          - heading "Ostajemo odgovorni dugo posle lansiranja" [level=2] [ref=f2e343]
+          - paragraph [ref=f2e344]: Vaša skalabilna web platforma treba brigu i iteraciju. Ostajemo uključeni da pratimo, optimizujemo i razvijamo funkcije kako baza korisnika raste.
+        - generic [ref=f2e345]:
+          - generic [ref=f2e346]:
+            - heading "Pregled stalnog angažmana" [level=3] [ref=f2e347]
+            - paragraph [ref=f2e352]: Retainere usklađujemo sa ciljevima brzine, isporučujući merljive ishode svakog sprinta uz predvidive budžete.
+          - list [ref=f2e353]:
+            - listitem [ref=f2e354]:
+              - generic [ref=f2e358]: Mesečni pregled performansi i Core Web Vitals-a sa action item-ima.
+            - listitem [ref=f2e359]:
+              - generic [ref=f2e363]: Održavanje observability dashboard-a, sintetičkih testova i alert routinga.
+            - listitem [ref=f2e364]:
+              - generic [ref=f2e368]: Kontinuirani backlog grooming usklađen sa GTM eksperimentima i OKR-ovima.
+            - listitem [ref=f2e369]:
+              - generic [ref=f2e373]: Profilisanje Edge funkcija i preporuke za optimizaciju troškova.
+            - listitem [ref=f2e374]:
+              - generic [ref=f2e378]: Bezbednosne zakrpe, nadogradnje zavisnosti i automatizovani QA zaštitni mehanizmi.
+      - generic [ref=f2e380]:
+        - generic [ref=f2e381]:
+          - text: Česta pitanja
+          - heading "Česta pitanja o našim uslugama izrade weba" [level=2] [ref=f2e382]
+          - paragraph [ref=f2e383]: Odgovori na teme koje najčešće prolazimo sa growth-stage osnivačima, marketing liderima i product timovima koji istražuju remote web development partnerstva.
+        - generic [ref=f2e384]:
+          - generic [ref=f2e385]:
+            - button "Sa koliko velikim web development timom ću raditi?" [expanded] [ref=f2e386]:
+              - generic [ref=f2e388]: "-"
+            - paragraph [ref=f2e390]: Uključujemo posvećen tim od 3-6 specijalista (lead engineer, product designer, frontend/backend developeri, QA) prilagođen vašem roadmap-u i budžetu.
+          - generic [ref=f2e391]:
+            - button "Koje tech stack-ove preferirate?" [ref=f2e392]:
+              - generic [ref=f2e394]: +
+            - paragraph [ref=f2e395]: Next.js, Remix i Astro na frontendu; serverless edge runtime-i, Node.js i GraphQL ili REST API-ji u sredini; moderni data store-ovi poput PlanetScale, Supabase ili DynamoDB gde odgovara. Svaki build je TypeScript-first.
+          - generic [ref=f2e396]:
+            - button "Kako rešavate održavanje posle lansiranja?" [ref=f2e397]:
+              - generic [ref=f2e399]: +
+            - paragraph [ref=f2e400]: Ostajemo odgovorni kroz observability, mesečne health review-e, automatizovani QA i brzo rešavanje bug-ova kako bi platforma nastavila da napreduje.
+          - generic [ref=f2e401]:
+            - button "Možete li podržati agresivne ciljeve performansi?" [ref=f2e402]:
+              - generic [ref=f2e404]: +
+            - paragraph [ref=f2e405]: Da. Dizajniramo ka prvom prikazu ispod dve sekunde, instrumentujemo real user monitoring i pokrećemo regresione testove pri svakom deploy-u kako bi vitals ostali u zelenom.
+          - generic [ref=f2e406]:
+            - button "Da li će moj proizvod skalirati sa rastom potražnje?" [ref=f2e407]:
+              - generic [ref=f2e409]: +
+            - paragraph [ref=f2e410]: Planiramo rast od prvog dana kroz multi-region deploy-e, infrastructure-as-code i strategije database sharding-a ili read replica po potrebi.
+          - generic [ref=f2e411]:
+            - button "Da li se uklapate sa postojećim timovima i dobavljačima?" [ref=f2e412]:
+              - generic [ref=f2e414]: +
+            - paragraph [ref=f2e415]: Apsolutno. Sarađujemo kroz marketing, product i ops, uključujući se u alate poput Linear-a, Jira-e, GitHub-a i Notion-a da sve ostane transparentno.
+          - generic [ref=f2e416]:
+            - button "Koliko brzo možemo da počnemo?" [ref=f2e417]:
+              - generic [ref=f2e419]: +
+            - paragraph [ref=f2e420]: Discovery može početi u roku od nedelju dana. Definišemo opseg, KPI-jeve i pokrećemo posvećen remote engineering tim usklađen sa EMEA ili severnoameričkim satima.
+          - generic [ref=f2e421]:
+            - button "Koliko košta angažman?" [ref=f2e422]:
+              - generic [ref=f2e424]: +
+            - paragraph [ref=f2e425]: Timovi kreću od fleksibilnih retainera sa transparentnim nedeljnim metrikama brzine. Dajemo detaljne ponude sa sastavom tima, ritmom i ishodima.
+      - generic [ref=f2e427]:
+        - heading "Definišimo vašu mapu puta i isporučimo skalabilnu web platformu" [level=2] [ref=f2e428]
+        - paragraph [ref=f2e429]: Podelite gde ste danas i koje KPI-jeve treba pomeriti, a mi ćemo sastaviti tim za izradu weba na daljinu koji se uklapa u vaš tim, uz ciljeve performansi i praćenje sistema od prvog sprinta.
+        - generic [ref=f2e430]:
+          - link "Definišimo mapu puta" [ref=f2e431] [cursor=pointer]:
+            - /url: /contact?intent=define-roadmap
+          - link "Pogledajte skorašnje projekte" [ref=f2e435] [cursor=pointer]:
+            - /url: /projects
+    - contentinfo [ref=f2e439]:
+      - generic [ref=f2e440]:
+        - generic [ref=f2e441]:
+          - generic [ref=f2e442]:
+            - generic [ref=f2e443]:
+              - generic [ref=f2e444]: Enigma Digital
+              - heading "Isporučujemo iskustva koja definišu brend uz odgovoran inženjering." [level=2] [ref=f2e445]
+              - paragraph [ref=f2e446]: Strategija, dizajn i inženjering rade zajedno kako bi svako lansiranje podiglo metrike koje su važne. Uključujemo timove u vaš product tim i održavamo visok tempo od početka do iteracije.
+            - generic [ref=f2e447]:
+              - link "Pokreni projekat" [ref=f2e448] [cursor=pointer]:
+                - /url: /contact
+              - link "hello@enigma.digital" [ref=f2e452] [cursor=pointer]:
+                - /url: mailto:hello@enigma.digital
+          - generic [ref=f2e453]:
+            - generic [ref=f2e454]:
+              - heading "Kompanija" [level=3] [ref=f2e455]
+              - list [ref=f2e456]:
+                - listitem [ref=f2e457]:
+                  - link "Početna" [ref=f2e458] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=f2e463]:
+                  - link "Projekti" [ref=f2e464] [cursor=pointer]:
+                    - /url: /projects
+            - generic [ref=f2e469]:
+              - heading "Usluge" [level=3] [ref=f2e470]
+              - list [ref=f2e471]:
+                - listitem [ref=f2e472]:
+                  - link "Izrada web sajtova" [ref=f2e473] [cursor=pointer]:
+                    - /url: /services/web-development
+                - listitem [ref=f2e475]:
+                  - link "UI | UX dizajn" [ref=f2e476] [cursor=pointer]:
+                    - /url: /services/ui-ux-design
+                - listitem [ref=f2e478]:
+                  - link "Izrada mobilnih aplikacija" [ref=f2e479] [cursor=pointer]:
+                    - /url: /services/mobile-app-development
+                - listitem [ref=f2e481]:
+                  - link "SEO i GEO" [ref=f2e482] [cursor=pointer]:
+                    - /url: /services/seo-geo
+                - listitem [ref=f2e484]:
+                  - link "Brending" [ref=f2e485] [cursor=pointer]:
+                    - /url: /services/branding
+                - listitem [ref=f2e487]:
+                  - link "Društvene mreže" [ref=f2e488] [cursor=pointer]:
+                    - /url: /services/social-media
+            - generic [ref=f2e490]:
+              - heading "Poseta i kontakt" [level=3] [ref=f2e491]
+              - generic [ref=f2e492]:
+                - generic [ref=f2e497]:
+                  - paragraph [ref=f2e498]: Evropa / prvo na daljinu
+                  - paragraph [ref=f2e499]: Partnerstva sa timovima širom EMEA regiona i Severne Amerike.
+                - generic [ref=f2e503]:
+                  - paragraph [ref=f2e504]: Poziv
+                  - link "+44 20 4577 1943" [ref=f2e505] [cursor=pointer]:
+                    - /url: tel:+442045771943
+                - generic [ref=f2e510]:
+                  - paragraph [ref=f2e511]: E-pošta
+                  - link "hello@enigma.digital" [ref=f2e512] [cursor=pointer]:
+                    - /url: mailto:hello@enigma.digital
+        - generic [ref=f2e513]:
+          - paragraph [ref=f2e514]: © 2026 Enigma Digital. Sva prava zadržana.
+          - generic [ref=f2e515]:
+            - link "Politika privatnosti" [ref=f2e516] [cursor=pointer]:
+              - /url: /privacy
+            - link "Uslovi korišćenja" [ref=f2e517] [cursor=pointer]:
+              - /url: /terms
+            - link "Smernice brenda" [ref=f2e518] [cursor=pointer]:
+              - /url: /brand
+    - button "Vrati se na vrh"
+  - dialog:
+    - generic [ref=f2e521]:
+      - generic [ref=f2e522]:
+        - heading "Upravljajte podešavanjima kolačića" [level=2] [ref=f2e523]
+        - paragraph [ref=f2e524]: Koristimo neophodne kolačiće da bi sajt radio. Omogućite funkcionalne kolačiće da zapamtimo izbore kao što su tema ili jezik.
+        - generic [ref=f2e525]:
+          - generic [ref=f2e526]: Funkcionalni kolačići
+          - switch "Funkcionalni kolačići" [ref=f2e527] [cursor=pointer]
+      - generic [ref=f2e529]:
+        - button "Prihvati sve" [ref=f2e530] [cursor=pointer]
+        - button "Sačuvaj izbor" [ref=f2e531] [cursor=pointer]
+        - button "Samo neophodni" [ref=f2e532] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f2e538] [cursor=pointer]

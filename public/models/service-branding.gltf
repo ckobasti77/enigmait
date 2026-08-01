@@ -1,0 +1,123 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "ServiceShapeGenerator"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "service-branding"
+    }
+  ],
+  "meshes": [
+    {
+      "name": "service-branding-mesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1,
+            "NORMAL": 2
+          },
+          "indices": 0,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "service-branding-material",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          1,
+          0.8,
+          0.32,
+          1
+        ],
+        "metallicFactor": 0.05,
+        "roughnessFactor": 0.45
+      }
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "service-branding.bin",
+      "byteLength": 624
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 48,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 48,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 336,
+      "byteLength": 288,
+      "target": 34962
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5123,
+      "count": 24,
+      "type": "SCALAR",
+      "min": [
+        0
+      ],
+      "max": [
+        23
+      ]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3",
+      "min": [
+        -0.8999999761581421,
+        -1.2999999523162842,
+        -1.100000023841858
+      ],
+      "max": [
+        0.8999999761581421,
+        1.2999999523162842,
+        1.100000023841858
+      ]
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3",
+      "min": [
+        -0.6821988224983215,
+        -0.4722914695739746,
+        -0.5581626296043396
+      ],
+      "max": [
+        0.6821988224983215,
+        0.4722914695739746,
+        0.5581626296043396
+      ]
+    }
+  ]
+}

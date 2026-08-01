@@ -1,0 +1,61 @@
+- generic:
+  - generic [active]:
+    - generic [ref=f6e3]:
+      - generic [ref=f6e4]:
+        - navigation [ref=f6e6]:
+          - button [disabled] [ref=f6e7]:
+            - img "previous" [ref=f6e8]
+          - generic [ref=f6e10]:
+            - generic [ref=f6e11]: 1/
+            - text: "1"
+          - button [disabled] [ref=f6e12]:
+            - img "next" [ref=f6e13]
+        - link "Next.js 16.2.6 (stale) Turbopack" [ref=f6e16] [cursor=pointer]:
+          - /url: https://nextjs.org/docs/messages/version-staleness
+          - generic "There is a newer version (16.2.12) available, upgrade recommended!" [ref=f6e19]: Next.js 16.2.6 (stale)
+          - generic [ref=f6e20]: Turbopack
+      - dialog "Build Error" [ref=f6e22]:
+        - generic [ref=f6e25]:
+          - generic [ref=f6e26]:
+            - generic [ref=f6e27]:
+              - generic [ref=f6e28]: Build Error
+              - generic [ref=f6e30]:
+                - button "Copy Error Info" [ref=f6e31] [cursor=pointer]
+                - button "No related documentation found" [disabled] [ref=f6e34]
+                - button "Attach Node.js inspector" [ref=f6e37] [cursor=pointer]
+            - generic [ref=f6e46]: Expected '</', got 'ident'
+          - generic [ref=f6e49]:
+            - generic [ref=f6e51]:
+              - generic [ref=f6e56]: ./app/_components/NavLinksMobile.tsx (315:17)
+              - button "Open in editor" [ref=f6e57] [cursor=pointer]
+            - generic [ref=f6e62]:
+              - generic [ref=f6e63]: Expected '</', got 'ident'
+              - generic [ref=f6e64]: 313 |
+              - generic [ref=f6e65]: be pinned to its dark rim rather than the page's. */
+              - generic [ref=f6e66]: "}"
+              - generic [ref=f6e67]: 314 |
+              - generic [ref=f6e68]: <
+              - text: CtaButton >
+              - generic [ref=f6e69]: 315 |
+              - generic [ref=f6e70]: "href={absPath(ctaLink.to)}"
+              - generic [ref=f6e71]: "|"
+              - text: ^^^^
+              - generic [ref=f6e72]: 316 |
+              - generic [ref=f6e73]: "onClick={toggleNav}"
+              - generic [ref=f6e74]: 317 |
+              - generic [ref=f6e75]: size=
+              - text: "\"sm\""
+              - generic [ref=f6e76]: 318 |
+              - generic [ref=f6e77]: className=
+              - text: "\"liquid-glass--on-dark\""
+              - generic [ref=f6e78]: "Parsing ecmascript source code failed Import traces: Client Component Browser: ./app/_components/NavLinksMobile.tsx [Client Component Browser] ./app/_components/Navbar.tsx [Client Component Browser] ./app/_components/Navbar.tsx [Server Component] ./app/layout.tsx [Server Component] Client Component SSR: ./app/_components/NavLinksMobile.tsx [Client Component SSR] ./app/_components/Navbar.tsx [Client Component SSR] ./app/_components/Navbar.tsx [Server Component] ./app/layout.tsx [Server Component]"
+        - generic [ref=f6e79]: "1"
+        - generic [ref=f6e80]: "2"
+    - generic [ref=f6e85] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=f6e86]
+      - button "Open issues overlay" [ref=f6e91]:
+        - generic [ref=f6e92]:
+          - generic [ref=f6e93]: "0"
+          - generic [ref=f6e94]: "1"
+        - generic [ref=f6e95]: Issue
+  - alert [ref=f6e96]

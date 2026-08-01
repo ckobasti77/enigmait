@@ -1,0 +1,379 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e3]:
+    - generic [ref=f4e5]:
+      - link "Enigma Digital — početna" [ref=f4e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f4e7]:
+        - link "Početna" [ref=f4e9] [cursor=pointer]:
+          - /url: /
+        - link "Usluge" [ref=f4e12] [cursor=pointer]:
+          - /url: /services
+        - link "Projekti" [ref=f4e17] [cursor=pointer]:
+          - /url: /projects
+        - link "Kontakt" [ref=f4e20] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f4e22]:
+        - generic [ref=f4e23]:
+          - button "Otvori social linkove" [ref=f4e24]
+          - menu:
+            - generic:
+              - menuitem "Instagram"
+              - menuitem "TikTok"
+              - menuitem "Facebook"
+              - menuitem "Email"
+              - menuitem "Telefon"
+        - generic "Prebaci jezik sajta" [ref=f4e31]:
+          - button "Prikaži sajt na srpskom" [pressed] [ref=f4e32]: SR
+          - button "Prikaži sajt na engleskom" [ref=f4e33]: EN
+        - button "Promeni temu" [pressed] [ref=f4e34]
+    - generic [ref=f4e42]:
+      - generic [ref=f4e47]:
+        - generic [ref=f4e48]:
+          - generic [ref=f4e49]: Vidljivost
+          - heading "Budite vidljivi tamo gde vas publika traži" [level=1] [ref=f4e50]
+          - paragraph [ref=f4e52]: Tehnički SEO, geo širenje i arhitektura sadržaja koji kumulativno grade organski rast. Isporučujemo audite, roadmap-e i implementaciju sa vašim ili našim timom.
+          - generic [ref=f4e53]:
+            - link "Zatražite SEO audit" [ref=f4e54] [cursor=pointer]:
+              - /url: /contact
+            - link "Pogledajte priče o rastu" [ref=f4e55] [cursor=pointer]:
+              - /url: /projects
+          - generic [ref=f4e56]:
+            - generic [ref=f4e57]:
+              - generic [ref=f4e58]: 30%
+              - generic [ref=f4e59]: Cilj rasta saobraćaja
+            - generic [ref=f4e60]:
+              - generic [ref=f4e61]: 90d
+              - generic [ref=f4e62]: Ritam roadmap-a
+            - generic [ref=f4e63]:
+              - generic [ref=f4e64]: 50+
+              - generic [ref=f4e65]: Optimizovane strane
+          - paragraph [ref=f4e66]: Uklapamo se sa vašim content i performance timovima, a eksperimente, uvide i playbook-e držimo u jednom zajedničkom prostoru.
+        - generic [ref=f4e67]:
+          - article [ref=f4e68]:
+            - generic [ref=f4e74]:
+              - heading "Tehnički temelji" [level=3] [ref=f4e76]
+              - paragraph [ref=f4e77]: Schema, brzina, crawl budžeti i internacionalizacija podešeni su da sajt gradi autoritet.
+          - article [ref=f4e78]:
+            - generic [ref=f4e86]:
+              - heading "Lokalno i geo širenje" [level=3] [ref=f4e88]
+              - paragraph [ref=f4e89]: Lokacijske strane, prevodi i listing upravljanje brzo vas stavljaju pred regionalnu publiku.
+          - article [ref=f4e90]:
+            - generic [ref=f4e94]:
+              - heading "Transparentno izveštavanje" [level=3] [ref=f4e96]
+              - paragraph [ref=f4e97]: Dashboard-i prate pozicije, share of voice i uticaj na prihod kako bi svaka optimizacija bila odgovorna.
+      - generic [ref=f4e99]:
+        - generic [ref=f4e100]:
+          - text: Opseg ukratko
+          - heading "SEO pokrivenost koja kumulativno gradi vidljivost" [level=2] [ref=f4e101]
+          - paragraph [ref=f4e102]: Usklađujemo tehnička poboljšanja, strategiju sadržaja i geo širenje kako biste uhvatili potražnju u svakoj fazi funnel-a.
+        - generic [ref=f4e103]:
+          - article [ref=f4e104]:
+            - generic [ref=f4e109]:
+              - heading "Tehnički SEO audit" [level=3] [ref=f4e110]
+              - paragraph [ref=f4e111]: Crawl analiza, zdravlje indeksa i schema provere otkrivaju skrivene praznine.
+          - article [ref=f4e112]:
+            - generic [ref=f4e118]:
+              - heading "Performanse sajta i crawlability" [level=3] [ref=f4e119]
+              - paragraph [ref=f4e120]: Core Web Vitals i arhitektura sajta podešeni za brzinu i jasnoću.
+          - article [ref=f4e121]:
+            - generic [ref=f4e128]:
+              - heading "Arhitektura sadržaja i intent" [level=3] [ref=f4e129]
+              - paragraph [ref=f4e130]: Topic cluster-i, interno linkovanje i page template-i građeni za konverziju.
+          - article [ref=f4e131]:
+            - generic [ref=f4e136]:
+              - heading "Lokalno i geo širenje" [level=3] [ref=f4e137]
+              - paragraph [ref=f4e138]: Lokacijske strane, listing-i i hreflang podešavanja za nova tržišta.
+          - article [ref=f4e139]:
+            - generic [ref=f4e144]:
+              - heading "Autoritet i link strategija" [level=3] [ref=f4e145]
+              - paragraph [ref=f4e146]: Digital PR i planiranje backlink-ova usklađeni sa ciljevima rasta.
+          - article [ref=f4e147]:
+            - generic [ref=f4e150]:
+              - heading "Izveštavanje i eksperimentisanje" [level=3] [ref=f4e151]
+              - paragraph [ref=f4e152]: Dashboard-i, rank tracking i test loop-ovi koji dokazuju uticaj.
+      - generic [ref=f4e154]:
+        - generic [ref=f4e155]:
+          - generic [ref=f4e156]:
+            - text: Strategija i metodologija
+            - heading "Kako gradimo organsku vidljivost" [level=2] [ref=f4e157]
+            - paragraph [ref=f4e158]: Spajamo tehnički SEO, arhitekturu sadržaja i analitiku kako bi rast bio merljiv i ponovljiv.
+            - generic [ref=f4e159]:
+              - generic [ref=f4e160]: Tehnički SEO
+              - generic [ref=f4e161]: Schema
+              - generic [ref=f4e162]: Hreflang
+              - generic [ref=f4e163]: Lokalni SEO
+              - generic [ref=f4e164]: Tematski klasteri
+              - generic [ref=f4e165]: Izveštavanje
+          - generic [ref=f4e166]:
+            - article [ref=f4e167]:
+              - heading "Tehnički temelj" [level=3] [ref=f4e168]
+              - list [ref=f4e172]:
+                - listitem [ref=f4e173]:
+                  - generic [ref=f4e177]: Crawl budžeti, strategija indeksiranja i schema markup podešeni za skaliranje.
+                - listitem [ref=f4e178]:
+                  - generic [ref=f4e182]: Poboljšanja performansi mapirana na konverzije i rast vidljivosti.
+            - article [ref=f4e183]:
+              - heading "Mapiranje sadržaja i intent-a" [level=3] [ref=f4e184]
+              - list [ref=f4e188]:
+                - listitem [ref=f4e189]:
+                  - generic [ref=f4e193]: Analiza search intent-a vezana za product funnel-e i ciljeve konverzije.
+                - listitem [ref=f4e194]:
+                  - generic [ref=f4e198]: Cluster strategija konsoliduje autoritet i vodi interno linkovanje.
+            - article [ref=f4e199]:
+              - heading "Merenje i iteracija" [level=3] [ref=f4e200]
+              - list [ref=f4e204]:
+                - listitem [ref=f4e205]:
+                  - generic [ref=f4e209]: Dashboard-i sa pozicijama, saobraćajem i revenue attribution update-ima.
+                - listitem [ref=f4e210]:
+                  - generic [ref=f4e214]: Logovi eksperimenata i kvartalni pregledi održavaju kumulativni zamah.
+        - generic [ref=f4e215]:
+          - generic [ref=f4e217]:
+            - heading "Preuzmite SEO roadmap template" [level=3] [ref=f4e218]
+            - paragraph [ref=f4e219]: Dobijte audit checklist-u, framework za mapiranje ključnih reči i ritam izveštavanja koji koristimo za kumulativni rast.
+          - generic [ref=f4e220]:
+            - generic [ref=f4e221]:
+              - generic [ref=f4e222]: Naš SEO tok
+              - generic [ref=f4e223]: Prevucite da istražite svaku fazu isporuke
+            - generic [ref=f4e225]:
+              - generic [ref=f4e226]:
+                - generic [ref=f4e227]:
+                  - generic [ref=f4e228]: AU
+                  - generic [ref=f4e229]: Audit
+                - paragraph [ref=f4e230]: Tehnički pregled, crawl podaci i početne metrike
+              - generic [ref=f4e231]:
+                - generic [ref=f4e232]:
+                  - generic [ref=f4e233]: ST
+                  - generic [ref=f4e234]: Strategija
+                - paragraph [ref=f4e235]: Mapiranje ključnih reči, content plan i prioritetne popravke
+              - generic [ref=f4e236]:
+                - generic [ref=f4e237]:
+                  - generic [ref=f4e238]: IM
+                  - generic [ref=f4e239]: Implementacija
+                - paragraph [ref=f4e240]: Tehničke popravke i on-page optimizacija
+              - generic [ref=f4e241]:
+                - generic [ref=f4e242]:
+                  - generic [ref=f4e243]: ŠI
+                  - generic [ref=f4e244]: Širenje
+                - paragraph [ref=f4e245]: Lokacijske strane, prevodi i rollout po tržištima
+              - generic [ref=f4e246]:
+                - generic [ref=f4e247]:
+                  - generic [ref=f4e248]: OP
+                  - generic [ref=f4e249]: Optimizacija
+                - paragraph [ref=f4e250]: Izveštavanje, testovi i stalna unapređenja
+      - generic [ref=f4e252]:
+        - generic [ref=f4e253]:
+          - text: Zašto izabrati nas
+          - heading "SEO partneri fokusirani na merljive ishode" [level=2] [ref=f4e254]
+          - paragraph [ref=f4e255]: Usklađujemo se sa vašim product, marketing i engineering timovima kako bismo isporučili search rast koji možete povezati sa prihodom.
+        - generic [ref=f4e256]:
+          - article [ref=f4e257]:
+            - heading "Engineering-led SEO" [level=3] [ref=f4e258]
+            - paragraph [ref=f4e259]: Tehnička poboljšanja spajamo sa product i analytics timovima kako bi izmene brzo izašle i ostale.
+          - article [ref=f4e260]:
+            - heading "Geo širenje ugrađeno" [level=3] [ref=f4e261]
+            - paragraph [ref=f4e262]: Lokalne strane, listing-i i planovi lokalizacije deo su roadmap-a, ne naknadna misao.
+          - article [ref=f4e263]:
+            - heading "Sadržaj usklađen sa konverzijom" [level=3] [ref=f4e264]
+            - paragraph [ref=f4e265]: Search intent oblikuje landing strane i onboarding kako bi organski saobraćaj konvertovao.
+          - article [ref=f4e266]:
+            - heading "Transparentno izveštavanje" [level=3] [ref=f4e267]
+            - paragraph [ref=f4e268]: Nedeljni dashboard-i i logovi eksperimenata jasno pokazuju odakle dolazi rast.
+      - generic [ref=f4e270]:
+        - generic [ref=f4e271]:
+          - generic [ref=f4e272]: Dokazi kojima možete verovati
+          - heading "Najvažnije search performanse" [level=2] [ref=f4e273]
+        - generic [ref=f4e274]:
+          - generic [ref=f4e275]:
+            - generic [ref=f4e276]: 30%
+            - generic [ref=f4e277]: Cilj rasta saobraćaja
+          - generic [ref=f4e278]:
+            - generic [ref=f4e279]: 90d
+            - generic [ref=f4e280]: Ritam roadmap-a
+          - generic [ref=f4e281]:
+            - generic [ref=f4e282]: 50+
+            - generic [ref=f4e283]: Optimizovane strane
+          - generic [ref=f4e284]:
+            - generic [ref=f4e285]: "12"
+            - generic [ref=f4e286]: Podržana tržišta
+        - generic [ref=f4e287]:
+          - generic [ref=f4e288]: Tehnička SEO pokrivenost
+          - generic [ref=f4e292]: Strategija geo širenja
+          - generic [ref=f4e298]: Transparentno izveštavanje
+      - generic [ref=f4e301]:
+        - generic [ref=f4e302]:
+          - text: Proces / putanja
+          - heading "Put od audita do kumulativnog rasta" [level=2] [ref=f4e303]
+          - paragraph [ref=f4e304]: Svaka prekretnica drži tim usklađenim i obezbeđuje dokumentovanje search rasta.
+        - list [ref=f4e305]:
+          - listitem [ref=f4e306]:
+            - generic [ref=f4e307]: "01"
+            - heading "1. Audit i bazno merenje" [level=3] [ref=f4e308]
+            - paragraph [ref=f4e309]: Pregledamo crawl podatke, pozicije i tehničko zdravlje da definišemo prioritete.
+            - paragraph [ref=f4e310]: "Isporučujemo: Tehnički audit i crawl izveštaj"
+          - listitem [ref=f4e311]:
+            - generic [ref=f4e312]: "02"
+            - heading "2. Strategija i roadmap" [level=3] [ref=f4e313]
+            - paragraph [ref=f4e314]: Usklađujemo prilike ključnih reči sa content planovima i product ciljevima.
+            - paragraph [ref=f4e315]: "Isporučujemo: 90-dnevni SEO roadmap"
+          - listitem [ref=f4e316]:
+            - generic [ref=f4e317]: "03"
+            - heading "3. Implementacija i popravke" [level=3] [ref=f4e318]
+            - paragraph [ref=f4e319]: Isporučujemo tehnička unapređenja i optimizujemo prioritetne landing strane.
+            - paragraph [ref=f4e320]: "Isporučujemo: Backlog popravki i implementation checklist-a"
+          - listitem [ref=f4e321]:
+            - generic [ref=f4e322]: "04"
+            - heading "4. Sadržaj i geo širenje" [level=3] [ref=f4e323]
+            - paragraph [ref=f4e324]: Objavljujemo nove strane, lokalne listing-e i prevedena iskustva.
+            - paragraph [ref=f4e325]: "Isporučujemo: Optimizovane strane i geo template-i"
+          - listitem [ref=f4e326]:
+            - generic [ref=f4e327]: "05"
+            - heading "5. Izveštavanje i iteracija" [level=3] [ref=f4e328]
+            - paragraph [ref=f4e329]: Merimo uticaj, pokrećemo eksperimente i ažuriramo roadmap.
+            - paragraph [ref=f4e330]: "Isporučujemo: Dashboard-i performansi i log eksperimenata"
+      - generic [ref=f4e332]:
+        - generic [ref=f4e333]:
+          - text: Održavanje i rast
+          - heading "Održavamo SEO zdravim dok se algoritmi menjaju" [level=2] [ref=f4e334]
+          - paragraph [ref=f4e335]: Organske performanse zahtevaju stalnu pažnju. Pratimo update-e i održavamo roadmap svežim.
+        - generic [ref=f4e336]:
+          - generic [ref=f4e337]:
+            - heading "Pregled stalnog angažmana" [level=3] [ref=f4e338]
+            - paragraph [ref=f4e343]: Mesečno izveštavanje i optimizacione sprintove usklađujemo da pozicije ostanu stabilne, a saobraćaj raste.
+          - list [ref=f4e344]:
+            - listitem [ref=f4e345]:
+              - generic [ref=f4e349]: Mesečno praćenje pozicija i izveštavanje o vidljivosti.
+            - listitem [ref=f4e350]:
+              - generic [ref=f4e354]: Ciklusi osvežavanja sadržaja i ažuriranja internog linkovanja.
+            - listitem [ref=f4e355]:
+              - generic [ref=f4e359]: Tehničke health provere za indeksiranje i Core Web Vitals.
+            - listitem [ref=f4e360]:
+              - generic [ref=f4e364]: Update-i lokalnih listing-a i smernice za odgovore na recenzije.
+            - listitem [ref=f4e365]:
+              - generic [ref=f4e369]: Praćenje algorithm update-a i planovi brzog odgovora.
+      - generic [ref=f4e371]:
+        - generic [ref=f4e372]:
+          - text: Česta pitanja
+          - heading "Česta pitanja o SEO i geo uslugama" [level=2] [ref=f4e373]
+          - paragraph [ref=f4e374]: Odgovori na teme koje najčešće prolazimo sa growth i marketing timovima koji istražuju search partnerstva.
+        - generic [ref=f4e375]:
+          - generic [ref=f4e376]:
+            - button "Koliko brzo ćemo videti SEO rezultate?" [expanded] [ref=f4e377]:
+              - generic [ref=f4e379]: "-"
+            - paragraph [ref=f4e381]: Rani signali se obično vide za 6-12 nedelja, a rast se kumulira kako tehnički i content rad sazrevaju.
+          - generic [ref=f4e382]:
+            - button "Da li radite tehničke popravke ili samo strategiju?" [ref=f4e383]:
+              - generic [ref=f4e385]: +
+            - paragraph [ref=f4e386]: Radimo oba. Naš tim može implementirati tehničke SEO popravke ili sarađivati sa vašim engineering timom na isporuci.
+          - generic [ref=f4e387]:
+            - button "Da li pišete sadržaj?" [ref=f4e388]:
+              - generic [ref=f4e390]: +
+            - paragraph [ref=f4e391]: Možemo obezbediti content brief-ove, outline-e i podršku u pisanju ili raditi uz vaš interni content tim.
+          - generic [ref=f4e392]:
+            - button "Možete li podržati internacionalni ili višejezični SEO?" [ref=f4e393]:
+              - generic [ref=f4e395]: +
+            - paragraph [ref=f4e396]: Da. Planiramo hreflang podešavanja, lokalizovan sadržaj i page template-e specifične za tržišta.
+          - generic [ref=f4e397]:
+            - button "Da li upravljate lokalnim listing-ima?" [ref=f4e398]:
+              - generic [ref=f4e400]: +
+            - paragraph [ref=f4e401]: Radimo lokacijske strane i strategiju listing-a, a možemo koordinisati review management sa vašim timom.
+          - generic [ref=f4e402]:
+            - button "How do you measure success?" [ref=f4e403]:
+              - generic [ref=f4e405]: +
+            - paragraph [ref=f4e406]: Pratimo pozicije, organski saobraćaj, konverzije i revenue attribution vezan za vaše KPI-jeve.
+          - generic [ref=f4e407]:
+            - button "Možete li raditi sa našim internim developerima?" [ref=f4e408]:
+              - generic [ref=f4e410]: +
+            - paragraph [ref=f4e411]: Apsolutno. Uklapamo se u vaš workflow kroz Jira-u, Linear ili GitHub radi transparentne egzekucije.
+          - generic [ref=f4e412]:
+            - button "Kako izgleda angažman?" [ref=f4e413]:
+              - generic [ref=f4e415]: +
+            - paragraph [ref=f4e416]: Većina angažmana radi se kroz kvartalni roadmap, mesečno izveštavanje i kontinuirane optimizacione sprintove.
+      - generic [ref=f4e418]:
+        - heading "Izgradimo search roadmap koji se skalira" [level=2] [ref=f4e419]
+        - paragraph [ref=f4e420]: Podelite tržišta, ciljeve i prioritete, a mi ćemo napraviti SEO roadmap koji usklađuje svaki tim oko merljivog rasta.
+        - generic [ref=f4e421]:
+          - link "Zatražite SEO audit" [ref=f4e422] [cursor=pointer]:
+            - /url: /contact?intent=seo-audit
+          - link "Pogledajte priče o rastu" [ref=f4e426] [cursor=pointer]:
+            - /url: /projects
+    - contentinfo [ref=f4e430]:
+      - generic [ref=f4e431]:
+        - generic [ref=f4e432]:
+          - generic [ref=f4e433]:
+            - generic [ref=f4e434]:
+              - generic [ref=f4e435]: Enigma Digital
+              - heading "Isporučujemo iskustva koja definišu brend uz odgovoran inženjering." [level=2] [ref=f4e436]
+              - paragraph [ref=f4e437]: Strategija, dizajn i inženjering rade zajedno kako bi svako lansiranje podiglo metrike koje su važne. Uključujemo timove u vaš product tim i održavamo visok tempo od početka do iteracije.
+            - generic [ref=f4e438]:
+              - link "Pokreni projekat" [ref=f4e439] [cursor=pointer]:
+                - /url: /contact
+              - link "hello@enigma.digital" [ref=f4e443] [cursor=pointer]:
+                - /url: mailto:hello@enigma.digital
+          - generic [ref=f4e444]:
+            - generic [ref=f4e445]:
+              - heading "Kompanija" [level=3] [ref=f4e446]
+              - list [ref=f4e447]:
+                - listitem [ref=f4e448]:
+                  - link "Početna" [ref=f4e449] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=f4e454]:
+                  - link "Projekti" [ref=f4e455] [cursor=pointer]:
+                    - /url: /projects
+            - generic [ref=f4e460]:
+              - heading "Usluge" [level=3] [ref=f4e461]
+              - list [ref=f4e462]:
+                - listitem [ref=f4e463]:
+                  - link "Izrada web sajtova" [ref=f4e464] [cursor=pointer]:
+                    - /url: /services/web-development
+                - listitem [ref=f4e466]:
+                  - link "UI | UX dizajn" [ref=f4e467] [cursor=pointer]:
+                    - /url: /services/ui-ux-design
+                - listitem [ref=f4e469]:
+                  - link "Izrada mobilnih aplikacija" [ref=f4e470] [cursor=pointer]:
+                    - /url: /services/mobile-app-development
+                - listitem [ref=f4e472]:
+                  - link "SEO i GEO" [ref=f4e473] [cursor=pointer]:
+                    - /url: /services/seo-geo
+                - listitem [ref=f4e475]:
+                  - link "Brending" [ref=f4e476] [cursor=pointer]:
+                    - /url: /services/branding
+                - listitem [ref=f4e478]:
+                  - link "Društvene mreže" [ref=f4e479] [cursor=pointer]:
+                    - /url: /services/social-media
+            - generic [ref=f4e481]:
+              - heading "Poseta i kontakt" [level=3] [ref=f4e482]
+              - generic [ref=f4e483]:
+                - generic [ref=f4e488]:
+                  - paragraph [ref=f4e489]: Evropa / prvo na daljinu
+                  - paragraph [ref=f4e490]: Partnerstva sa timovima širom EMEA regiona i Severne Amerike.
+                - generic [ref=f4e494]:
+                  - paragraph [ref=f4e495]: Poziv
+                  - link "+44 20 4577 1943" [ref=f4e496] [cursor=pointer]:
+                    - /url: tel:+442045771943
+                - generic [ref=f4e501]:
+                  - paragraph [ref=f4e502]: E-pošta
+                  - link "hello@enigma.digital" [ref=f4e503] [cursor=pointer]:
+                    - /url: mailto:hello@enigma.digital
+        - generic [ref=f4e504]:
+          - paragraph [ref=f4e505]: © 2026 Enigma Digital. Sva prava zadržana.
+          - generic [ref=f4e506]:
+            - link "Politika privatnosti" [ref=f4e507] [cursor=pointer]:
+              - /url: /privacy
+            - link "Uslovi korišćenja" [ref=f4e508] [cursor=pointer]:
+              - /url: /terms
+            - link "Smernice brenda" [ref=f4e509] [cursor=pointer]:
+              - /url: /brand
+    - button "Vrati se na vrh"
+  - dialog:
+    - generic [ref=f4e512]:
+      - generic [ref=f4e513]:
+        - heading "Upravljajte podešavanjima kolačića" [level=2] [ref=f4e514]
+        - paragraph [ref=f4e515]: Koristimo neophodne kolačiće da bi sajt radio. Omogućite funkcionalne kolačiće da zapamtimo izbore kao što su tema ili jezik.
+        - generic [ref=f4e516]:
+          - generic [ref=f4e517]: Funkcionalni kolačići
+          - switch "Funkcionalni kolačići" [ref=f4e518] [cursor=pointer]
+      - generic [ref=f4e520]:
+        - button "Prihvati sve" [ref=f4e521] [cursor=pointer]
+        - button "Sačuvaj izbor" [ref=f4e522] [cursor=pointer]
+        - button "Samo neophodni" [ref=f4e523] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f4e529] [cursor=pointer]

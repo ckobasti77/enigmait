@@ -1,0 +1,411 @@
+- generic [active] [ref=f11e1]:
+  - generic [ref=f11e3]:
+    - generic [ref=f11e5]:
+      - link "Enigma Digital — početna" [ref=f11e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f11e7]:
+        - link "Početna" [ref=f11e9] [cursor=pointer]:
+          - /url: /
+        - link "Usluge" [ref=f11e12] [cursor=pointer]:
+          - /url: /services
+        - link "Projekti" [ref=f11e17] [cursor=pointer]:
+          - /url: /projects
+        - link "Kontakt" [ref=f11e20] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f11e22]:
+        - generic [ref=f11e23]:
+          - button "Otvori social linkove" [ref=f11e24]
+          - menu:
+            - generic:
+              - menuitem "Instagram"
+              - menuitem "TikTok"
+              - menuitem "Facebook"
+              - menuitem "Email"
+              - menuitem "Telefon"
+        - generic "Prebaci jezik sajta" [ref=f11e31]:
+          - button "Prikaži sajt na srpskom" [pressed] [ref=f11e32]: SR
+          - button "Prikaži sajt na engleskom" [ref=f11e33]: EN
+        - button "Promeni temu" [pressed] [ref=f11e34]
+    - generic [ref=f11e42]:
+      - generic [ref=f11e47]:
+        - generic [ref=f11e48]:
+          - generic [ref=f11e49]: Dizajn sistemi
+          - heading "Interfejsi koji svuda deluju prirodno" [level=1] [ref=f11e50]
+          - paragraph [ref=f11e52]: UX zasnovan na istraživanju, doteran UI i dizajn sistemi koji se skaliraju sa proizvodom. Radimo zajedno sa stakeholder-ima i predajemo čiste tokene, biblioteke i dokumentaciju.
+          - generic [ref=f11e53]:
+            - link "Zatražite dizajn radionicu" [ref=f11e54] [cursor=pointer]:
+              - /url: /contact
+            - link "Pogledajte dizajn transformacije" [ref=f11e55] [cursor=pointer]:
+              - /url: /projects
+          - generic [ref=f11e56]:
+            - generic [ref=f11e57]:
+              - generic [ref=f11e58]: 10+
+              - generic [ref=f11e59]: Korisničke sesije
+            - generic [ref=f11e60]:
+              - generic [ref=f11e61]: 3x
+              - generic [ref=f11e62]: Brzina prototipa
+            - generic [ref=f11e63]:
+              - generic [ref=f11e64]: AA
+              - generic [ref=f11e65]: Osnova pristupačnosti
+          - paragraph [ref=f11e66]: Isporuke obuhvataju izveštaje istraživanja, service blueprint-e, anotirane tokove i dokumentaciju spremnu za razvoj.
+        - generic [ref=f11e67]:
+          - article [ref=f11e68]:
+            - generic [ref=f11e76]:
+              - heading "Discovery vođen uvidima" [level=3] [ref=f11e78]
+              - paragraph [ref=f11e79]: Jobs-to-be-done intervjui, analiza podataka i radionice zajedničkog rada oblikuju svaku dizajn odluku.
+          - article [ref=f11e80]:
+            - generic [ref=f11e84]:
+              - heading "Dizajn sistemi spremni za razvoj" [level=3] [ref=f11e86]
+              - paragraph [ref=f11e87]: Strukturisani tokeni, varijante komponenti i Figma biblioteke drže dizajnere i inženjere u istom ritmu.
+          - article [ref=f11e88]:
+            - generic [ref=f11e94]:
+              - heading "Izrada koja izdvaja vaš brend" [level=3] [ref=f11e96]
+              - paragraph [ref=f11e97]: Mikrointerakcije, ton komunikacije i vizuelna završnica podižu iskustvo bez žrtvovanja upotrebljivosti.
+      - main [ref=f11e98]:
+        - generic [ref=f11e100]:
+          - generic [ref=f11e101]:
+            - generic [ref=f11e102]: Naša dizajn filozofija
+            - heading "Dizajn filozofija i pristup koji počinje od ljudi" [level=2] [ref=f11e105]
+            - generic [ref=f11e106]:
+              - paragraph [ref=f11e107]: Interfejse dizajniramo oko ljudi, ne oko ekrana. Svaki koncept počinje kvalitativnim istraživanjem, razgovorima uživo i mapiranjem ponašanja kako bismo interfejs uskladili sa namerom, emocijom i kontekstom korisnika.
+              - paragraph [ref=f11e108]: Empatija, upotrebljivost i glas brenda spajaju se dok storyboard-ujemo tokove, prototipujemo interakcije i testiramo poruke sa stvarnim korisnicima. Rezultat je proizvod koji deluje prirodno i svrhovito, ne samo pixel-perfect.
+              - paragraph [ref=f11e109]: Naši vizuelni sistemi proširuju vaš brend. Tipografija, ilustracije i obrasci interakcije ostaju kohezivni kroz platforme, pa timovi isporučuju konzistentno dok korisnici osećaju jasan i siguran identitet.
+          - generic [ref=f11e110]:
+            - generic [ref=f11e113]:
+              - generic [ref=f11e114]: Wireframe
+              - generic [ref=f11e115]:
+                - heading "Wireframe mapa empatije" [level=3] [ref=f11e116]
+                - paragraph [ref=f11e117]: Low-fidelity tokovi usklađuju stakeholder-e pre nego što se obavežemo na vizuale.
+            - generic [ref=f11e120]:
+              - generic [ref=f11e121]: Vizuelni dizajn
+              - generic [ref=f11e122]:
+                - heading "High-fidelity dizajn brenda" [level=3] [ref=f11e123]
+                - paragraph [ref=f11e124]: Komponentizovani UI koji spaja vašu paletu, tipografiju i glas.
+            - generic [ref=f11e127]:
+              - generic [ref=f11e128]: Prototip
+              - generic [ref=f11e129]:
+                - heading "Prototip i motion studija" [level=3] [ref=f11e130]
+                - paragraph [ref=f11e131]: Interaktivni prototipovi sa dokumentovanim motion stanjima i mikrointerakcijama.
+        - generic [ref=f11e133]:
+          - generic [ref=f11e135]:
+            - generic [ref=f11e136]: Mapa korisničkog putovanja
+            - heading "Koreografišemo celo UX putovanje" [level=2] [ref=f11e140]
+            - paragraph [ref=f11e141]: Awareness -> Consideration -> Decision -> Retention je više od funnel-a. Dizajniramo namerne touchpoint-e u svakoj fazi kako bi se korisnici osećali vođeno, podržano i sigurno, što vodi ka većim konverzijama i dugoročnoj lojalnosti.
+          - generic [ref=f11e142]:
+            - generic [ref=f11e143]:
+              - generic [ref=f11e144]: Svest
+              - heading "Razjasnite vrednost na prvi pogled" [level=3] [ref=f11e148]
+              - list [ref=f11e149]:
+                - listitem [ref=f11e150]: Hero narativi landing strana
+                - listitem [ref=f11e152]: Onboarding modali za konkretne oglase
+            - generic [ref=f11e154]:
+              - generic [ref=f11e155]: Razmatranje
+              - heading "Vodite istraživanje jasnoćom" [level=3] [ref=f11e159]
+              - list [ref=f11e160]:
+                - listitem [ref=f11e161]: Interaktivni product tour-ovi
+                - listitem [ref=f11e163]: Comparison grid-ovi i proof point-i
+            - generic [ref=f11e165]:
+              - generic [ref=f11e166]: Odluka
+              - heading "Smanjite trenje u trenutku izbora" [level=3] [ref=f11e170]
+              - list [ref=f11e171]:
+                - listitem [ref=f11e172]: Progresivni checkout tokovi
+                - listitem [ref=f11e174]: Widget-i pomoći u realnom vremenu
+            - generic [ref=f11e176]:
+              - generic [ref=f11e177]: Retencija
+              - heading "Održite zamah posle konverzije" [level=3] [ref=f11e181]
+              - list [ref=f11e182]:
+                - listitem [ref=f11e183]: Lifecycle email template-i
+                - listitem [ref=f11e185]: In-app podsticaji i success dashboard-i
+            - generic:
+              - paragraph: Mikrointerakcije
+              - paragraph: Prijatne tranzicije i taktilni feedback pojačavaju ključne akcije.
+            - generic:
+              - paragraph: Provera pristupačnosti
+              - paragraph: Tokovi spremni za WCAG 2.2 AA, testiranje kontrasta i validirane putanje tastaturom.
+            - generic:
+              - paragraph: Emocionalno relevantan micro-copy
+              - paragraph: Copy oblikovan bihejvioralnom naukom da održi visok zamah.
+        - generic [ref=f11e187]:
+          - generic [ref=f11e188]:
+            - generic [ref=f11e189]: Galerija pre i posle
+            - 'heading "Pogledajte razliku: product putovanja pre i posle našeg UI unapređenja" [level=2] [ref=f11e194]'
+          - generic [ref=f11e195]:
+            - generic [ref=f11e196]:
+              - generic [ref=f11e197]:
+                - heading "Redizajniran onboarding tok" [level=3] [ref=f11e198]
+                - generic [ref=f11e199]: 45% pad napuštanja
+              - generic [ref=f11e200]:
+                - generic [ref=f11e201]:
+                  - paragraph [ref=f11e202]: Pre
+                  - paragraph [ref=f11e203]: Gusta forma od 8 koraka bez signala napretka.
+                - generic [ref=f11e204]:
+                  - paragraph [ref=f11e205]: Posle
+                  - paragraph [ref=f11e206]: Vođeno progresivno profilisanje uz kontekstualne tooltip-ove.
+            - generic [ref=f11e207]:
+              - generic [ref=f11e208]:
+                - heading "E-commerce product detail strana" [level=3] [ref=f11e209]
+                - generic [ref=f11e210]: 22% rast add-to-cart stope
+              - generic [ref=f11e211]:
+                - generic [ref=f11e212]:
+                  - paragraph [ref=f11e213]: Pre
+                  - paragraph [ref=f11e214]: Statične tabele specifikacija i preopširan sadržaj za poređenje.
+                - generic [ref=f11e215]:
+                  - paragraph [ref=f11e216]: Posle
+                  - paragraph [ref=f11e217]: Narativni layout sa sticky pomagačima odluke i social proof-om.
+            - generic [ref=f11e218]:
+              - generic [ref=f11e219]:
+                - heading "SaaS analytics dashboard" [level=3] [ref=f11e220]
+                - generic [ref=f11e221]: 30% rast nedeljno aktivnih korisnika
+              - generic [ref=f11e222]:
+                - generic [ref=f11e223]:
+                  - paragraph [ref=f11e224]: Pre
+                  - paragraph [ref=f11e225]: Kompleksno filtriranje sa nekonzistentnom vizuelnom hijerarhijom.
+                - generic [ref=f11e226]:
+                  - paragraph [ref=f11e227]: Posle
+                  - paragraph [ref=f11e228]: Modularne kartice, sačuvani prikazi i adaptivno tematizovanje po ulogama.
+            - generic [ref=f11e229]:
+              - generic [ref=f11e230]:
+                - heading "Redizajn mobilnog bankarstva" [level=3] [ref=f11e231]
+                - generic [ref=f11e232]: 60% rast završavanja zadataka
+              - generic [ref=f11e233]:
+                - generic [ref=f11e234]:
+                  - paragraph [ref=f11e235]: Pre
+                  - paragraph [ref=f11e236]: Fragmentirana navigacija i skrivene brze akcije.
+                - generic [ref=f11e237]:
+                  - paragraph [ref=f11e238]: Posle
+                  - paragraph [ref=f11e239]: Prečice po ulogama, biometrijski ulaz i kontekstualni podsticaji.
+        - generic [ref=f11e241]:
+          - generic [ref=f11e242]:
+            - generic [ref=f11e243]:
+              - generic [ref=f11e244]: Dizajn za sve
+              - heading "Pristupačnost i inkluzivni dizajn" [level=2] [ref=f11e251]
+              - paragraph [ref=f11e252]: Pristupačnost nije stvar pregovora. Inkluzivne prakse ugrađujemo kroz istraživanje, dizajn i razvoj kako bi svaki korisnik mogao potpuno da učestvuje, bez obzira na sposobnost, kontekst ili uređaj.
+            - list [ref=f11e253]:
+              - listitem [ref=f11e254]: Odnosi kontrasta boja provereni prema WCAG 2.2 AA.
+              - listitem [ref=f11e256]: Keyboard-first navigacione putanje i upravljanje fokusom.
+              - listitem [ref=f11e258]: Semantika za screen reader-e sa aria-label-ima i live regions.
+              - listitem [ref=f11e260]: Responzivna tipografija i razmaci za čitljivost na svim uređajima.
+              - listitem [ref=f11e262]: Poštovanje motion preferencija kroz reduced motion stanja.
+            - link "Preuzmite checklist-u pristupačnosti" [ref=f11e265] [cursor=pointer]:
+              - /url: /assets/downloads/uiux-accessibility-checklist.pdf
+          - generic [ref=f11e266]:
+            - generic [ref=f11e267]:
+              - generic [ref=f11e268]: Vizuelni identitet u UX-u
+              - heading "Integracija brenda i vizuelnog identiteta" [level=3] [ref=f11e269]
+              - paragraph [ref=f11e270]: Brand smernice prevodimo u fleksibilne UI biblioteke kako bi marketing, product i engineering govorili istim vizuelnim jezikom. Svaka komponenta i stanje proširuju brend, ne razvodnjavaju ga.
+            - generic [ref=f11e271]:
+              - generic [ref=f11e272]:
+                - paragraph [ref=f11e273]: Sastojci brenda
+                - generic [ref=f11e274]:
+                  - paragraph [ref=f11e275]: "- Logo lockup-i za svetlu/tamnu temu"
+                  - paragraph [ref=f11e276]: "- Tipografski parovi i skale tokena"
+                  - paragraph [ref=f11e277]: "- Reference za motion i ilustraciju"
+              - generic [ref=f11e278]:
+                - paragraph [ref=f11e279]: Isporuka UI sistema
+                - generic [ref=f11e280]:
+                  - paragraph [ref=f11e281]: "- Component kit sa tokenizovanim temama"
+                  - paragraph [ref=f11e282]: "- Specifikacije interakcija i developer dokumentacija"
+                  - paragraph [ref=f11e283]: "- QA checklist-e za glatku predaju"
+        - generic [ref=f11e285]:
+          - generic [ref=f11e286]:
+            - generic [ref=f11e287]: Prototipovanje i testiranje
+            - heading "Od ideje do validacije u četiri koraka" [level=2] [ref=f11e289]
+          - generic [ref=f11e290]:
+            - generic [ref=f11e296]:
+              - paragraph [ref=f11e297]: Korak 1
+              - heading "Skica i wireframe" [level=3] [ref=f11e298]
+              - paragraph [ref=f11e299]: Mapiramo tokove zadataka, storyboard putanje i usklađujemo metrike uspeha.
+            - generic [ref=f11e308]:
+              - paragraph [ref=f11e309]: Korak 2
+              - heading "High-fidelity dizajn" [level=3] [ref=f11e310]
+              - paragraph [ref=f11e311]: Gradimo layout-e vođene komponentama u Figmi sa sistemskim tokenima.
+            - generic [ref=f11e320]:
+              - paragraph [ref=f11e321]: Korak 3
+              - heading "Interaktivni prototip" [level=3] [ref=f11e322]
+              - paragraph [ref=f11e323]: Animiramo u Figmi i Framer-u, slojevito dodajemo mikrointerakcije i pripremamo dev beleške.
+            - generic [ref=f11e330]:
+              - paragraph [ref=f11e331]: Korak 4
+              - heading "Usability testiranje i iteracija" [level=3] [ref=f11e332]
+              - paragraph [ref=f11e333]: Testiramo sa 5-7 korisnika, pregledamo heatmap-e i prioritizujemo dorade.
+        - generic [ref=f11e335]:
+          - generic [ref=f11e336]:
+            - generic [ref=f11e337]: UX metrike i uticaj
+            - heading "Kako izgleda uspeh" [level=2] [ref=f11e341]
+            - paragraph [ref=f11e342]: Dizajn odluke povezujemo sa merljivim ishodima. Tokom svakog angažmana vezujemo metrike za poslovne ciljeve, pratimo ih iz nedelje u nedelju i delimo dashboard-e da znate gde se uticaj dešava.
+          - generic [ref=f11e343]:
+            - generic [ref=f11e344]:
+              - paragraph [ref=f11e345]: +30%
+              - paragraph [ref=f11e346]: Vreme na zadatku
+              - paragraph [ref=f11e347]: Korisnici ostaju angažovani kroz bogatije, personalizovane tokove.
+            - generic [ref=f11e348]:
+              - paragraph [ref=f11e349]: "-25%"
+              - paragraph [ref=f11e350]: Stopa grešaka
+              - paragraph [ref=f11e351]: Poboljšana validacija i feedback loop-ovi smanjuju skupe greške.
+            - generic [ref=f11e352]:
+              - paragraph [ref=f11e353]: +18 pts
+              - paragraph [ref=f11e354]: NPS poeni
+              - paragraph [ref=f11e355]: Redizajni vođeni iskustvom podstiču merljivu lojalnost brendu.
+        - generic [ref=f11e357]:
+          - generic [ref=f11e358]:
+            - generic [ref=f11e359]:
+              - generic [ref=f11e360]: Fokus po industriji
+              - heading "UI/UX prilagođen vašoj industriji" [level=2] [ref=f11e361]
+              - paragraph [ref=f11e362]: Svaki sektor ima sopstvene signale poverenja i tačke trenja. Prikazujemo industrije koje opslužujemo da istražite realne scenarije, zatim kliknete karticu za detalje.
+            - generic [ref=f11e363]:
+              - button "<" [ref=f11e364]
+              - button ">" [ref=f11e365]
+          - generic [ref=f11e366]:
+            - button [pressed] [ref=f11e367]:
+              - generic [ref=f11e368]:
+                - paragraph [ref=f11e369]: SaaS dashboard-i
+                - paragraph [ref=f11e370]: Preoblikovali smo kompleksnu analitiku za netehničke operatere.
+                - paragraph [ref=f11e371]: Isporučili smo modularnu biblioteku uvida sa brzim akcijama po ulogama.
+              - generic [ref=f11e372]: Pogledaj uvid
+            - button [ref=f11e375]:
+              - generic [ref=f11e376]:
+                - paragraph [ref=f11e377]: E-commerce
+                - paragraph [ref=f11e378]: Pojednostavili smo discovery za 3k+ SKU-ova kroz mobilne površine.
+                - paragraph [ref=f11e379]: Uveli smo vođenu orijentaciju, bundle builder-e i trust vizuale.
+              - generic [ref=f11e380]: Pogledaj uvid
+            - button [ref=f11e383]:
+              - generic [ref=f11e384]:
+                - paragraph [ref=f11e385]: Fintech
+                - paragraph [ref=f11e386]: Saželi smo KYC za mobilne korisnike na regulisanim tržištima.
+                - paragraph [ref=f11e387]: Implementirali smo skeniranje dokumenata, progress stanja i live support eskalaciju.
+              - generic [ref=f11e388]: Pogledaj uvid
+            - button [ref=f11e391]:
+              - generic [ref=f11e392]:
+                - paragraph [ref=f11e393]: Enterprise platforme
+                - paragraph [ref=f11e394]: Ujedinili smo različite interne alate u koherentan workspace.
+                - paragraph [ref=f11e395]: Isporučili smo dizajn sistem sa API-driven UI kit-om i governance modelom.
+              - generic [ref=f11e396]: Pogledaj uvid
+            - button [ref=f11e399]:
+              - generic [ref=f11e400]:
+                - paragraph [ref=f11e401]: Zdravlje i wellness
+                - paragraph [ref=f11e402]: Podstakli smo formiranje navika bez preopterećenja korisnika.
+                - paragraph [ref=f11e403]: Kreirali smo empatične podsticaje, daily streak mehanike i inkluzivne vizuale.
+              - generic [ref=f11e404]: Pogledaj uvid
+            - button [ref=f11e407]:
+              - generic [ref=f11e408]:
+                - paragraph [ref=f11e409]: Obrazovne platforme
+                - paragraph [ref=f11e410]: Ujedinili smo sadržaj kurikuluma sa adaptivnim putanjama učenja.
+                - paragraph [ref=f11e411]: Isporučili smo dashboard-e svesne napretka i lesson template-e sa pristupačnošću na prvom mestu.
+              - generic [ref=f11e412]: Pogledaj uvid
+        - generic [ref=f11e423]:
+          - generic [ref=f11e424]:
+            - generic [ref=f11e425]: Sarađujemo - vi ste deo tima
+            - heading "Klijentske radionice i zajedničko kreiranje" [level=2] [ref=f11e431]
+            - paragraph [ref=f11e432]: Saradnja je ugrađena u naš ritam. Od discovery faze do lansiranja, naš dizajn tim vodi radionice koje spajaju product, marketing i engineering kako bi odluke bile zajedničke, ne samo predate.
+            - list [ref=f11e433]:
+              - listitem [ref=f11e434]: Dvodnevni remote design sprint za validaciju north-star putanja.
+              - listitem [ref=f11e436]: Nedeljni co-creation lab-ovi za copy, motion i odluke o komponentama.
+              - listitem [ref=f11e438]: Live whiteboarding sa cross-functional timovima u FigJam-u i Miro-u.
+          - generic [ref=f11e440]:
+            - paragraph [ref=f11e443]:
+              - strong [ref=f11e444]: "Snapshot radionice:"
+              - text: FigJam board u realnom vremenu sa mapiranjem putovanja, voting dot-ovima i copywriting slojevima. Remote učesnici sarađuju asinhrono dok dokumentujemo odluke za predaju.
+            - blockquote [ref=f11e445]:
+              - paragraph [ref=f11e446]: "\"Enigma nije samo predstavila novi interfejs - stavili su naš tim u dizajn proces. Radionice su svaku odluku učinile transparentnom i stakeholder-i su se osećali saslušano sve vreme.\""
+              - generic [ref=f11e447]: Leah Morton - VP Product, Northwind Ventures
+        - generic [ref=f11e450]:
+          - generic [ref=f11e451]:
+            - generic [ref=f11e452]: Sledeći koraci i mikroangažman
+            - heading "Spremni da istražimo vaš sledeći dizajn potez?" [level=2] [ref=f11e453]
+            - paragraph [ref=f11e454]: Izaberite način angažovanja. Bilo da želite zajednički sprint, audit ili starter kit, odgovorićemo u roku od 24 sata sa sledećim koracima.
+          - generic [ref=f11e455]:
+            - generic [ref=f11e456]:
+              - heading "Zakažite 30-minutne konsultacije za design sprint" [level=3] [ref=f11e457]
+              - paragraph [ref=f11e458]: Dovedite product lead-a i zajedno ćemo razraditi jedno korisničko putovanje.
+              - link "Hajde da počnemo" [ref=f11e459] [cursor=pointer]:
+                - /url: /contact?intent=design-sprint
+            - generic [ref=f11e460]:
+              - heading "Zatražite snapshot usability audita" [level=3] [ref=f11e461]
+              - paragraph [ref=f11e462]: Analiziraćemo trenutni tok i vratiti heuristički scorecard.
+              - link "Hajde da počnemo" [ref=f11e463] [cursor=pointer]:
+                - /url: /contact?intent=usability-audit
+            - generic [ref=f11e464]:
+              - heading "Preuzmite starter template za UI kit" [level=3] [ref=f11e465]
+              - paragraph [ref=f11e466]: Pokrenite dizajn sistem sa tokenima i komponentnim scaffold-ima spremnim za upotrebu.
+              - link "Hajde da počnemo" [ref=f11e467] [cursor=pointer]:
+                - /url: /assets/downloads/uiux-accessibility-checklist.pdf
+    - contentinfo [ref=f11e468]:
+      - generic [ref=f11e469]:
+        - generic [ref=f11e470]:
+          - generic [ref=f11e471]:
+            - generic [ref=f11e472]:
+              - generic [ref=f11e473]: Enigma Digital
+              - heading "Isporučujemo iskustva koja definišu brend uz odgovoran inženjering." [level=2] [ref=f11e474]
+              - paragraph [ref=f11e475]: Strategija, dizajn i inženjering rade zajedno kako bi svako lansiranje podiglo metrike koje su važne. Uključujemo timove u vaš product tim i održavamo visok tempo od početka do iteracije.
+            - generic [ref=f11e476]:
+              - link "Pokreni projekat" [ref=f11e477] [cursor=pointer]:
+                - /url: /contact
+              - link "hello@enigma.digital" [ref=f11e481] [cursor=pointer]:
+                - /url: mailto:hello@enigma.digital
+          - generic [ref=f11e482]:
+            - generic [ref=f11e483]:
+              - heading "Kompanija" [level=3] [ref=f11e484]
+              - list [ref=f11e485]:
+                - listitem [ref=f11e486]:
+                  - link "Početna" [ref=f11e487] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=f11e492]:
+                  - link "Projekti" [ref=f11e493] [cursor=pointer]:
+                    - /url: /projects
+            - generic [ref=f11e498]:
+              - heading "Usluge" [level=3] [ref=f11e499]
+              - list [ref=f11e500]:
+                - listitem [ref=f11e501]:
+                  - link "Izrada web sajtova" [ref=f11e502] [cursor=pointer]:
+                    - /url: /services/web-development
+                - listitem [ref=f11e504]:
+                  - link "UI | UX dizajn" [ref=f11e505] [cursor=pointer]:
+                    - /url: /services/ui-ux-design
+                - listitem [ref=f11e507]:
+                  - link "Izrada mobilnih aplikacija" [ref=f11e508] [cursor=pointer]:
+                    - /url: /services/mobile-app-development
+                - listitem [ref=f11e510]:
+                  - link "SEO i GEO" [ref=f11e511] [cursor=pointer]:
+                    - /url: /services/seo-geo
+                - listitem [ref=f11e513]:
+                  - link "Brending" [ref=f11e514] [cursor=pointer]:
+                    - /url: /services/branding
+                - listitem [ref=f11e516]:
+                  - link "Društvene mreže" [ref=f11e517] [cursor=pointer]:
+                    - /url: /services/social-media
+            - generic [ref=f11e519]:
+              - heading "Poseta i kontakt" [level=3] [ref=f11e520]
+              - generic [ref=f11e521]:
+                - generic [ref=f11e526]:
+                  - paragraph [ref=f11e527]: Evropa / prvo na daljinu
+                  - paragraph [ref=f11e528]: Partnerstva sa timovima širom EMEA regiona i Severne Amerike.
+                - generic [ref=f11e532]:
+                  - paragraph [ref=f11e533]: Poziv
+                  - link "+44 20 4577 1943" [ref=f11e534] [cursor=pointer]:
+                    - /url: tel:+442045771943
+                - generic [ref=f11e539]:
+                  - paragraph [ref=f11e540]: E-pošta
+                  - link "hello@enigma.digital" [ref=f11e541] [cursor=pointer]:
+                    - /url: mailto:hello@enigma.digital
+        - generic [ref=f11e542]:
+          - paragraph [ref=f11e543]: © 2026 Enigma Digital. Sva prava zadržana.
+          - generic [ref=f11e544]:
+            - link "Politika privatnosti" [ref=f11e545] [cursor=pointer]:
+              - /url: /privacy
+            - link "Uslovi korišćenja" [ref=f11e546] [cursor=pointer]:
+              - /url: /terms
+            - link "Smernice brenda" [ref=f11e547] [cursor=pointer]:
+              - /url: /brand
+    - button "Vrati se na vrh"
+  - dialog:
+    - generic [ref=f11e550]:
+      - generic [ref=f11e551]:
+        - heading "Upravljajte podešavanjima kolačića" [level=2] [ref=f11e552]
+        - paragraph [ref=f11e553]: Koristimo neophodne kolačiće da bi sajt radio. Omogućite funkcionalne kolačiće da zapamtimo izbore kao što su tema ili jezik.
+        - generic [ref=f11e554]:
+          - generic [ref=f11e555]: Funkcionalni kolačići
+          - switch "Funkcionalni kolačići" [ref=f11e556] [cursor=pointer]
+      - generic [ref=f11e558]:
+        - button "Prihvati sve" [ref=f11e559] [cursor=pointer]
+        - button "Sačuvaj izbor" [ref=f11e560] [cursor=pointer]
+        - button "Samo neophodni" [ref=f11e561] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f11e567] [cursor=pointer]

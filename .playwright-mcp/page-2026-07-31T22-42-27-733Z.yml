@@ -1,0 +1,267 @@
+- generic [active] [ref=f9e1]:
+  - generic [ref=f9e3]:
+    - generic [ref=f9e5]:
+      - link "Enigma Digital — početna" [ref=f9e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f9e7]:
+        - generic [ref=f9e8]:
+          - button "Otvori social linkove" [ref=f9e9]
+          - menu:
+            - generic:
+              - menuitem "Instagram"
+              - menuitem "TikTok"
+              - menuitem "Facebook"
+              - menuitem "Email"
+              - menuitem "Telefon"
+        - generic "Prebaci jezik sajta" [ref=f9e16]:
+          - button "Prikaži sajt na srpskom" [pressed] [ref=f9e17]: SR
+          - button "Prikaži sajt na engleskom" [ref=f9e18]: EN
+        - button "Promeni temu" [pressed] [ref=f9e19]
+        - button "Otvori meni" [ref=f9e26] [cursor=pointer]
+    - generic [ref=f9e30]:
+      - region "Enigma Digital hero" [ref=f9e31]:
+        - generic [ref=f9e32]:
+          - generic [ref=f9e34]:
+            - heading "Jedna linija. Sve povezano." [level=1] [ref=f9e35]:
+              - generic [ref=f9e36]: Jedna
+              - generic [ref=f9e37]: linija.
+              - generic [ref=f9e38]: Sve
+              - generic [ref=f9e39]: povezano.
+            - paragraph [ref=f9e40]: Product, engineering and design as one continuous system - not three vendors.
+            - generic [ref=f9e41]:
+              - link "Start a project" [ref=f9e42] [cursor=pointer]:
+                - /url: /contact
+              - link "See our work" [ref=f9e43] [cursor=pointer]:
+                - /url: /projects
+          - img "Enigma Digital mark drawn as one continuous line" [ref=f9e44]
+      - generic [ref=f9e48]:
+        - generic [ref=f9e49]: TEHNOLOGIJE KOJE KORISTIMO
+        - generic [ref=f9e51]:
+          - img "NextJS" [ref=f9e53] [cursor=pointer]
+          - img "Convex DB" [ref=f9e55] [cursor=pointer]
+          - img "Tailwindcss" [ref=f9e57] [cursor=pointer]
+          - img "GSAP" [ref=f9e59] [cursor=pointer]
+          - img "Framer Motion" [ref=f9e61] [cursor=pointer]
+          - img "React" [ref=f9e63] [cursor=pointer]
+          - img "AstroJS" [ref=f9e65] [cursor=pointer]
+          - img "Figma" [ref=f9e67] [cursor=pointer]
+          - img "NextJS" [ref=f9e69] [cursor=pointer]
+          - img "Convex DB" [ref=f9e71] [cursor=pointer]
+          - img "Tailwindcss" [ref=f9e73] [cursor=pointer]
+          - img "GSAP" [ref=f9e75] [cursor=pointer]
+          - img "Framer Motion" [ref=f9e77] [cursor=pointer]
+          - img "React" [ref=f9e79] [cursor=pointer]
+          - img "AstroJS" [ref=f9e81] [cursor=pointer]
+          - img "Figma" [ref=f9e83] [cursor=pointer]
+      - generic [ref=f9e85]:
+        - generic [ref=f9e86]:
+          - text: Kako gradimo zamah
+          - heading "Upoznajte naš način rada" [level=1] [ref=f9e87]
+          - paragraph [ref=f9e89]: Svaka faza spaja istraživanje, dizajn i isporuku kako biste ostali usklađeni i stalno isporučivali vrednost. Skrolujte kroz tok ili pređite preko faze da vidite šta se aktivira.
+        - generic [ref=f9e92]:
+          - generic [ref=f9e96]:
+            - generic [ref=f9e97]: Faza 01
+            - heading "Discovery upitnik" [level=4] [ref=f9e102]
+            - paragraph [ref=f9e103]: Počinjemo razumevanjem vašeg poslovanja, ciljne publike i ciljeva kroz detaljan upitnik.
+            - generic [ref=f9e104]: "01"
+          - generic [ref=f9e108]:
+            - generic [ref=f9e109]: Faza 02
+            - heading "Predlog početne strane" [level=4] [ref=f9e114]
+            - paragraph [ref=f9e115]: Naš tim izrađuje prilagođene mockup-e za vaš sajt na osnovu discovery faze.
+            - generic [ref=f9e116]: "02"
+          - generic [ref=f9e120]:
+            - generic [ref=f9e121]: Faza 03
+            - heading "Zakazivanje pregleda početne strane" [level=4] [ref=f9e126]
+            - paragraph [ref=f9e127]: Zakazujemo sastanak za pregled mockup-a, izmene ili nove koncepte.
+            - generic [ref=f9e128]: "03"
+          - generic [ref=f9e132]:
+            - generic [ref=f9e133]: Faza 04
+            - heading "Predlog unutrašnjih strana" [level=4] [ref=f9e138]
+            - paragraph [ref=f9e139]: Nakon odobrenja početne strane dizajniramo unutrašnje strane.
+            - generic [ref=f9e140]: "04"
+          - generic [ref=f9e144]:
+            - generic [ref=f9e145]: Faza 05
+            - heading "Zakazivanje pregleda unutrašnjih strana" [level=4] [ref=f9e150]
+            - paragraph [ref=f9e151]: Naš tim priprema mockup-e za unutrašnje strane.
+            - generic [ref=f9e152]: "05"
+          - generic [ref=f9e156]:
+            - generic [ref=f9e157]: Faza 06
+            - heading "Proces izrade sajta" [level=4] [ref=f9e162]
+            - paragraph [ref=f9e163]: Kada odobrite dizajn, počinjemo razvoj koristeći modernu tehnologiju i najbolje prakse.
+            - generic [ref=f9e164]: "06"
+          - generic [ref=f9e168]:
+            - generic [ref=f9e169]: Faza 07
+            - heading "Kontrola kvaliteta" [level=4] [ref=f9e174]
+            - paragraph [ref=f9e175]: Obezbeđujemo responzivnost i pouzdan rad bez grešaka na svim uređajima.
+            - generic [ref=f9e176]: "07"
+          - generic [ref=f9e180]:
+            - generic [ref=f9e181]: Faza 08
+            - heading "Izmene, izmene, izmene" [level=4] [ref=f9e186]
+            - paragraph [ref=f9e187]: Nakon razvoja možete tražiti onoliko izmena koliko je potrebno.
+            - generic [ref=f9e188]: "08"
+          - generic [ref=f9e192]:
+            - generic [ref=f9e193]: Faza 09
+            - heading "Lansiranje i SEO optimizacija" [level=4] [ref=f9e198]
+            - paragraph [ref=f9e199]: Kada date zeleno svetlo, lansiramo sajt i fino podešavamo SEO.
+            - generic [ref=f9e200]: "09"
+      - generic [ref=f9e203]:
+        - complementary [ref=f9e204]:
+          - generic [ref=f9e205]:
+            - text: Efikasan razvoj softvera
+            - heading "Strategija, dizajn i inženjering kao jedan tim vode vas dalje i brže." [level=2] [ref=f9e206]
+            - paragraph [ref=f9e207]: Uključujemo iskusne, višefunkcionalne timove koji preuzimaju odgovornost za ishode od discovery faze do optimizacije. Svaka faza hrani sledeću, smanjuje doradu i održava isporuku vrednosti.
+          - generic [ref=f9e208]:
+            - generic [ref=f9e209]: Timovi od discovery faze do isporuke
+            - generic [ref=f9e212]: Playbook-ovi vođeni ishodima
+            - generic [ref=f9e215]: Standardi spremni za enterprise
+          - generic [ref=f9e218]:
+            - link "Zakažite razgovor" [ref=f9e219] [cursor=pointer]:
+              - /url: /contact
+            - link "Pogledajte uspešne priče" [ref=f9e220] [cursor=pointer]:
+              - /url: /projects
+        - generic [ref=f9e221]:
+          - generic [ref=f9e223]:
+            - generic [ref=f9e224]: "01"
+            - generic [ref=f9e225]:
+              - heading "Product discovery i strategija" [level=3] [ref=f9e226]
+              - paragraph [ref=f9e227]: Počinjemo radionicama, istraživanjem korisnika i brzom validacijom kako bi svaki sprint bio vezan za korisničku i poslovnu vrednost.
+              - link "Istražite ovu fazu" [ref=f9e228] [cursor=pointer]:
+                - /url: /services/ui-ux-design
+          - generic [ref=f9e232]:
+            - generic [ref=f9e233]: "02"
+            - generic [ref=f9e234]:
+              - heading "Dizajn iskustva i interfejsa" [level=3] [ref=f9e235]
+              - paragraph: Dizajniramo intuitivna putovanja, komponentne sisteme i motion obrasce koji održavaju proizvod konzistentnim na svim platformama.
+              - link "Istražite ovu fazu" [ref=f9e236] [cursor=pointer]:
+                - /url: /services/ui-ux-design
+          - generic [ref=f9e240]:
+            - generic [ref=f9e241]: "03"
+            - generic [ref=f9e242]:
+              - heading "Inženjering i integracije" [level=3] [ref=f9e243]
+              - paragraph: Isporučujemo otporan softver kroz modularnu arhitekturu, moderan DevOps i automatizaciju od CI-ja do cloud observability-ja.
+              - link "Istražite ovu fazu" [ref=f9e244] [cursor=pointer]:
+                - /url: /services/web-development
+          - generic [ref=f9e248]:
+            - generic [ref=f9e249]: "04"
+            - generic [ref=f9e250]:
+              - heading "Skaliranje i kontinuirano unapređenje" [level=3] [ref=f9e251]
+              - paragraph: Merimo ishode, otkrivamo nove prilike i brzo iteriramo kako bi proizvod ostao ispred ciljeva rasta.
+              - link "Istražite ovu fazu" [ref=f9e252] [cursor=pointer]:
+                - /url: /services/seo-geo
+      - generic [ref=f9e256]:
+        - generic [ref=f9e257]:
+          - generic [ref=f9e258]: Usluge podešene za rast
+          - heading "Izaberite disciplinu, mi uključujemo tim koji vam treba." [level=2] [ref=f9e259]
+          - paragraph [ref=f9e260]: Svaki angažman spaja strategiju, dizajn i inženjering. Pređite preko kartice za fokus partnerstva i kliknite za detalje.
+        - generic [ref=f9e261]:
+          - link [ref=f9e262] [cursor=pointer]:
+            - /url: /services/web-development
+            - generic [ref=f9e268]:
+              - heading "Izrada web sajtova" [level=3] [ref=f9e269]
+              - paragraph [ref=f9e270]: Razvijaj. Dominiraj. Skaliraj.
+          - link [ref=f9e275] [cursor=pointer]:
+            - /url: /services/ui-ux-design
+            - generic [ref=f9e283]:
+              - heading "UI | UX dizajn" [level=3] [ref=f9e284]
+              - paragraph [ref=f9e285]: Intuitivna iskustva, lepi interfejsi.
+          - link [ref=f9e290] [cursor=pointer]:
+            - /url: /services/mobile-app-development
+            - generic [ref=f9e296]:
+              - heading "Izrada mobilnih aplikacija" [level=3] [ref=f9e297]
+              - paragraph [ref=f9e298]: Od ideje do App Store-a.
+          - link [ref=f9e303] [cursor=pointer]:
+            - /url: /services/seo-geo
+            - generic [ref=f9e310]:
+              - heading "SEO i GEO" [level=3] [ref=f9e311]
+              - paragraph [ref=f9e312]: Budite pri vrhu na Google-u i u AI pretragama.
+          - link [ref=f9e317] [cursor=pointer]:
+            - /url: /services/branding
+            - generic [ref=f9e324]:
+              - heading "Brending" [level=3] [ref=f9e325]
+              - paragraph [ref=f9e326]: Odmah prepoznatljivo. Lako pamtljivo.
+          - link [ref=f9e331] [cursor=pointer]:
+            - /url: /services/social-media
+            - generic [ref=f9e338]:
+              - heading "Društvene mreže" [level=3] [ref=f9e339]
+              - paragraph [ref=f9e340]: Pretvaramo pratioce u obožavaoce.
+    - contentinfo [ref=f9e345]:
+      - generic [ref=f9e346]:
+        - generic [ref=f9e347]:
+          - generic [ref=f9e348]:
+            - generic [ref=f9e349]:
+              - generic [ref=f9e350]: Enigma Digital
+              - heading "Isporučujemo iskustva koja definišu brend uz odgovoran inženjering." [level=2] [ref=f9e351]
+              - paragraph [ref=f9e352]: Strategija, dizajn i inženjering rade zajedno kako bi svako lansiranje podiglo metrike koje su važne. Uključujemo timove u vaš product tim i održavamo visok tempo od početka do iteracije.
+            - generic [ref=f9e353]:
+              - link "Pokreni projekat" [ref=f9e354] [cursor=pointer]:
+                - /url: /contact
+              - link "hello@enigma.digital" [ref=f9e355] [cursor=pointer]:
+                - /url: mailto:hello@enigma.digital
+          - generic [ref=f9e356]:
+            - generic [ref=f9e357]:
+              - heading "Kompanija" [level=3] [ref=f9e358]
+              - list [ref=f9e359]:
+                - listitem [ref=f9e360]:
+                  - link "Početna" [ref=f9e361] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=f9e366]:
+                  - link "Projekti" [ref=f9e367] [cursor=pointer]:
+                    - /url: /projects
+            - generic [ref=f9e372]:
+              - heading "Usluge" [level=3] [ref=f9e373]
+              - list [ref=f9e374]:
+                - listitem [ref=f9e375]:
+                  - link "Izrada web sajtova" [ref=f9e376] [cursor=pointer]:
+                    - /url: /services/web-development
+                - listitem [ref=f9e378]:
+                  - link "UI | UX dizajn" [ref=f9e379] [cursor=pointer]:
+                    - /url: /services/ui-ux-design
+                - listitem [ref=f9e381]:
+                  - link "Izrada mobilnih aplikacija" [ref=f9e382] [cursor=pointer]:
+                    - /url: /services/mobile-app-development
+                - listitem [ref=f9e384]:
+                  - link "SEO i GEO" [ref=f9e385] [cursor=pointer]:
+                    - /url: /services/seo-geo
+                - listitem [ref=f9e387]:
+                  - link "Brending" [ref=f9e388] [cursor=pointer]:
+                    - /url: /services/branding
+                - listitem [ref=f9e390]:
+                  - link "Društvene mreže" [ref=f9e391] [cursor=pointer]:
+                    - /url: /services/social-media
+            - generic [ref=f9e393]:
+              - heading "Poseta i kontakt" [level=3] [ref=f9e394]
+              - generic [ref=f9e395]:
+                - generic [ref=f9e400]:
+                  - paragraph [ref=f9e401]: Evropa / prvo na daljinu
+                  - paragraph [ref=f9e402]: Partnerstva sa timovima širom EMEA regiona i Severne Amerike.
+                - generic [ref=f9e406]:
+                  - paragraph [ref=f9e407]: Poziv
+                  - link "+44 20 4577 1943" [ref=f9e408] [cursor=pointer]:
+                    - /url: tel:+442045771943
+                - generic [ref=f9e413]:
+                  - paragraph [ref=f9e414]: E-pošta
+                  - link "hello@enigma.digital" [ref=f9e415] [cursor=pointer]:
+                    - /url: mailto:hello@enigma.digital
+        - generic [ref=f9e416]:
+          - paragraph [ref=f9e417]: © 2026 Enigma Digital. Sva prava zadržana.
+          - generic [ref=f9e418]:
+            - link "Politika privatnosti" [ref=f9e419] [cursor=pointer]:
+              - /url: /privacy
+            - link "Uslovi korišćenja" [ref=f9e420] [cursor=pointer]:
+              - /url: /terms
+            - link "Smernice brenda" [ref=f9e421] [cursor=pointer]:
+              - /url: /brand
+    - button "Vrati se na vrh"
+  - dialog:
+    - generic [ref=f9e424]:
+      - generic [ref=f9e425]:
+        - heading "Upravljajte podešavanjima kolačića" [level=2] [ref=f9e426]
+        - paragraph [ref=f9e427]: Koristimo neophodne kolačiće da bi sajt radio. Omogućite funkcionalne kolačiće da zapamtimo izbore kao što su tema ili jezik.
+        - generic [ref=f9e428]:
+          - generic [ref=f9e429]: Funkcionalni kolačići
+          - switch "Funkcionalni kolačići" [ref=f9e430] [cursor=pointer]
+      - generic [ref=f9e432]:
+        - button "Prihvati sve" [ref=f9e433] [cursor=pointer]
+        - button "Sačuvaj izbor" [ref=f9e434] [cursor=pointer]
+        - button "Samo neophodni" [ref=f9e435] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f9e441] [cursor=pointer]
