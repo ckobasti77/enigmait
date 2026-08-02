@@ -85,7 +85,7 @@ Per-phase colour is a pair of CSS variables (`--card-accent` / `--card-glow`) se
 
 ## Shared Components
 
-- `app/_components/` - App-level components (Hero, Timeline, Footer, Navbar, PageHero, ServiceCards, etc.)
+- `app/_components/` - App-level components (Hero, Timeline, Footer, Navbar, PageHero, etc.)
 - `components/ui/` - Reusable UI primitives (button, cta-button, auto-typing-console, wave-background)
 - `components/EnigmaLogo.tsx` - SVG logo component
 

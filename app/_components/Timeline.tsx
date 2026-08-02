@@ -93,8 +93,6 @@ const Timeline = () => {
             ))}
           </div>
         </div>
-
-        <div id="timeline-end-sentinel" className="h-1 w-px bg-transparent" />
       </div>
     </section>
   );

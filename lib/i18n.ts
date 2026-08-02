@@ -253,12 +253,6 @@ export const englishToSerbianEntries = [
     "Merimo ishode, otkrivamo nove prilike i brzo iteriramo kako bi proizvod ostao ispred ciljeva rasta.",
   ],
   ["Explore this phase", "Istražite ovu fazu"],
-  ["Services tuned for traction", "Usluge podešene za rast"],
-  ["Pick the discipline, we plug in the squad you need.", "Izaberite disciplinu, mi uključujemo tim koji vam treba."],
-  [
-    "Each engagement blends strategy, design, and engineering. Hover to preview the focus of every partnership and click to dive deeper.",
-    "Svaki angažman spaja strategiju, dizajn i inženjering. Pređite preko kartice za fokus partnerstva i kliknite za detalje.",
-  ],
 
   // Footer
   ["Shipping brand-defining experiences with accountable engineering.", "Isporučujemo iskustva koja definišu brend uz odgovoran inženjering."],
