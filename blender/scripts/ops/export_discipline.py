@@ -135,6 +135,123 @@ PRESETS = {
                   "angle_deg": 25.0, "profile": 0.5},
         "ao": {"samples": 512, "distance": 0.30, "floor": 0.40, "gain": 0.60},
     },
+    #: Telefon nosi ISTI `width_rel` kao monitor, i to je poenta relativne mere:
+    #: oba modela su normalizovana na 2.0, pa isti broj daje isto vidljivo
+    #: skupljanje specularа na oba. Provera da broj tu sme da stoji: najuza
+    #: povrsina koju bevel dira je zakosenje kucista, 0.02263 W, a 1 W izlazi na
+    #: 0.881132 sveta posle normalizacije - dakle 0.01994. Dva bevela od 0.006
+    #: ne staju u to (0.012 od 0.01994 je 60% trake, blizu), pa je granica
+    #: stvarna ali nije prekoracena i `clamp_overlap` nigde ne interveniše.
+    #: Sine u ovaj racun ne ulaze: njihov profil je gradjen u koracima od 22.5
+    #: stepeni, ispod `angle_deg` praga, pa ih modifikator preskace.
+    "mobile-app-development": {
+        "builder": "ops.build_mobile_app_development",
+        "body": "mobile-app-development",
+        "screen": "mobile-app-development_screen",
+        "bevel": {"width_rel": 0.0030, "segments": 8,
+                  "angle_deg": 25.0, "profile": 0.5},
+        "ao": {"samples": 512, "distance": 0.30, "floor": 0.40, "gain": 0.60},
+    },
+    #: Tablet je TANAK (0.026 W), pa je najuza povrsina na modelu zakosenje
+    #: bocne ivice: 0.0099 W. Model LEBDI - podmetaca nema - pa je bbox manji i
+    #: 1 W izlazi na 1.69271 sveta posle normalizacije, dakle 0.01675. Dva
+    #: bevela sa monitorovih 0.0030 pojela bi 0.012 od te 0.01675 (72%) i ivica
+    #: bi pocela da zavisi od `use_clamp_overlap`, a nejednaka ivica se vidi kao
+    #: greska. 0.0026 (0.0052 u svetu) uzima 62% - isti red velicine kao telefon
+    #: (60%) - i ostavlja 0.0064 ravnog zakosenja; klamp nigde ne intervenise
+    #: osim na vrhu olovke, gde je zaobljenje pozeljno.
+    "ui-ux-design": {
+        "builder": "ops.build_ui_ux_design",
+        "body": "ui-ux-design",
+        "screen": "ui-ux-design_screen",
+        "bevel": {"width_rel": 0.0026, "segments": 8,
+                  "angle_deg": 25.0, "profile": 0.5},
+        "ao": {"samples": 512, "distance": 0.30, "floor": 0.40, "gain": 0.60},
+    },
+    #: Lupa je JEDINI model gde i sirina i broj segmenata odstupaju, i oba
+    #: odstupanja imaju istu meru iza sebe - nazubljeni pojas.
+    #:
+    #: SIRINA. Najuza povrsina na modelu nije zubac nego traka izmedju drugog
+    #: stepenika obruca i zljeba (`SHELF_LIP` = 0.008 W). 1 W izlazi na 0.948
+    #: sveta posle normalizacije, pa je to 0.00758. Dva bevela od 0.0026
+    #: (`width_rel` 0.0013) pojedu 0.0052, tj. 69% trake - isti red velicine kao
+    #: kod telefona (60%), pa `use_clamp_overlap` nigde ne intervenise i ivica je
+    #: svuda iste sirine. Facete zubaca su sire nego sto izgledaju (0.0110 W:
+    #: 0.00626 tangencijalno plus 0.009 radijalno) i nisu granica.
+    #:
+    #: SEGMENTI. Ostalih pet modela imaju red velicine 40 bevelovanih petlji;
+    #: ovaj ih ima preko 1400, jer 56 zubaca znaci 112 uzduznih greben-ivica. Na
+    #: 8 segmenata to je IZMERENIH 21.632 trougla na telu - preko dozvoljenih
+    #: 14.000 iz zadatka i pri 4 segmenta, pa je i pojas smanjen na cetiri
+    #: prstena (`build_seo_geo._knurl`). 3 segmenta na traci od 0.0026 sveta i
+    #: dalje daju traku po kojoj specular klizi, a na 400px razlika prema 8 ne
+    #: postoji ni kao piksel. Ovde budzet ide na zubce, ne na segmente bevela -
+    #: zubci su ono sto model prodaje, segmenti bevela na 1400 ivica nisu.
+    #: Bilbord je JEDINI model kome je bevel namerno POTKAPACITIRAN, i to je
+    #: karakter a ne stednja. Ostalih pet su uredjaji: zaobljeni, tanki, i sto
+    #: sira ivica to skuplji predmet. Ovaj mora da bude suprotno - konstrukcija.
+    #: Radijus uglova mu je 0.008 W (monitorova stopa nosi 0.075 W), pa bi
+    #: monitorovih 0.0030 rel zaoblilo bas ono zbog cega model postoji.
+    #:
+    #: SIRINA. Najuza povrsina je presek stubica ograde, 0.007 W. 1 W izlazi na
+    #: 2.0787 sveta posle normalizacije, dakle 0.01455. Dva bevela od 0.0024
+    #: (`width_rel` 0.0012) pojedu 0.0048, tj. 33% - najkomotniji odnos od svih
+    #: sest modela (telefon 60%, lupa 69%), pa `use_clamp_overlap` nigde ne
+    #: intervenise. Isto vazi za rukohvat (0.006 W) i za facet ugla panela,
+    #: cija je tetiva `2*R*sin(22.5) = 0.00612 W` = 0.01273 sveta.
+    #:
+    #: SEGMENTI. 3, kao na lupi. Traka od 0.0024 sveta je na 1024 px oko 1.2 px
+    #: siroka; razlika izmedju 3 i 8 segmenata na njoj ne postoji ni kao piksel,
+    #: a 15 kvadara ograde i nosaca bi na 8 segmenata kostalo preko 11.000
+    #: trouglova umesto trazenih ~6.000.
+    #:
+    #: UGAO 20, ne 25. Ugao panela je razlozen na dva faceta po 45, ali se ti
+    #: faceti sa pravim stranicama sustu pod 22.5. Na pragu od 25 bi srednja
+    #: ivica ugla bila bevelovana a dve spoljne ostale ostre - ista ivica sa tri
+    #: razlicita odsjaja. 20 uzima sve tri i ugao izlazi ujednacen.
+    "branding": {
+        "builder": "ops.build_branding",
+        "body": "branding",
+        "screen": "branding_screen",
+        "bevel": {"width_rel": 0.0012, "segments": 3,
+                  "angle_deg": 20.0, "profile": 0.5},
+        "ao": {"samples": 512, "distance": 0.30, "floor": 0.40, "gain": 0.60},
+    },
+    "seo-geo": {
+        "builder": "ops.build_seo_geo",
+        "body": "seo-geo",
+        "screen": "seo-geo_screen",
+        "bevel": {"width_rel": 0.0013, "segments": 3,
+                  "angle_deg": 25.0, "profile": 0.5},
+        "ao": {"samples": 512, "distance": 0.30, "floor": 0.40, "gain": 0.60},
+    },
+    #: Lepeza je od svih sest modela NAJSIRA u odnosu na visinu (3.18 W prema
+    #: 1.87 W), pa joj normalizacija na 2.0 daje najsitniju jedinicu: 1 W izlazi
+    #: na 0.6425 sveta, prema 0.881 na telefonu. Ista `width_rel` bi ovde dakle
+    #: bila 27% uza mereno po modelu - a bevel se sudi po tome sta pojede od
+    #: najuze povrsine, ne po nominalnom broju.
+    #:
+    #: SIRINA. Najuza povrsina je zakosenje uzvisenja: `0.008*sqrt(2) = 0.0113
+    #: W`, tj. 0.00727 sveta. Dva bevela od 0.0026 (`width_rel` 0.0013) pojedu
+    #: 0.0052, tj. 72% - isti red kao lupa (69%) i telefon (60%), pa
+    #: `use_clamp_overlap` nigde ne intervenise. Usne lezista su bas zato
+    #: gradjene BEZ zakosenja (`build_social_media._box`): sa njim bi ONE bile
+    #: najuza povrsina, na 0.0037 sveta, i bevel bi morao da se prepolovi zbog
+    #: sest komadica koji se jedva vide.
+    #:
+    #: SEGMENTI. 4, izmedju uredjaja (8) i konstrukcija (3). Model ima 720
+    #: bevelovanih ivica u 20 zatvorenih petlji - tri rama, plint, uzvisenje i
+    #: sest usana - pa svaki segment kosta oko 1.440 trouglova. Na 8 bi izaslo
+    #: preko 13.000, daleko preko trazenih ~8.000; na 4 staje, a traka od
+    #: 0.0026 sveta je na 1024 px oko 1.3 piksela, gde se 4 i 8 ne razlikuju.
+    "social-media": {
+        "builder": "ops.build_social_media",
+        "body": "social-media",
+        "screen": "social-media_screen",
+        "bevel": {"width_rel": 0.0013, "segments": 4,
+                  "angle_deg": 25.0, "profile": 0.5},
+        "ao": {"samples": 512, "distance": 0.30, "floor": 0.40, "gain": 0.60},
+    },
 }
 
 
@@ -389,9 +506,17 @@ def bake_ao(obj, spec):
     try:
         scn.render.engine = 'CYCLES'
         c = scn.cycles
+        # `use_adaptive_sampling` MORA da bude ovde. Zakljucan seed nije dovoljan:
+        # adaptivno uzorkovanje odlucuje koliko uzoraka stvarno uzme po tacki na
+        # osnovu praga suma, a ta odluka pada po nitima, pa raspored niti ulazi u
+        # rezultat. Merljivo: dva uzastopna pokretanja su davala AO sa razlicitom
+        # sredinom (0.8157 / 0.8158) i time `.glb` koji NIJE bajt-identican -
+        # tacno ono sto Faza B tvrdi da jeste. Sa iskljucenim adaptivnim
+        # uzorkovanjem svaka tacka dobija punih `samples` uzoraka i bake je
+        # funkcija samo ulaza.
         for k, v in (("samples", spec["samples"]), ("seed", 0),
                      ("use_animated_seed", False), ("use_denoising", False),
-                     ("bake_type", 'AO')):
+                     ("use_adaptive_sampling", False), ("bake_type", 'AO')):
             if hasattr(c, k):
                 cyc_prev[k] = getattr(c, k)
                 setattr(c, k, v)

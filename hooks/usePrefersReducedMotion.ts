@@ -17,10 +17,30 @@ const getConnection = () => {
 const computePreference = (mediaMatches: boolean, connectionSaveData: boolean, lowBattery: boolean) =>
   mediaMatches || connectionSaveData || lowBattery;
 
-export function usePrefersReducedMotion() {
+type ReducedMotionOptions = {
+  /**
+   * Whether Save-Data and a low battery also count as "reduce motion".
+   *
+   * Defaults to `true`, which is right for the things this gate was written
+   * for: the background video, the dot field, the 3D scenes - continuous costs
+   * that run for as long as the page is open.
+   *
+   * Pass `false` for one-shot entrances (the process card unlock, the services
+   * panel trace). Those are the brand, they cost a few hundred milliseconds
+   * once, and silently deleting them because a laptop dipped under 20% is a
+   * far bigger regression than the frames it saves. The OS preference is still
+   * honoured either way - that one is an explicit request from the user.
+   */
+  includeDataAndBattery?: boolean;
+};
+
+export function usePrefersReducedMotion({
+  includeDataAndBattery = true,
+}: ReducedMotionOptions = {}) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
     if (typeof window === "undefined") return false;
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!includeDataAndBattery) return mediaQuery.matches;
     const connection = getConnection();
     return computePreference(mediaQuery.matches, Boolean(connection?.saveData), false);
   });
@@ -29,11 +49,15 @@ export function usePrefersReducedMotion() {
     if (typeof window === "undefined") return;
 
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const connection = getConnection();
+    const connection = includeDataAndBattery ? getConnection() : null;
     let lowBattery = false;
 
     const updatePreference = () => {
-      setPrefersReducedMotion(computePreference(mediaQuery.matches, Boolean(connection?.saveData), lowBattery));
+      setPrefersReducedMotion(
+        includeDataAndBattery
+          ? computePreference(mediaQuery.matches, Boolean(connection?.saveData), lowBattery)
+          : mediaQuery.matches
+      );
     };
 
     updatePreference();
@@ -49,7 +73,7 @@ export function usePrefersReducedMotion() {
     connection?.addEventListener?.("change", handleConnectionChange);
 
     let cleanupBattery: (() => void) | undefined;
-    if (hasBatteryAPI()) {
+    if (includeDataAndBattery && hasBatteryAPI()) {
       (navigator as unknown as { getBattery: () => Promise<BatteryManager> })
         .getBattery()
         .then((battery) => {
@@ -81,7 +105,7 @@ export function usePrefersReducedMotion() {
       connection?.removeEventListener?.("change", handleConnectionChange);
       cleanupBattery?.();
     };
-  }, []);
+  }, [includeDataAndBattery]);
 
   return prefersReducedMotion;
 }

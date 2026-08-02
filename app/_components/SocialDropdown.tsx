@@ -83,7 +83,15 @@ const canUseHover = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-export default function SocialDropdown() {
+type SocialDropdownProps = {
+  /** `ghost` drops the resting border and fill - for use inside the nav island,
+   *  where a bordered chip inside a bordered capsule reads as clutter. */
+  variant?: "solid" | "ghost";
+};
+
+export default function SocialDropdown({
+  variant = "solid",
+}: SocialDropdownProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -130,7 +138,10 @@ export default function SocialDropdown() {
         aria-haspopup="menu"
         onClick={() => setOpen((current) => !current)}
         className={clsx(
-          "group relative flex h-10 w-10 items-center justify-center rounded-full border border-theme bg-card text-theme-primary shadow-theme transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/40 sm:h-11 sm:w-11",
+          "group relative flex h-10 w-10 items-center justify-center rounded-full border text-theme-primary transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/40 sm:h-11 sm:w-11",
+          variant === "ghost"
+            ? "border-transparent bg-transparent hover:border-theme hover:bg-muted"
+            : "border-theme bg-card",
           open && "border-[var(--border-strong)] bg-muted"
         )}
       >

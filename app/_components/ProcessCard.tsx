@@ -81,7 +81,12 @@ export default function ProcessCard({ step, position }: ProcessCardProps) {
   /** Survives timeline rebuilds so a resize does not re-lock an opened card. */
   const openedRef = useRef(false);
 
-  const prefersReducedMotion = usePrefersReducedMotion();
+  // The unlock is a one-shot entrance and it is the section's whole point, so
+  // it follows the OS preference only. Folding a low battery into this gate
+  // deleted the animation outright on any laptop under 20%.
+  const prefersReducedMotion = usePrefersReducedMotion({
+    includeDataAndBattery: false,
+  });
   const { locale } = useLanguage();
   const localeRef = useRef(locale);
 

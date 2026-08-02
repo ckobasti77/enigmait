@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { navLinks } from "@/constants/navLinks";
+import { useSmoothScroll } from "./SmoothScrollProvider";
 import CtaButton from "@/components/ui/cta-button";
 import { LucideIcon, ArrowUpRight, ChevronDown } from "lucide-react";
 import clsx from "clsx";
@@ -46,9 +47,31 @@ const NavLinksMobile = ({
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const footerRef = useRef<HTMLDivElement>(null);
   const blobRef = useRef<HTMLDivElement>(null);
+  const smoothScrollRef = useSmoothScroll();
 
   const mainLinks = navLinks.filter((l) => !l.cta);
   const ctaLink = navLinks.find((l) => l.cta);
+
+  /**
+   * `body { overflow: hidden }` alone never actually locked this: the scrolling
+   * element is `documentElement`, and Lenis keeps consuming wheel events either
+   * way, so the page kept moving behind the curtain. `lenis.stop()` is the
+   * intended fix - `globals.css` already ships `.lenis-stopped { overflow: hidden }`
+   * for it. The fallback branch is not optional: under reduced motion the
+   * provider never constructs a Lenis instance at all.
+   */
+  const lockScroll = useCallback(() => {
+    const lenis = smoothScrollRef?.current;
+    if (lenis) lenis.stop();
+    else document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+  }, [smoothScrollRef]);
+
+  const unlockScroll = useCallback(() => {
+    smoothScrollRef?.current?.start();
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+  }, [smoothScrollRef]);
 
   useEffect(() => {
     const overlay = overlayRef.current;
@@ -57,7 +80,7 @@ const NavLinksMobile = ({
     const validItems = itemRefs.current.filter(Boolean) as HTMLDivElement[];
 
     if (navOpen) {
-      document.body.style.overflow = "hidden";
+      lockScroll();
       overlay.style.display = "flex";
       overlay.style.pointerEvents = "auto";
 
@@ -102,7 +125,7 @@ const NavLinksMobile = ({
         );
       }
     } else {
-      document.body.style.overflow = "";
+      unlockScroll();
 
       gsap.killTweensOf([overlay, ...validItems]);
 
@@ -131,9 +154,9 @@ const NavLinksMobile = ({
     }
 
     return () => {
-      document.body.style.overflow = "";
+      unlockScroll();
     };
-  }, [navOpen]);
+  }, [lockScroll, navOpen, unlockScroll]);
 
   // Escape key support
   useEffect(() => {
@@ -185,7 +208,7 @@ const NavLinksMobile = ({
       />
 
       {/* ── Main content ───────────────────────────────── */}
-      <div className="relative z-10 flex h-full flex-col overflow-y-auto px-7 pb-8 pt-[88px] sm:px-10">
+      <div className="relative z-10 flex h-full flex-col overflow-y-auto px-7 pb-8 pt-[calc(var(--nav-bar-height)+1rem)] sm:px-10">
 
         {/* Navigation links */}
         <nav className="flex flex-1 flex-col justify-center" aria-label="Mobilna navigacija">

@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import clsx from "clsx";
 import gsap from "gsap";
 import Burger from "./Burger";
 import NavLinks from "./NavLinks";
@@ -13,31 +12,56 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 import SocialDropdown from "./SocialDropdown";
+import CtaButton from "@/components/ui/cta-button";
+import { navLinks } from "@/constants/navLinks";
+import { useNavVisibility } from "@/hooks/useNavVisibility";
+import { ArrowUpRight } from "lucide-react";
 
 gsap.registerPlugin(useGSAP);
 
 const LOGO_INTRO_SESSION_KEY = "enigma-digital-navbar-logo-intro-v1";
 
+const ctaLink = navLinks.find((link) => link.cta);
+
 const Navbar = () => {
   const pathname = usePathname();
-  const [showNav, setShowNav] = useState(true);
   const [navOpen, setNavOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [currentDropdown, setCurrentDropdown] = useState(0);
-  const logoLinkRef = useRef<HTMLAnchorElement>(null);
   const wordmarkMaskRef = useRef<HTMLSpanElement>(null);
   const wordmarkImageRef = useRef<HTMLImageElement>(null);
   const logoRevealTimelineRef = useRef<gsap.core.Timeline | null>(null);
-  const logoIntroHoldRef = useRef<gsap.core.Tween | null>(null);
   const logoIntroPlayedRef = useRef(false);
   const logoIntroDecisionRef = useRef<{
     pathname: string;
     shouldPlay: boolean;
   } | null>(null);
-  const lastScrollYRef = useRef(0);
-  const tickingRef = useRef(false);
-  const rafRef = useRef(0);
 
+  const closeDropdown = useCallback(() => {
+    setCurrentDropdown((current) => (current === 0 ? current : 0));
+  }, []);
+
+  const { barRef, isPeeled } = useNavVisibility({
+    // Only the mobile menu locks. Locking on the dropdown would deadlock: the
+    // panel would hold the bar visible, so it could never hide, so `onHide`
+    // could never close the panel. Instead the hide commit closes it in the same
+    // frame - and the panel rides the bar's transform anyway, so there is no
+    // frame where it floats detached over the page.
+    locked: navOpen,
+    resetKey: pathname,
+    onHide: closeDropdown,
+  });
+
+  /**
+   * One paused timeline, two drivers: `progress(1)` is the full wordmark,
+   * `progress(0)` is the emblem alone.
+   *
+   * It runs in a layout effect, so the non-intro branch lands on `progress(1)`
+   * before paint and the `invisible` class in the markup never shows.
+   *
+   * Only clip and opacity move - the mask keeps its box. Collapsing the width
+   * would animate layout inside a `fixed` bar that no page reserves space for,
+   * and the emblem is first in the row, so it does not shift either way.
+   */
   useGSAP(
     () => {
       const wordmarkMask = wordmarkMaskRef.current;
@@ -110,22 +134,11 @@ const Navbar = () => {
         }
 
         revealTimeline.progress(0).play();
-        logoIntroHoldRef.current = gsap.delayedCall(
-          revealDuration + 2.5,
-          () => {
-            logoIntroHoldRef.current = null;
-            if (!logoLinkRef.current?.matches(":hover, :focus")) {
-              revealTimeline.reverse();
-            }
-          }
-        );
       } else {
-        revealTimeline.progress(0).pause();
+        revealTimeline.progress(1).pause();
       }
 
       return () => {
-        logoIntroHoldRef.current?.kill();
-        logoIntroHoldRef.current = null;
         if (logoRevealTimelineRef.current === revealTimeline) {
           logoRevealTimelineRef.current = null;
         }
@@ -133,60 +146,18 @@ const Navbar = () => {
     },
     {
       dependencies: [pathname],
-      scope: logoLinkRef,
+      scope: barRef,
       revertOnUpdate: true,
     }
   );
 
+  // Driver two: the island peel takes the wordmark with it.
   useEffect(() => {
-    const updateNavigationState = () => {
-      const currentScrollPos = window.scrollY;
-      const nextScrolled = currentScrollPos > 0;
-      const shouldShowNav =
-        currentScrollPos <= lastScrollYRef.current || currentScrollPos < 8;
-
-      setShowNav((current) =>
-        current === shouldShowNav ? current : shouldShowNav
-      );
-      setIsScrolled((current) =>
-        current === nextScrolled ? current : nextScrolled
-      );
-
-      if (currentScrollPos !== lastScrollYRef.current) {
-        setCurrentDropdown((current) => (current === 0 ? current : 0));
-        setNavOpen((current) => (current ? false : current));
-      }
-
-      lastScrollYRef.current = currentScrollPos;
-      tickingRef.current = false;
-    };
-
-    const onScroll = () => {
-      if (tickingRef.current) return;
-      tickingRef.current = true;
-      rafRef.current = window.requestAnimationFrame(updateNavigationState);
-    };
-
-    updateNavigationState();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafRef.current) {
-        window.cancelAnimationFrame(rafRef.current);
-      }
-    };
-  }, []);
-
-  const revealLogo = useCallback(() => {
-    logoIntroHoldRef.current?.kill();
-    logoIntroHoldRef.current = null;
-    logoRevealTimelineRef.current?.play();
-  }, []);
-
-  const retractLogo = useCallback(() => {
-    if (logoLinkRef.current?.matches(":hover, :focus")) return;
-    logoRevealTimelineRef.current?.reverse();
-  }, []);
+    const timeline = logoRevealTimelineRef.current;
+    if (!timeline) return;
+    if (isPeeled) timeline.reverse();
+    else timeline.play();
+  }, [isPeeled]);
 
   const toggleNav = useCallback(() => {
     if (navOpen) {
@@ -198,29 +169,22 @@ const Navbar = () => {
   return (
     <>
       <div
-        className={clsx(
-          "site-gutter fixed left-0 top-0 z-50 w-full transition-transform duration-300",
-          isScrolled ? "bg-blur" : "bg-transparent",
-          showNav ? "translate-y-0" : "-translate-y-full"
-        )}
+        ref={barRef}
+        className="site-gutter fixed left-0 top-0 z-50 w-full"
+        style={{ paddingTop: "env(safe-area-inset-top)" }}
+        data-nav-state={isPeeled ? "peeled" : "top"}
         // Chrome, not copy: the site-wide reveal would stage the menu every
         // time it slides back in.
         data-reveal="off"
       >
         {/* Same measure as the hero, so the logo sits on the headline's left edge. */}
-        <div
-          className="site-container grid grid-cols-[minmax(0,1fr)_auto] items-center pb-4 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]"
-          style={{ paddingTop: "calc(1rem + env(safe-area-inset-top))" }}
-        >
+        <div className="site-container nav-inner grid grid-cols-[minmax(0,1fr)_auto] items-center lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+          <span className="nav-surface" aria-hidden />
+
           <Link
-            ref={logoLinkRef}
             href="/"
             className="relative z-10 inline-flex w-[112px] min-w-0 items-center justify-self-start gap-1.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 sm:w-[160px] sm:gap-2.5 lg:w-[224px] xl:w-[244px]"
             aria-label="Enigma Digital — početna"
-            onMouseEnter={revealLogo}
-            onMouseLeave={retractLogo}
-            onFocus={revealLogo}
-            onBlur={retractLogo}
           >
             <Image
               src="/logos/logo-emblem.png"
@@ -257,10 +221,24 @@ const Navbar = () => {
             currentDropdown={currentDropdown}
           />
 
-          <div className="flex items-center justify-self-end gap-1 sm:gap-4 lg:gap-6">
-            <SocialDropdown />
+          <div className="relative z-10 flex items-center justify-self-end gap-1 sm:gap-2 lg:gap-3">
+            {/* Two ghost icon buttons, one segmented chip, one CTA. The
+                language switcher keeps its track because SR/EN needs a
+                readable segmented control; three equal-weight bordered chips
+                inside a bordered island read as clutter. */}
+            <SocialDropdown variant="ghost" />
+            <ThemeSwitcher variant="ghost" />
             <LanguageSwitcher />
-            <ThemeSwitcher />
+            {ctaLink && (
+              <CtaButton
+                href={ctaLink.to}
+                size="default"
+                className="ml-1 hidden lg:inline-flex"
+              >
+                {ctaLink.text}
+                <ArrowUpRight className="h-4 w-4" aria-hidden />
+              </CtaButton>
+            )}
             <Burger toggleNav={toggleNav} navOpen={navOpen} />
           </div>
         </div>

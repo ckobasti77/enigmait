@@ -135,6 +135,88 @@ export const englishToSerbianEntries = [
   ["Launch & SEO Optimization", "Lansiranje i SEO optimizacija"],
   ["Once you give the go, we launch and fine-tune SEO.", "Kada date zeleno svetlo, lansiramo sajt i fino podešavamo SEO."],
 
+  // Home disciplines
+  //
+  // The six titles and the six kickers are NOT here - they already have pairs in
+  // `Nav services` above, and `constants/disciplines.ts` carries exactly those English
+  // strings. A second copy would be a second place for them to drift.
+  ["Pick a discipline", "Izaberite disciplinu"],
+  ["Six disciplines. One team.", "Šest disciplina. Jedan tim."],
+  [
+    "Each one is a full squad - strategy, design and engineering in the same room. Start where you need it most.",
+    "Svaka je pun tim - strategija, dizajn i inženjering u istoj sobi. Počnite tamo gde je najpotrebnije.",
+  ],
+  ["See the discipline", "Pogledaj disciplinu"],
+
+  // One lede per discipline, in `DISCIPLINE_ORDER`.
+  [
+    "Next.js, TypeScript and a build pipeline you can audit. Fast on the first paint, still fast in year two.",
+    "Next.js, TypeScript i build pipeline koji možete da proverite. Brzo na prvom prikazu, brzo i druge godine.",
+  ],
+  [
+    "Component systems and motion rules, not a folder of screens. Every state is designed before it is built.",
+    "Komponentni sistemi i pravila pokreta, ne folder ekrana. Svako stanje je dizajnirano pre nego što se napravi.",
+  ],
+  [
+    "One codebase, two stores, no compromise on feel. Shipped, reviewed and updated on your schedule.",
+    "Jedna baza koda, dve prodavnice, bez kompromisa u osećaju. Objavljeno, odobreno i ažurirano po vašem rasporedu.",
+  ],
+  [
+    "Technical SEO for crawlers and structured answers for AI search. Two audiences, one architecture.",
+    "Tehnički SEO za pretraživače i strukturirani odgovori za AI pretragu. Dve publike, jedna arhitektura.",
+  ],
+  [
+    "A mark, a voice and a system that holds up at 16 pixels and on a building. Documented so your team can use it.",
+    "Znak, glas i sistem koji izdrži i na 16 piksela i na zgradi. Dokumentovano da vaš tim može da ga koristi.",
+  ],
+  [
+    "Content that has a reason to exist. We plan the calendar, produce the assets and read the numbers.",
+    "Sadržaj koji ima razlog da postoji. Planiramo kalendar, produciramo materijale i čitamo brojke.",
+  ],
+
+  // The two accessible names that carry a discipline inside a sentence: the CTA, whose
+  // visible label is identical on all six, and the 3D column, which is a `role="img"`
+  // whose description changes with the model. `LanguageProvider` matches an `aria-label`
+  // WHOLE, so a composed string needs its own pair - the title's pair above cannot reach
+  // into the middle of one. Twelve pairs is the price of not having six identical links
+  // and one silent English label on a Serbian page.
+  ["See the discipline: Web development", "Pogledaj disciplinu: Izrada web sajtova"],
+  ["See the discipline: UI | UX Design", "Pogledaj disciplinu: UI | UX dizajn"],
+  [
+    "See the discipline: Mobile App Development",
+    "Pogledaj disciplinu: Izrada mobilnih aplikacija",
+  ],
+  ["See the discipline: SEO & GEO", "Pogledaj disciplinu: SEO i GEO"],
+  ["See the discipline: Branding", "Pogledaj disciplinu: Brending"],
+  ["See the discipline: Social Media", "Pogledaj disciplinu: Društvene mreže"],
+  [
+    "Web development shown as a 3D device",
+    "Izrada web sajtova prikazana kao 3D uređaj",
+  ],
+  [
+    "UI | UX Design shown as a 3D device",
+    "UI | UX dizajn prikazan kao 3D uređaj",
+  ],
+  [
+    "Mobile App Development shown as a 3D device",
+    "Izrada mobilnih aplikacija prikazana kao 3D uređaj",
+  ],
+  ["SEO & GEO shown as a 3D device", "SEO i GEO prikazan kao 3D uređaj"],
+  ["Branding shown as a 3D device", "Brending prikazan kao 3D uređaj"],
+  [
+    "Social Media shown as a 3D device",
+    "Društvene mreže prikazane kao 3D uređaj",
+  ],
+  [
+    "Discipline model. Use the arrow keys or the mouse wheel to change discipline.",
+    "Model discipline. Koristite strelice ili točkić miša da promenite disciplinu.",
+  ],
+  // Distinct from "Pick a discipline" on purpose: `serbianToEnglish` is the same table
+  // read backwards, so two pairs may not share a Serbian side.
+  ["Discipline list", "Lista disciplina"],
+  ["Previous discipline", "Prethodna disciplina"],
+  ["Next discipline", "Sledeća disciplina"],
+
   // Effective software and services cards
   ["Effective software development", "Efikasan razvoj softvera"],
   [

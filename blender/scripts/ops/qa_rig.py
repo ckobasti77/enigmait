@@ -361,6 +361,10 @@ def _snapshot():
         "res": (r.resolution_x, r.resolution_y, r.resolution_percentage),
         "film_transparent": r.film_transparent,
         "color_mode": r.image_settings.color_mode,
+        # Still prolaz menja i format i kvalitet, pa i oni moraju da se vrate -
+        # rig koji ostavi scenu na WEBP/RGBA je rig sa side-efektom.
+        "file_format": r.image_settings.file_format,
+        "quality": r.image_settings.quality,
         "view_transform": vs.view_transform, "look": vs.look,
         "eevee_samples": scn.eevee.taa_render_samples,
         "eevee_rt": scn.eevee.use_raytracing,
@@ -383,7 +387,12 @@ def _restore(s):
     r.filepath = s["filepath"]
     r.resolution_x, r.resolution_y, r.resolution_percentage = s["res"]
     r.film_transparent = s["film_transparent"]
+    r.image_settings.file_format = s["file_format"]
     r.image_settings.color_mode = s["color_mode"]
+    try:
+        r.image_settings.quality = s["quality"]
+    except Exception:
+        pass
     vs.view_transform = s["view_transform"]
     vs.look = s["look"]
     scn.eevee.taa_render_samples = s["eevee_samples"]
@@ -530,6 +539,87 @@ def render_silhouette(output_path, only=None, res=RES, samples=32):
         _restore(state)
 
 
+# ------------------------------------------------------------------ prolaz 3: still
+
+#: Kamera SAJTA, ne kamera spec-a. `DisciplineStage.CAMERA_POSITION` je
+#: (-3.2, 2.4, 6.4) skalirano duz istog pravca na r = 4.388, da model popuni
+#: kolonu umesto da pluta u njoj. Pravac je nepromenjen, pa su CAM_AZ i CAM_EL -
+#: a sa njima i sva tri svetla - i dalje tacni; menja se samo udaljenost.
+#: glTF (x, y, z) -> Blender (x, -z, y).
+SITE_CAM_POS_GLTF = (-1.86, 1.4, 3.72)
+SITE_CAM_POS = (SITE_CAM_POS_GLTF[0], -SITE_CAM_POS_GLTF[2], SITE_CAM_POS_GLTF[1])
+
+#: Kutija canvasa je 4:3 (`.discipline-viewport`), a fov iz spec-a je VERTIKALAN
+#: i sensor_fit je 'VERTICAL' - pa render 4:3 daje TACNO isti kadar kao sajt.
+#: Kvadratni still bi u 4:3 kutiji dobio praznine levo i desno i model bi ispao
+#: manji nego u WebGL varijanti.
+STILL_RES = (1024, 768)
+
+#: Fallback nikad nije crn canvas: film je providan, pa still nosi alfu i legne
+#: na pozadinu sekcije u obe teme umesto da nosi svoju.
+STILL_FORMAT = "WEBP"
+STILL_QUALITY = 80
+
+
+def render_still(output_path, only=None, res=STILL_RES, samples=SAMPLES,
+                 quality=STILL_QUALITY, fmt=STILL_FORMAT):
+    """Fallback still za klijent bez WebGL-a - isti kadar, prava kamera sajta.
+
+    Razlika prema clay prolazu je namerna i cela je u tome cemu still sluzi:
+    clay sudi FORMU (sivi clay, neutralna pozadina, jedan kriterijum), a still
+    ZAMENJUJE RENDER (materijali kakvi su na sajtu, providna pozadina, jedan te
+    isti kadar kao WebGL kolona). Materijale postavlja pozivalac - `render_stills.py`
+    ih gradi iz `materials.ts` - ovde je samo rig, kadar i film.
+
+    NE dira svetla ni world: providan film iskljucuje pozadinu iz slike, ali ne
+    iz osvetljenja, pa gradijent i dalje radi kao okruzenje. To je najbliza stvar
+    PMREM okruzenju koje sajt gradi u kodu.
+    """
+    scn = bpy.context.scene
+    state = _snapshot()
+    cam = bpy.data.objects.get(CAM)
+    cam_pos = tuple(cam.location) if cam else None
+    try:
+        if cam:
+            cam.location = SITE_CAM_POS
+            _aim(cam)
+
+        scn.render.engine = 'BLENDER_EEVEE'
+        scn.render.resolution_x, scn.render.resolution_y = res
+        scn.render.resolution_percentage = 100
+        scn.render.film_transparent = True
+        scn.render.image_settings.file_format = fmt
+        scn.render.image_settings.color_mode = 'RGBA'
+        try:
+            scn.render.image_settings.quality = quality
+        except Exception:
+            pass
+        scn.eevee.taa_render_samples = samples
+        scn.eevee.use_shadows = True
+        try:
+            scn.eevee.use_raytracing = True
+            scn.eevee.ray_tracing_options.use_denoise = True
+        except Exception:
+            pass
+        # AgX bez look-a: three.js `AgXToneMapping` je AgX Base, a "Medium High
+        # Contrast" iz clay prolaza je look povrh njega. Still mora da izgleda
+        # kao canvas, ne kao QA render.
+        scn.view_settings.view_transform = 'AgX'
+        _pick(scn.view_settings, "look", ("AgX - None", "None"))
+
+        _isolate(only)
+        info = _render_to(output_path)
+        info["pass"] = "still"
+        info["resolution"] = list(res)
+        info["quality"] = quality
+        return info
+    finally:
+        if cam and cam_pos:
+            cam.location = cam_pos
+            _aim(cam)
+        _restore(state)
+
+
 # ------------------------------------------------------------------ oba
 
 def render_both(stem, only=None, res=RES, samples=SAMPLES):
@@ -578,17 +668,23 @@ def set_display_scale(names, scale):
     return scale
 
 
-def fit_display_scale(names, target_name, target_frac, lo=0.5, hi=4.0, iters=40):
-    """Nadji `displayScale` na kome `target_name` zauzima `target_frac` sirine kadra.
+def fit_display_scale(names, target_name, target_frac, lo=0.5, hi=4.0, iters=40,
+                      axis="width"):
+    """Nadji `displayScale` na kome `target_name` zauzima `target_frac` kadra.
 
     Bisekcija, ne deljenje - objekat je centriran u koordinatnom pocetku a
     kamera je na konacnoj udaljenosti, pa dvostruka skala NE daje dvostruku
     projekciju.
+
+    `axis` bira po kojoj se osi kadrira. Sirina je default jer je vecina
+    predmeta pejzazna, ali portret (telefon) se kadrira po VISINI - po sirini
+    bi isti broj znacio dvostruko manji predmet u kadru.
     """
+    key = "height_frac" if axis == "height" else "width_frac"
     for _ in range(iters):
         mid = (lo + hi) / 2.0
         set_display_scale(names, mid)
-        if frame_fraction(target_name)["width_frac"] < target_frac:
+        if frame_fraction(target_name)[key] < target_frac:
             lo = mid
         else:
             hi = mid

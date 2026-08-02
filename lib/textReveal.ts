@@ -50,6 +50,18 @@ const STATE_ATTR = "data-reveal-state";
 const isHeading = (element: Element) => /^H[1-6]$/.test(element.tagName);
 
 /**
+ * A flex or grid box lays its children out as boxes, and word spans are
+ * children. Splitting a line inside one turns every gap, alignment and
+ * justification rule loose on the individual words - a `gap-2` eyebrow would
+ * come back with 8px between every word. Those lines arrive as one piece
+ * instead; the caller falls back to the block fade when every node is refused.
+ */
+const laysOutChildrenAsBoxes = (element: Element) => {
+  const display = getComputedStyle(element).display;
+  return display.includes("flex") || display.includes("grid");
+};
+
+/**
  * Text nodes this element is responsible for. A nested candidate (a `<p>`
  * inside an `<li>`) owns its own words, so the outer element skips them and
  * animates only the text that is directly its own.
@@ -67,6 +79,7 @@ const collectTextNodes = (element: HTMLElement) => {
       if (parent.closest(TEXT_REVEAL.candidateSelector) !== element) {
         return NodeFilter.FILTER_REJECT;
       }
+      if (laysOutChildrenAsBoxes(parent)) return NodeFilter.FILTER_REJECT;
 
       return NodeFilter.FILTER_ACCEPT;
     },

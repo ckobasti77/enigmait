@@ -13,24 +13,50 @@
  * to bring back.
  */
 
+/** Copy whose whole reason to exist is text. */
+const BLOCK_COPY =
+  "h1, h2, h3, h4, h5, h6, p, li, dt, dd, blockquote, figcaption";
+
+/**
+ * Elements a `<span>` may sit inside without being a line of its own.
+ *
+ * Two different jobs, one list. A span inside a heading or a paragraph is part
+ * of that sentence and must not be pulled out of it - that is also what stops
+ * the word spans the splitter itself creates from being treated as new copy.
+ * A span inside a link, a button or a label is the control's own label, and a
+ * control has to be readable the instant it appears.
+ */
+const INLINE_HOSTS = `${BLOCK_COPY}, a, button, label, summary, th, td`;
+
+/**
+ * Standalone text: a `<span>` with no copy element above it. This is what
+ * catches the eyebrows, kickers, metric labels and stat captions the site is
+ * full of - text that carries no semantic tag but is read as a line all the
+ * same. Without it "everywhere" quietly meant "everywhere with a tag".
+ */
+const STANDALONE_TEXT = `span:not(:is(${INLINE_HOSTS}) *)`;
+
 export const TEXT_REVEAL = {
   /** The controller only looks inside the app shell; chrome outside it is left alone. */
   rootSelector: ".app-shell",
 
   /** Everything that gets the word-by-word treatment. */
-  candidateSelector:
-    "h1, h2, h3, h4, h5, h6, p, li, dt, dd, blockquote, figcaption, [data-reveal='text']",
+  candidateSelector: `${BLOCK_COPY}, ${STANDALONE_TEXT}, [data-reveal='text']`,
 
   /**
    * Copy that is owned by something else. Either another animation already
-   * writes its opacity (hero, timeline cards, the typed console headline), or
-   * it is chrome that must be readable the instant it appears (navigation,
+   * writes its opacity (hero, discipline panels, the typed console headline),
+   * or it is chrome that must be readable the instant it appears (navigation,
    * forms, live regions, the consent banner).
+   *
+   * `.reveal-word` and `.hero-reveal-word` are in here for a different reason:
+   * they are the splitter's own output, and a controller that treated its own
+   * word spans as new copy would keep splitting its own splits.
    *
    * Matching an element *or any of its descendants* opts the whole subtree out.
    */
   skipSelector:
-    "nav, form, [role='dialog'], [aria-live], [data-reveal='off'], .no-reveal",
+    "nav, form, [role='dialog'], [aria-live], [data-reveal='off'], .no-reveal, .reveal-word, .hero-reveal-word",
 
   /** Never split inside these - the split spans would break their meaning. */
   opaqueSelector: "script, style, code, pre, svg, canvas, textarea, input, select",

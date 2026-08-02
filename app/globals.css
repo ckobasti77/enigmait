@@ -60,11 +60,18 @@
 :root {
   --site-edge-gutter: 1rem;
   --site-content-max: 80rem;
+  /* The bar is `fixed` with no spacer, so its height is a contract: every page
+     pays for the overlap itself (`pt-28` on the hero, `py-24` on PageHero) and
+     the mobile menu clears it with the same number. One source, not three.
+     These values reproduce the previous bar exactly (padding + logo + padding),
+     so the redesign costs no page zero re-padding. */
+  --nav-bar-height: 4.5rem;
 }
 
 @media (min-width: 640px) {
   :root {
     --site-edge-gutter: 1.25rem;
+    --nav-bar-height: 4.875rem;
   }
 }
 
@@ -77,7 +84,18 @@
 @media (min-width: 1024px) {
   :root {
     --site-edge-gutter: clamp(1rem, 2.4vw, 2.75rem);
+    --nav-bar-height: 5.25rem;
   }
+}
+
+/* How far the peeled island spills past the site grid line. Clamped to the
+   gutter so it can never overrun the screen edge on the narrowest viewport. */
+:root {
+  --nav-island-bleed: min(1.25rem, calc(var(--site-edge-gutter) * 0.7));
+  /* Kept in sync with `PANEL_RADIUS` in ServicesDropdown.tsx. The border trace
+     is drawn from that number, so if the two drift the streak cuts across the
+     corner instead of following it - same contract as the process cards. */
+  --nav-panel-radius: 1rem;
 }
 
 /* Section shell: owns the distance to the viewport edge. */
@@ -263,6 +281,34 @@
   --lg-tint: var(--lg-tint-on-light);
   --lg-tint-hover: var(--lg-tint-hover-on-light);
   --lg-wash: var(--lg-wash-on-light);
+
+  /* Navbar island. Replaces the old `.bg-blur`, which was a hardcoded
+     `rgba(0,0,0,0.25)` scrim and therefore darkened the page in light mode. */
+  --nav-surface-bg: rgba(255, 255, 255, 0.7);
+  --nav-surface-border: rgba(20, 34, 51, 0.12);
+  --nav-surface-shadow: 0 18px 50px rgba(15, 23, 42, 0.16);
+  --nav-pill-bg: rgba(255, 255, 255, 0.5);
+  --nav-pill-border: rgba(20, 34, 51, 0.1);
+  --nav-indicator-bg: rgba(20, 34, 51, 0.08);
+  --nav-blur: blur(20px) saturate(160%);
+  /* Violet-led over paper: the accent glows are tuned for a dark backdrop and
+     wash out over white, so the trace picks the darker end of the ramp. */
+  --nav-trace-color: #7c3aed;
+  --nav-trace-glow: rgba(124, 58, 237, 0.45);
+  --nav-glow-a: rgba(124, 58, 237, 0.55);
+  --nav-glow-b: rgba(56, 189, 248, 0.4);
+  /* Deliberately NOT built on `var(--card)`: that is 0.94 alpha, which makes the
+     panel effectively opaque and leaves the refraction below nothing to bend. */
+  --nav-panel-wash: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.54) 52%,
+    rgba(124, 58, 237, 0.16) 100%
+  );
+  --nav-panel-rim:
+    inset 0 0 0 1px rgba(20, 34, 51, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --nav-panel-specular: rgba(255, 255, 255, 0.5);
 }
 
 .dark {
@@ -364,6 +410,28 @@
   --lg-tint: var(--lg-tint-on-dark);
   --lg-tint-hover: var(--lg-tint-hover-on-dark);
   --lg-wash: var(--lg-wash-on-dark);
+
+  --nav-surface-bg: rgba(11, 18, 33, 0.6);
+  --nav-surface-border: rgba(96, 128, 180, 0.22);
+  --nav-surface-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  --nav-pill-bg: rgba(148, 180, 235, 0.07);
+  --nav-pill-border: rgba(96, 128, 180, 0.2);
+  --nav-indicator-bg: rgba(148, 180, 235, 0.13);
+  --nav-blur: blur(20px) saturate(160%);
+  --nav-trace-color: #c084fc;
+  --nav-trace-glow: rgba(168, 85, 247, 0.55);
+  --nav-glow-a: rgba(168, 85, 247, 0.7);
+  --nav-glow-b: rgba(56, 189, 248, 0.5);
+  --nav-panel-wash: linear-gradient(
+    135deg,
+    rgba(11, 18, 33, 0.56) 0%,
+    rgba(13, 20, 38, 0.5) 50%,
+    rgba(124, 58, 237, 0.3) 100%
+  );
+  --nav-panel-rim:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  --nav-panel-specular: rgba(190, 215, 255, 0.16);
 }
 
 @layer base {
@@ -405,9 +473,243 @@ html.lenis body {
 }
 
 
-.bg-blur {
-  background-color: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(20px);
+/* ---------------------------------------------------------------------------
+   Navbar island (app/_components/Navbar.tsx, NavLinks.tsx)
+
+   Two states, one attribute on the shell. `data-nav-state="top"` sits flat over
+   the hero; `"peeled"` detaches into a floating capsule.
+
+   The morph touches only the surface layer - opacity, scale, radius, colour,
+   shadow - and never layout. That is deliberate, not an optimisation: the bar is
+   `fixed` with no spacer, so every page pays for the overlap itself. Animate the
+   row height and the hero, every PageHero and the mobile menu's clearance all
+   drift. The perceived condensation comes from the wordmark collapsing to the
+   emblem, which costs nothing.
+   --------------------------------------------------------------------------- */
+
+.nav-inner {
+  position: relative;
+  min-height: var(--nav-bar-height);
+}
+
+.nav-surface {
+  position: absolute;
+  /* Bleeds OUTWARD from the site grid line, never inward: the logo, the pill and
+     the controls stay on the same vertical as the hero headline and every
+     section below. The float reads from the vertical gap, the round ends and the
+     shadow - not from an indent that would break the one measure. */
+  inset-block: 0.375rem;
+  inset-inline: calc(-1 * var(--nav-island-bleed));
+  border-radius: 999px;
+  border: 1px solid var(--nav-surface-border);
+  background-color: var(--nav-surface-bg);
+  box-shadow: var(--nav-surface-shadow);
+  /* Unprefixed only. Lightning CSS adds the `-webkit-` alias itself, and if you
+     hand-write both it dedupes them down to whichever came last - which silently
+     left this rule webkit-only, so the glass vanished in Firefox. */
+  backdrop-filter: var(--nav-blur);
+  opacity: 0;
+  transform: scale(1.015);
+  transform-origin: top center;
+  pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.6s ease,
+              border-color 0.6s ease;
+}
+
+[data-nav-state="peeled"] .nav-surface {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.nav-pill {
+  position: relative;
+  border-radius: 999px;
+  border: 1px solid var(--nav-pill-border);
+  background-color: var(--nav-pill-bg);
+  /* One backdrop-filter on screen at a time. At the top the pill is the only
+     glass; once peeled the island surface carries it and the pill dissolves.
+     Two nested blurred layers cost twice and read muddy. */
+  backdrop-filter: var(--nav-blur);
+  transition: background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-nav-state="peeled"] .nav-pill {
+  background-color: transparent;
+  border-color: transparent;
+  backdrop-filter: none;
+}
+
+/* Same rule, third layer: once the island is blurred, the CTA's own refraction
+   is sampling an already-blurred backdrop and contributes almost nothing for a
+   second full pass. The rim and the wash carry the glass read on their own.
+
+   `.nav-surface` is a SIBLING of the content, never a wrapper - that is what
+   keeps it from becoming a backdrop root and flattening this button entirely.
+   Do not move `backdrop-filter` onto `.nav-inner`. */
+[data-nav-state="peeled"] .liquid-glass__refraction {
+  backdrop-filter: saturate(165%);
+}
+
+/* ---------------------------------------------------------------------------
+   Services panel: border trace + rotating glow
+
+   Same geometry as the process cards (`lib/borderTrace.ts`), entered from the
+   TOP edge instead of the side: one streak splits at the top midpoint and the
+   two halves run the border in opposite directions, meeting at the bottom
+   midpoint where they vanish.
+
+   The entry has to stay an edge MIDPOINT. A rounded rectangle is symmetric
+   about both midlines, so splitting there halves the perimeter by construction
+   and both streaks arrive together. Move the entry to a corner and they desync.
+
+   The trace and the glow are siblings of `.nav-panel-body`, never children:
+   the body carries `backdrop-filter`, which would make it a backdrop root and
+   clip the streak's own glow at the very edge the stroke sits on.
+   --------------------------------------------------------------------------- */
+
+.nav-panel {
+  position: absolute;
+  isolation: isolate;
+  /* Resting state lives in CSS, not a layout effect - the server paints before
+     hydration, so hiding this from JS would flash the finished panel. */
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* The glass itself.
+
+   A WebGL card like the reference one can only work when the backdrop IS a
+   single known texture - it samples that video element directly. Here the
+   backdrop is a composite: the blended background video, the hero headline and
+   the 3D cube, all under a panel that moves over them. Nothing in WebGL can
+   read that. `backdrop-filter` is the only thing that samples the real
+   composite, so the refraction is done with the displacement filter the liquid
+   glass buttons already use, plus a specular that tracks the cursor. */
+.nav-panel-body {
+  position: relative;
+  z-index: 0;
+  border-radius: var(--nav-panel-radius);
+  background: var(--nav-panel-wash);
+  /* Rim first, elevation second - the rim is the glass edge, the long shadow is
+     what lifts the panel off the page. */
+  box-shadow: var(--nav-panel-rim), 0 24px 70px var(--shadow-elevated);
+  backdrop-filter: blur(16px) saturate(155%);
+}
+
+@supports (backdrop-filter: url("#liquid-glass-filter")) {
+  .nav-panel-body {
+    backdrop-filter: url("#liquid-glass-filter") blur(7px) saturate(155%);
+  }
+}
+
+/* Specular highlight. The shader computes it per-pixel from the cursor; one
+   radial gradient at the same position is indistinguishable at this size and
+   costs a composite instead of a 25-tap blur. */
+.nav-panel-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    260px circle at var(--panel-x, 50%) var(--panel-y, 0%),
+    var(--nav-panel-specular),
+    transparent 68%
+  );
+  transition: opacity 0.45s ease;
+}
+
+.nav-panel-body:hover .nav-panel-sheen {
+  opacity: 1;
+}
+
+.nav-trace {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  /* The stroke sits on the edge, so its glow would be halved by any clip. */
+  overflow: visible;
+  pointer-events: none;
+}
+
+.nav-trace-path {
+  fill: none;
+  stroke: var(--nav-trace-color);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px var(--nav-trace-glow))
+    drop-shadow(0 0 10px var(--nav-trace-glow));
+}
+
+/* A bare custom property cannot be animated - it has no interpolation type
+   until it is registered, so the keyframe below would snap 0deg -> 360deg. */
+@property --nav-glow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Ring rather than fill: the conic gradient paints the whole box and the mask
+   subtracts the content box, leaving just the 1px padding band. */
+.nav-panel-glow {
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  border-radius: calc(var(--nav-panel-radius) + 1px);
+  padding: 1px;
+  background: conic-gradient(
+    from var(--nav-glow-angle),
+    transparent 0deg,
+    var(--nav-glow-a) 50deg,
+    var(--nav-glow-b) 110deg,
+    transparent 170deg,
+    transparent 360deg
+  );
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+/* Armed only once the trace has finished, so the two never overlap. */
+.nav-panel[data-glow="on"] .nav-panel-glow {
+  opacity: 1;
+  animation: nav-glow-spin 4.5s linear infinite;
+}
+
+@keyframes nav-glow-spin {
+  to {
+    --nav-glow-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-trace {
+    display: none;
+  }
+
+  .nav-panel-glow {
+    animation: none;
+  }
+}
+
+/* GSAP owns `transform` here (x + width), so the resting position is expressed
+   with insets rather than a translate it would have to compose with. */
+.nav-indicator {
+  position: absolute;
+  inset-block: 0.3125rem;
+  left: 0;
+  border-radius: 999px;
+  background-color: var(--nav-indicator-bg);
+  pointer-events: none;
+  opacity: 0;
 }
 
 .btn-blur {
@@ -745,6 +1047,29 @@ html[data-mood="alt"] {
     rgba(0, 255, 65, 0.02) 34%,
     rgba(4, 12, 6, 0.3) 100%
   );
+
+  --nav-surface-bg: rgba(8, 18, 10, 0.66);
+  --nav-surface-border: rgba(0, 255, 65, 0.22);
+  --nav-surface-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  --nav-pill-bg: rgba(0, 255, 65, 0.06);
+  --nav-pill-border: rgba(0, 255, 65, 0.18);
+  --nav-indicator-bg: rgba(0, 255, 65, 0.14);
+  /* The mood is a single-colour terminal, so the trace separates from the glow
+     by brightness rather than by hue - no violet here on purpose. */
+  --nav-trace-color: #86ffb8;
+  --nav-trace-glow: rgba(0, 255, 65, 0.5);
+  --nav-glow-a: rgba(0, 255, 65, 0.7);
+  --nav-glow-b: rgba(0, 200, 100, 0.45);
+  --nav-panel-wash: linear-gradient(
+    135deg,
+    rgba(8, 18, 10, 0.58) 0%,
+    rgba(8, 20, 11, 0.52) 50%,
+    rgba(0, 255, 65, 0.2) 100%
+  );
+  --nav-panel-rim:
+    inset 0 0 0 1px rgba(0, 255, 65, 0.1),
+    inset 0 1px 0 rgba(0, 255, 65, 0.18);
+  --nav-panel-specular: rgba(0, 255, 65, 0.14);
 }
 
 .card-lift {
@@ -1444,8 +1769,10 @@ html[data-mood="alt"] {
 .liquid-glass__refraction {
   overflow: hidden;
   background-color: var(--lg-tint);
+  /* Unprefixed only. Lightning CSS emits the `-webkit-` alias itself; authoring
+     both makes it dedupe down to the webkit one alone, which left this rule
+     doing nothing in Firefox. */
   backdrop-filter: blur(6px) saturate(165%);
-  -webkit-backdrop-filter: blur(6px) saturate(165%);
   transition: background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1493,4 +1820,193 @@ html[data-mood="alt"] {
   .liquid-glass:active {
     transform: none !important;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Pick a discipline
+   ---------------------------------------------------------------------------
+   The section is NOT pinned. It is an ordinary block in the flow of the page,
+   and the index moves on the wheel while the cursor is over the 3D column, on
+   the stepper, on the arrow keys, and on a horizontal swipe on touch. Every
+   number that decides where those controls sit lives here, scoped to the
+   section, the way `.process-timeline` does it.
+
+   `--discipline-control` is the resting size of an arrow. It is the one knob
+   worth turning: the arrows are the affordance for a wheel capture nobody can
+   see, so they have to read as controls at a glance without becoming furniture.
+   --------------------------------------------------------------------------- */
+.disciplines {
+  --discipline-control: 2.25rem;
+  --discipline-dot: 0.4rem;
+  --discipline-dot-active: 0.55rem;
+}
+
+/* The capture region. `touch-action` is load-bearing, not a tidy-up: `pan-y`
+   hands the vertical gesture and the pinch straight back to the browser, so the
+   page's own scroll on a phone is never something this section has to give
+   back - only the sideways part ever reaches the swipe handler. */
+.discipline-column {
+  position: relative;
+  width: 100%;
+  border-radius: 1rem;
+  touch-action: pan-y pinch-zoom;
+  outline-offset: 4px;
+}
+
+.discipline-column:focus-visible {
+  outline: 2px solid var(--primary);
+}
+
+/* THE BOX, AND THE REASON THERE IS NO CLS.
+   Reserved here, in CSS, on a wrapper that is rendered before any of the three things that
+   can go inside it - the WebGL canvas, the WebP still, or nothing at all while the WebGL
+   probe is still answering. So the height of this section is settled at first paint and no
+   model, image or fallback decision can move the footer. Putting the ratio on the canvas
+   itself (where it used to live) would have tied it to one of the three branches. */
+.discipline-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+
+/* The no-WebGL branch. All six stills are mounted and one is opaque, so a step is a
+   cross-fade between decoded images rather than a fetch - see DisciplineStill.tsx. */
+.discipline-still {
+  position: absolute;
+  inset: 0;
+}
+
+.discipline-still-frame {
+  object-fit: contain;
+  transition: opacity var(--discipline-dot-duration, 0.28s)
+    var(--discipline-dot-ease, ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discipline-still-frame {
+    transition: none;
+  }
+}
+
+/* Horizontal under the canvas on a phone, vertical between the canvas and the
+   copy from `lg` up. One instance, two axes - a second copy of the stepper
+   would be a second set of controls in the accessibility tree. */
+.discipline-stepper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.discipline-dots {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .discipline-stepper {
+    flex-direction: column;
+    align-self: stretch;
+    justify-content: space-between;
+    padding-block: 0.5rem;
+  }
+
+  .discipline-dots {
+    flex-direction: column;
+  }
+}
+
+/* GSAP writes `scale` and `y` on the arrows for the one-time hint pulse, so the
+   hover treatment is colour and border only. Two owners on one transform is the
+   kind of fight that shows up as a twitch and never as a stack trace. */
+.discipline-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--discipline-control);
+  height: var(--discipline-control);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  background: var(--surface-card-muted);
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.discipline-arrow:hover:not(:disabled) {
+  color: var(--primary);
+  border-color: var(--border-strong);
+}
+
+.discipline-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.discipline-dot {
+  display: block;
+  width: var(--discipline-dot);
+  height: var(--discipline-dot);
+  border-radius: 999px;
+  background: var(--text-secondary);
+  opacity: 0.35;
+  /* Duration and curve are the transition table's `stepper tacka` row, handed down from
+     `disciplinesTiming.ts` by DisciplineStepper - see DOT_TIMING there. The fallbacks are
+     the same numbers so the dot still animates if the rail is ever rendered without them. */
+  transition: opacity var(--discipline-dot-duration, 0.28s)
+      var(--discipline-dot-ease, ease-out),
+    width var(--discipline-dot-duration, 0.28s)
+      var(--discipline-dot-ease, ease-out),
+    height var(--discipline-dot-duration, 0.28s)
+      var(--discipline-dot-ease, ease-out),
+    background-color var(--discipline-dot-duration, 0.28s)
+      var(--discipline-dot-ease, ease-out);
+}
+
+.discipline-dot:hover {
+  opacity: 0.7;
+}
+
+/* The dots are a roving-tabindex group, so exactly one of them is ever a tab stop and the
+   arrow keys move between them. That makes a visible focus ring load-bearing rather than
+   polite: without it the rail moves and nothing on screen says where the keyboard is. */
+.discipline-dot:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  opacity: 1;
+}
+
+.discipline-dot[aria-current="true"] {
+  width: var(--discipline-dot-active);
+  height: var(--discipline-dot-active);
+  background: var(--primary);
+  opacity: 1;
+}
+
+/* All six panels share one grid cell, so the tallest of them sets the height
+   and a change of discipline cannot make the block jump. Stacking them is also
+   what lets the inactive five stay in the DOM at `opacity: 0` instead of being
+   unmounted - `display:none` here would take the copy out of the document, and
+   that copy is the section's whole SEO argument. */
+.discipline-copy-stack {
+  display: grid;
+}
+
+.discipline-copy-stack > .discipline-panel {
+  grid-area: 1 / 1;
+}
+
+/* REDUCED MOTION / SAVE-DATA / LOW BATTERY: the same six panels, read top to bottom.
+   A list and not the stack, because there is no index to hide five of them behind - every
+   panel is active, so every one needs its own room. Nothing here overlaps, so nothing here
+   needs `inert`, `opacity` or a grid cell to share. */
+.discipline-copy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }

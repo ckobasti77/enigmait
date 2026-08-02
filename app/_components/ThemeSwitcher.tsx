@@ -30,7 +30,7 @@ const ThemeSwitcher = ({ variant = "solid", className }: ThemeSwitcherProps) => 
     "relative group flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/40 disabled:cursor-not-allowed disabled:opacity-70 sm:h-11 sm:w-11";
   const variantClasses =
     variant === "ghost"
-      ? "border border-theme bg-transparent text-theme-primary transition-all duration-600 hover:bg-muted"
+      ? "border border-transparent bg-transparent text-theme-primary transition-all duration-600 hover:border-theme hover:bg-muted"
       : "border border-theme bg-card/70 text-theme-primary transition-all duration-600 hover:bg-muted";
 
   const iconClasses = "h-[18px] w-[18px] transition-all duration-300";

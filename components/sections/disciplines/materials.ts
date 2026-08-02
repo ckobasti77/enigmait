@@ -82,6 +82,74 @@ const SCREEN_CLEARCOAT = 1;
 const SCREEN_CLEARCOAT_ROUGHNESS = 0.05;
 
 /**
+ * What the second primitive of a model actually is. Five of the six are `"display"`; the
+ * magnifier's is glass. See `screenKind` in `constants/disciplines.ts` - the field exists so
+ * that difference does not cost a third primitive or a second export contract.
+ */
+export type ScreenKind = "display" | "lens";
+
+/**
+ * The lens on `seo-geo`. The only transmission element on the whole section, and the single
+ * reason that model is allowed a fourth draw call (SECTION_SPEC section 3).
+ *
+ * `thickness` is not a taste value: the lens is modelled biconvex with 0.055 W of sag per
+ * side, so it is 0.11 W thick, which is 0.104 in object space after the bbox normalisation.
+ * Transmission uses it to work out how far light travels through the volume, so a number
+ * pulled out of the air here would tint and bend the view through the glass by the wrong
+ * amount. It is measured, like everything else on this model.
+ *
+ * `ior` 1.5 is crown glass. `roughness` stays very low: a scratched magnifier is a defect,
+ * not a texture.
+ */
+const LENS_SPECS: Record<
+  DisciplineTheme,
+  {
+    color: string;
+    ior: number;
+    thickness: number;
+    roughness: number;
+    envMapIntensity: number;
+  }
+> = {
+  // Cooler and slightly denser on the dark palette, where the glass has to be visible
+  // against a dark backdrop rather than disappear into it.
+  dark: {
+    color: "#dce6f0",
+    ior: 1.5,
+    thickness: 0.104,
+    roughness: 0.04,
+    envMapIntensity: 1.4,
+  },
+  light: {
+    color: "#eef4fa",
+    ior: 1.5,
+    thickness: 0.104,
+    roughness: 0.05,
+    envMapIntensity: 0.9,
+  },
+};
+
+const LENS_TRANSMISSION = 1;
+
+/**
+ * The two numbers the transmission pass is budgeted at.
+ *
+ * They are NOT settable on a bare `MeshPhysicalMaterial` - three.js sizes the transmission
+ * render target from the renderer (`WebGLRenderer.transmissionResolutionScale`), and the
+ * blur sample count only exists on drei's `MeshTransmissionMaterial`. So they live here as
+ * the single place the budget is written down, and whichever of the two paths the render
+ * layer takes reads them from here rather than inventing its own pair.
+ */
+export const LENS_TRANSMISSION_SAMPLES = 4;
+export const LENS_TRANSMISSION_RESOLUTION = 256;
+
+/**
+ * Below this the lens goes opaque and the model drops back to three draw calls. Transmission
+ * is the most expensive material in three.js and a phone is the last place to spend it.
+ */
+export const LENS_TRANSMISSION_MIN_WIDTH = 768;
+
+/**
  * The environment is drawn on an 8-bit canvas, so its brightest value is 1.0 while a real
  * key light is several times that. These carry the make-up gain: above 1.0 on purpose, so
  * metal reads as metal instead of as grey plastic. It is a small correction, not a rescue
@@ -150,7 +218,13 @@ export function getAccentMaterial(theme: DisciplineTheme) {
  * is the part SECTION_SPEC pins down - so all six screens are the same surface with a
  * different image, and every one of them is built here.
  */
-export function createScreenMaterial(theme: DisciplineTheme, texture: Texture) {
+export function createScreenMaterial(
+  theme: DisciplineTheme,
+  texture: Texture,
+  kind: ScreenKind = "display"
+) {
+  if (kind === "lens") return createLensMaterial(theme);
+
   const spec = SCREEN_SPECS[theme];
   const material = new MeshPhysicalMaterial({
     map: texture,
@@ -164,6 +238,70 @@ export function createScreenMaterial(theme: DisciplineTheme, texture: Texture) {
     envMapIntensity: spec.envMapIntensity,
   });
   material.name = `DISC_SCREEN_${theme}`;
+  return material;
+}
+
+/**
+ * Whether this device should pay for transmission. Read at call time rather than at module
+ * scope: this module is imported by a client component whose `useMemo` can in principle run
+ * where there is no `window`, and a media query evaluated once at import would then be
+ * frozen at whatever the first environment answered.
+ */
+export function supportsLensTransmission() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return false;
+  }
+  return window.matchMedia(`(min-width: ${LENS_TRANSMISSION_MIN_WIDTH}px)`)
+    .matches;
+}
+
+/**
+ * The magnifier's lens, and the one place on the section where glass is real rather than
+ * suggested by a clearcoat layer.
+ *
+ * Below 768px it falls back to opaque steel and the model returns to three draw calls, which
+ * is the trade SECTION_SPEC section 3 already committed to.
+ *
+ * TWO THINGS THE FALLBACK IS NOT.
+ *
+ * It is not `getBodyMaterial(theme, "steel")`. That one is shared and cached for the session,
+ * and the caller disposes whatever this function returns when the model unmounts - handing it
+ * the cached instance would take the casing material of every model down with it. The fallback
+ * therefore borrows the steel NUMBERS and owns its instance.
+ *
+ * And it is not `vertexColors: true`, even though the material it is copied from is. The lens
+ * primitive ships without `COLOR_0` - it never gets the AO bake, on purpose, because ambient
+ * occlusion painted onto glass is occlusion of the wrong thing. Leaving the flag on would ask
+ * the shader for an attribute the geometry does not have.
+ */
+export function createLensMaterial(
+  theme: DisciplineTheme,
+  transmission: boolean = supportsLensTransmission()
+) {
+  if (!transmission) {
+    const steel = BODY_SPECS[theme].steel;
+    const opaque = new MeshStandardMaterial({
+      color: new Color(steel.color),
+      metalness: steel.metalness,
+      roughness: steel.roughness,
+      vertexColors: false,
+      envMapIntensity: BODY_ENV_INTENSITY[theme],
+    });
+    opaque.name = `DISC_LENS_OPAQUE_${theme}`;
+    return opaque;
+  }
+
+  const spec = LENS_SPECS[theme];
+  const material = new MeshPhysicalMaterial({
+    color: new Color(spec.color),
+    metalness: 0,
+    roughness: spec.roughness,
+    transmission: LENS_TRANSMISSION,
+    thickness: spec.thickness,
+    ior: spec.ior,
+    envMapIntensity: spec.envMapIntensity,
+  });
+  material.name = `DISC_LENS_${theme}`;
   return material;
 }
 

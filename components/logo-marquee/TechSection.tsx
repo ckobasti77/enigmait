@@ -100,9 +100,6 @@ export function TechSection() {
       ref={sectionRef}
       className="relative z-30 flex h-[33vh] min-h-[250px] max-h-[340px] w-full flex-col justify-center bg-transparent overflow-visible select-none"
     >
-      {/* Background Radial Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,109,255,0.02)_0%,transparent_70%)] pointer-events-none" />
-
       {/* Subtle Title Badge */}
       <div className="text-center z-10 mb-6 sm:mb-8">
         <span className="font-accent text-[9px] md:text-[10.5px] tracking-[0.25em] text-[#D7DCE5]/35 uppercase font-bold">

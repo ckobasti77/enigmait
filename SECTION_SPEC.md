@@ -4,7 +4,7 @@
 
 Šest disciplina već postoje kao podaci i kao rute — `constants/navLinks.ts`, folderi pod
 `app/(pages)/services/`, `ServiceFloatingKey`. Ovaj posao ne izmišlja nove discipline,
-nego menja **kako se biraju**: umesto grida od šest kartica, jedna pinovana sekcija sa
+nego menja **kako se biraju**: umesto grida od šest kartica, jedna sekcija sa
 jednim 3D modelom u fokusu.
 
 Cilj je lista u sekciji „Definicija „gotovo"". Radi dok sve stavke ne prođu.
@@ -17,8 +17,8 @@ Tri stvari traže moju odluku pre Faze E i stoje u „Otvorena pitanja". Sve ost
 ## 0. Šta pravimo
 
 Zamenjujemo **kompletnu** sekciju „Izaberite disciplinu". Levo: 3D kolona, jedan model u
-fokusu. Desno: naslov + podnaslov + CTA koji se menjaju sinhrono sa modelom. Ispod/iznad
-desne kolone: stepper sa strelicama i tačkama.
+fokusu. Desno: naslov + podnaslov + CTA koji se menjaju sinhrono sa modelom. Između njih:
+stepper — strelica iznad i ispod, tačke između njih.
 
 **Postojeći grid od šest kartica se uklanja u potpunosti.** Ne spašavaj kartice, ne gradi
 novo pored starog, ne pravi feature flag.
@@ -57,8 +57,8 @@ Učitaj relevantan skill PRE nego što napišeš kod za tu oblast, ne posle prve
 
 | Pre nego što radiš | Učitaj |
 |---|---|
-| pin, `scrub`, `refresh`, `progress → index` | **`gsap-scrolltrigger`** ← najvažniji ovde |
-| bilo koji GSAP u komponenti, cleanup, `useGSAP` | `gsap-react`, `gsap-performance` |
+| bilo koji GSAP u komponenti, cleanup, `useGSAP` | **`gsap-react`, `gsap-performance`** ← najvažniji ovde |
+| wheel capture, tastatura, swipe nad modelom | **`threejs-interaction`** |
 | trajanja, easing, koliko je „previše", stagger | **`motion-design`** ← brojevi u tabeli prelaza dolaze odavde |
 | `InstancedMesh`, `TubeGeometry`, budžet trouglova | `threejs-geometry` |
 | tri deljena materijala, transmission, dve kože po temi | `threejs-materials` |
@@ -90,10 +90,10 @@ Ovo **nije** vanilla Three.js projekat. Pišeš R3F komponentu.
   Lenis vozi nativni `window` scroll, pa je default scroller već tačan.
 - `useSmoothScroll()` vraća `RefObject<Lenis | null>`, **dvostruko opciono**: sam hook može
   biti `null`, i `.current` može biti `null`. Pod reduced-motion Lenis se **nikad ne instancira**
-  (`SmoothScrollProvider.tsx:36-41`), pa `window.scrollTo` grana nije opciona.
-- `app/_components/MoodScrollController.tsx` — jedini postojeći `pin:` u repou i gotov obrazac:
-  `progressRef` kao `MutableRefObject` (`:50`), `lenis.scrollTo` sa `window.scrollTo`
-  granom (`:34`, `:39`), `gsap.context()` + `ctx.revert()`.
+  (`SmoothScrollProvider.tsx:36-41`), pa nijedna grana koja zove Lenis ne sme da bude jedina.
+  Lenis sluša `wheel` na `window`-u, dakle **posle** svakog listener-a na elementu u stablu.
+- `app/_components/MoodScrollController.tsx` — gotov obrazac za ref-om vođeno stanje bez
+  re-rendera (`progressRef` kao `MutableRefObject`, `:50`) i za `gsap.context()` + `ctx.revert()`.
 - `components/ui/cta-button.tsx` — **jedini CTA na sajtu**, `asChild` preko `next/link`.
 - `components/sections/hero/heroTiming.ts` — obrazac za fajl sa tajmingom uz sekciju.
 - `.site-gutter` + `.site-container` par (`globals.css:84-98`). Obavezan.
@@ -119,7 +119,8 @@ nikad `_for_cli` nad otvorenim `projekat.blend`, nikad apsolutne `C:\` putanje u
 | Fajl | Šta |
 |---|---|
 | `constants/disciplines.ts` | **ugovor podataka**, jedini izvor istine za svih šest |
-| `components/sections/disciplines/Disciplines.tsx` | shell sekcije, vlasnik pina i `index` state-a |
+| `components/sections/disciplines/Disciplines.tsx` | shell sekcije, vlasnik `index` state-a |
+| `components/sections/disciplines/useDisciplineIndex.ts` | ulazni motor: wheel capture, tastatura, swipe, koraci |
 | `components/sections/disciplines/DisciplineStage.tsx` | `<Canvas>`, najviše dva modela u sceni |
 | `components/sections/disciplines/DisciplineModel.tsx` | jedan model: GLB telo + primitiv ekrana + instancirani akcent |
 | `components/sections/disciplines/DisciplineCopy.tsx` | šest tekstualnih panela, svih šest uvek u DOM-u |
@@ -159,9 +160,13 @@ Sve je odlučeno. Ne pitaj, ne čekaj odgovor, radi.
 
 1. **Layout:** levo 3D kolona sa jednim modelom u fokusu, desno title + subtitle + CTA
    koji se menjaju sinhrono sa modelom.
-2. **Mehanizam:** ScrollTrigger `pin` + **nativni scroll**. Nema wheel hijack-a, nema
-   `preventDefault`. Jedan izvor istine: scroll progress → index. Strelice i tačke samo
-   zovu `lenis.scrollTo(offset)`. Lenis je već globalan — integriši se, ne bori se.
+2. **Mehanizam: sekcija se NE pinuje.** Nema pin-a, nema snap-a, nema pin-spacer-a.
+   Stranica skroluje pored sekcije normalno i scroll pozicija ne određuje ništa.
+   Index se menja iz **tri ulaza i samo tri**: (a) kursor nad 3D kolonom + točkić miša,
+   (b) klik na strelicu ili tačku, (c) tastatura dok je 3D kolona fokusirana. Na dodiru
+   još i horizontalni swipe preko modela. **Kursor bilo gde drugde na sekciji — naslov,
+   lede, CTA, prazan prostor — i scroll ide ka footeru, ništa se ne presreće.**
+   Detalji, brojevi i pravilo otpuštanja na krajevima su u Fazi D.
 3. **Najviše DVA modela u sceni**: aktivni i onaj koji ulazi. Ostali su unmount-ovani.
    Prefetch susednih GLB-ova na `requestIdleCallback`.
 4. **Blender daje SAMO geometriju** — bevel + weighted normals + AO zapečen u vertex
@@ -186,9 +191,10 @@ Sve je odlučeno. Ne pitaj, ne čekaj odgovor, radi.
 9. **SEO/a11y je tvrd zahtev.** Tekst svih šest disciplina je u DOM-u sve vreme, inaktivni
    sakriveni vizuelno a **ne** uslovno mountovani. Svaki CTA je pravi
    `<Link href="/services/<key>">`. Stepper ima `aria-current` i strelice na tastaturi.
-   `prefers-reduced-motion` gasi pin i daje običnu listu. No-WebGL/Save-Data pada na WebP still.
+   `prefers-reduced-motion` gasi 3D i daje običnu vertikalnu listu od šest.
+   No-WebGL/Save-Data pada na WebP still.
 10. **Postojeći grid od šest kartica se uklanja u potpunosti.**
-11. **Mobilni ispod 768px zadržava i pin i 3D.** `dpr [1, 1.5]`, bez posta, bez transmission-a,
+11. **Mobilni ispod 768px zadržava 3D.** `dpr [1, 1.5]`, bez posta, bez transmission-a,
     instance prepolovljene. Ako izmerena brojka padne ispod 45 fps, javi mi je pre nego što
     sam nešto isključiš.
 12. Ako nešto stvarno ne može, uradi najbliže moguće i napiši mi to u izveštaju.
@@ -374,7 +380,7 @@ export type Discipline = {
   lede: string;
 };
 
-/** Redosled u pinu. Index u ovom nizu je jedini redosled koji postoji. */
+/** Redosled koraka. Index u ovom nizu je jedini redosled koji postoji. */
 export const DISCIPLINE_ORDER = [
   "web-development",
   "ui-ux-design",
@@ -672,119 +678,200 @@ kao akcent. **3 draw call-a** — baza + paneli + čipovi.
 
 ---
 
-## Faza D — Scroll engine na placeholder kockama
+## Faza D — Ulazni motor na placeholder kockama
 
 **Ovu fazu možeš da radiš paralelno sa A-C.** Ne čeka nijedan GLB — dok modeli ne postoje,
 u sceni stoji `<boxGeometry>` sa brojem discipline. To je pola posla koje se ne blokira Blenderom.
 
-```js
-ScrollTrigger.create({
-  id: "disciplines-pin",
-  trigger: sectionRef.current,
-  start: "top top",
-  end: () => "+=" + Math.round(window.innerHeight * 3.6),   // 6 panela × 60vh
-  pin: true,
-  pinSpacing: true,
-  anticipatePin: 1,
-  invalidateOnRefresh: true,
-  snap: {
-    // Round na najbliži centar, pa clamp — bez clamp-a p = 1 zaokruži na
-    // sedmi centar i snap izleti preko kraja pina.
-    snapTo: (p) => (Math.min(5, Math.max(0, Math.round(p * 6 - 0.5))) + 0.5) / 6,
-    duration: { min: 0.15, max: 0.4 },
-    delay: 0.04,
-    ease: "power2.inOut",
-  },
-  onUpdate: (self) => {
-    progressRef.current = self.progress;
-    const next = Math.min(5, Math.floor(self.progress * 6));
-    if (next !== indexRef.current) { indexRef.current = next; setIndex(next); }
-  },
-});
-```
+### Mehanizam — sekcija se ne pinuje
 
-`end` je **funkcija, ne string procenat.** Vraća piksele izračunate iz `window.innerHeight`
-u trenutku refresh-a, pa ne zavisi ni od jedne semantike koju nisam proverio.
-`invalidateOnRefresh: true` znači da se ponovo pozove na svaki refresh.
+Sekcija je običan blok u toku strane. **Nema pin-a, nema snap-a, nema pin-spacer-a, nema
+ScrollTrigger instance.** Stranica skroluje pored nje kao pored bilo koje druge sekcije, a
+scroll pozicija ne određuje index — nikad, ni na jednoj širini.
 
-**Zašto snap postoji.** 3,6 × `innerHeight` / 6 = **60vh po panelu**, a swap traje **1,36 s**. Pri normalnoj
-brzini skrola posetilac pređe tih 60vh pre nego što se prelaz završi, pa nikad ne vidi model
-da stoji — vidi samo neprekidnu kašu ulaza i izlaza. Snap na centar panela je ono što pravi
-pauzu u kojoj model postoji. Bez njega cela tabela prelaza iz Faze E je uzalud odrađena.
+Index se menja iz tačno tri ulaza:
 
-**Ko vozi šta.** `progressRef` je `MutableRefObject`, ne state — React se re-renderuje
-**samo na promenu indeksa**, nikad po frejmu. Obrazac već postoji na
-`MoodScrollController.tsx:50`. Model u sceni čita `progressRef.current` unutar `useFrame`,
-ne kroz props.
+1. **Kursor nad 3D kolonom + točkić miša.**
+2. **Klik na strelicu ili na tačku.**
+3. **Tastatura dok je 3D kolona fokusirana.**
 
-**Panel `i` zauzima** `p ∈ [i/6, (i+1)/6)`. Centar panela je `(i + 0.5) / 6`.
+Na dodiru dolazi četvrti, i samo tamo: **horizontalni swipe preko modela.**
 
-**Stepper i strelice** računaju offset iz same instance pina i ciljaju **centar** panela,
-ne granicu — na granici bi jedan piksel u drugu stranu vratio prethodni index:
+Kursor bilo gde drugde na sekciji — naslov, kicker, lede, CTA, prazan prostor pored
+kolone — i scroll ide ka footeru. Ništa se ne presreće, jer se ništa i ne sluša tamo.
 
-```js
-const st = ScrollTrigger.getById("disciplines-pin");
-const target = st.start + ((i + 0.5) / 6) * (st.end - st.start);
+`index` je jedini izvor istine i živi u `Disciplines.tsx` kao React state. Sve što se dešava
+između dve promene indeksa (točkić koji još nije napunio bafer, cooldown, pointer parallax)
+ide kroz **refove**, nikad kroz state — React se re-renderuje isključivo na promenu indeksa.
 
-const lenis = smoothScrollRef?.current;      // dvostruko opciono
-if (lenis) lenis.scrollTo(target, { duration: 0.7 });
-else window.scrollTo({ top: target, behavior: "smooth" });
-```
+### Capture — gde i pod kojim uslovom
 
-**Nema wheel hijack-a, nema `preventDefault`, nema `scrollerProxy`.**
+- `pointerenter` / `pointerleave` idu na **kontejner 3D kolone**, ne na celu sekciju. Sekcija
+  je široka i visoka; kolona je tačno ono što korisnik misli da je „model".
+- Capture postoji **samo uz `(pointer: fine)` i `(min-width: 768px)`**. Na dodiru nikad —
+  tamo je vertikalni gest skrol strane i ostaje skrol strane.
+- `wheel` listener ide na sam element kolone, sa **`{ passive: false }`** — bez toga
+  `preventDefault()` ne radi ništa i browser ispisuje upozorenje.
+- **`preventDefault()` + `stopPropagation()` SAMO kad deltu stvarno trošimo.** Trošimo je i
+  kad korak ne pukne zbog cooldown-a ili nedovoljnog bafera — delta je pojedena, dakle
+  presretnuta. Ne trošimo je kad smo na kraju liste u smeru gesta (vidi ispod) i kad je gest
+  horizontalan (`deltaY === 0`).
 
-**Zaštita od brzog skrola.** Ako korisnik prođe tri panela za 400 ms, ne smeš da odigraš tri
-prelaza. Pravilo: na promenu indeksa, ako swap već traje **i skok je veći od jednog panela**,
-ubij tekući timeline, postavi izlazni model odmah na krajnje stanje i pusti samo ulaz
-finalnog indeksa kao **0,25 s crossfade**. Skok od tačno jednog panela igra punu tabelu prelaza.
+**Lenis.** Naš listener stoji na elementu, Lenis-ov na `window`-u, pa naš puca prvi u fazi
+bubblinga. `stopPropagation()` je zato dovoljan da event nikad ne stigne do Lenis-a, a Lenis
+ostaje živ za sve ostalo — tastaturu, skrol iznad i ispod sekcije, `scrollTo` iz navigacije.
+`lenis.stop()` na `pointerenter` je **fallback, ne prvi potez**: uzima se tek ako se izmeri da
+strana i dalje beži, i tada obavezno sa `lenis.start()` na `pointerleave` i na unmount.
+`useSmoothScroll()` je dvostruko opciono (hook može biti `null`, `.current` može biti `null`),
+a pod reduced-motion Lenis ne postoji uopšte — nijedna grana ne sme da zavisi od njega.
 
-**Redosled kreiranja.** ScrollTrigger refresh-uje redom kojim su instance napravljene, a ova
-sekcija je poslednja na strani, pa React redosled već daje tačan poredak. Ako se pin spacing
-ipak pogrešno izračuna, postavi `refreshPriority` iznad Timeline-ovog, i javi mi da si to uradio.
+### Otpuštanje na krajevima — bez ovoga se korisnik zaglavi
+
+**Ovo je najvažnije pravilo cele faze.**
+
+Na **indeksu 0 sa gestom nagore** i na **indeksu 5 sa gestom nadole** ne zovemo
+`preventDefault()` i ne zovemo `stopPropagation()`. Event prolazi, Lenis ga dobija, stranica
+skroluje. **Odmah, bez odlaganja**, bez „još jednog koraka da bude sigurno" i bez čekanja da
+istekne cooldown — provera kraja ide **pre** provere cooldown-a i pre akumulacije. Bafer se
+pritom nulira, da promena smera kreće od nule umesto od nagomilane delte.
+
+Posledica koja se traži: korisnik koji **namerno** drži kursor nad modelom kroz ceo skrol
+strane potroši pet koraka, stigne do indeksa 5 i odatle skroluje do footera bez i jednog
+presretnutog eventa.
+
+### Akumulacija
+
+- Sabiraj normalizovanu `deltaY` u bafer. `|bafer| > 120` → **jedan korak**, bafer na 0.
+- **Cooldown 450 ms** između koraka. Dok traje, delta se troši ali se ne akumulira — tako
+  rep trackpad flick-a nema šta da napuni i jedan zamah ne prolazi kroz dva modela.
+- **200 ms bez ijednog eventa → bafer na 0.** Dva odvojena, spora gesta se ne sabiraju.
+- **`deltaMode` se normalizuje pre svega ostalog:**
+  `DOM_DELTA_LINE` (1) × 16, `DOM_DELTA_PAGE` (2) × visina viewporta, `DOM_DELTA_PIXEL` (0)
+  kakva jeste. **Firefox šalje LINE**, gde je `deltaY` reda veličine 3, a Chrome PIXEL, gde je
+  reda veličine 100. Bez ove normalizacije prag od 120 znači dve potpuno različite stvari u
+  dva browsera.
+
+### Stepper
+
+Strelica **iznad** kolone i strelica **ispod** nje, tačke između njih. Ispod `lg` se ceo
+stepper okreće u horizontalu i seli ispod canvasa — smisao ostaje „prethodni i sledeći".
+
+- Pravi `<button>`-i sa `aria-label`, nikad divovi.
+- Klik = **tačno jedan korak**. **`disabled` na krajevima, bez wrap-a** — sa indeksa 5 se ne
+  ide na 0.
+- Tačke nose `aria-current` na aktivnoj i vode direktno na svoj index.
+- 3D kolona ima `tabIndex={0}` i sluša **`ArrowUp`/`ArrowDown`** i **`Home`/`End`** —
+  točkić ne sme da bude jedini ulaz. Krajevi se poštuju i ovde.
+- **Afordansa:** na **prvi** `pointerenter` nad kolonom strelice pulsiraju **jednom**, pa
+  nikad više u toj sesiji komponente. Pulsira se preko klase koju postavlja ref, ne preko
+  state-a — jedan re-render bi prošao nezapaženo, ali pravilo „nula re-rendera između promena
+  indeksa" mora da važi doslovno da bi se moglo izmeriti.
+
+### Mobilni
+
+**Bez wheel capture-a i bez ijednog presretanja vertikalnog dodira.** Vertikalni gest na
+telefonu je skrol strane; svako mešanje u njega je tačno onaj sudar koji ova revizija uklanja.
+
+Ostaje: strelice, tačke, i **horizontalni swipe preko modela** — prag **40 px**, i samo ako je
+`|dx| > |dy| × 1.5`. Swipe ulevo je sledeći, udesno prethodni, krajevi se poštuju.
+Kolona nosi `touch-action: pan-y pinch-zoom`, pa vertikalni skrol i zumiranje idu browseru
+netaknuti, a horizontalni pomeraj stiže nama.
+
+Layout ispod `768px`: jedna kolona, canvas gore, **stepper horizontalno ispod canvasa**, tekst
+ispod steppera. Tekst ide ispod, ne preko — preko bi tražilo scrim, scrim bi pojeo model.
+Prelom je čist CSS (Tailwind `lg:`), bez `useState` na resize i bez JS breakpoint-a: nema
+pina koji bi trebalo ponovo graditi na promenu orijentacije, pa nema ni razloga za JS.
+
+### Sadržaj
+
+Naslov, kicker, lede i CTA dolaze iz `constants/disciplines.ts` i menjaju se **sinhrono sa
+modelom**. `href` je `/services/${key}`, izveden, ne upisan. Tabela prelaza iz Faze E važi i
+ukupan swap je **1,36 s**.
+
+Svih šest panela je u DOM-u sve vreme, složeni jedan preko drugog u istoj grid ćeliji, pa
+najviši od njih drži visinu i panel ne poskakuje pri promeni. Neaktivni: `opacity: 0` +
+`pointer-events: none` + `inert`. Nikad `display:none`, `visibility:hidden`, uslovni mount ni
+`autoAlpha` (odluka 9).
+
+### Tekst reveal — na svaki dolazak, i na povratak
+
+Naslov stiže **po reči**, isto kao svaki naslov na sajtu, i to **svaki put** — na svaki korak,
+i kad se vratiš na disciplinu koju si već video. To je razlika u odnosu na globalni
+kontroler: on element otkrije **jednom** i završi s njim, a ovde je kopija nova pri svakom
+koraku jer je i model iza nje nov.
+
+- Panel nosi `data-reveal="off"` i vozi svoj reveal. `data-reveal='off'` je u `skipSelector`,
+  pa je panel ujedno izuzet i iz CSS pravila koje skriva kopiju pre prvog paint-a — nema
+  duplog vlasništva nad neprozirnošću.
+- Splitter je **`splitWords`/`restoreWords` iz `lib/textReveal.ts`**, nikad lokalni: ugovor sa
+  `LanguageProvider`-om (pomeri tekstualni čvor, nosi `data-no-translate` dok je razdvojen,
+  vrati ga pre nego što walker prođe) mora da važi svuda ili prevod uhvati pola rečenice.
+- **Vraćanje ide odmah po završetku dolaska**, ne kad panel ode. Razdvojen element nosi
+  `data-no-translate`, a kopija koja ostane razdvojena je kopija do koje promena jezika ne
+  može da dođe. Uz to, efekat na `locale` vraća reči i usred animacije.
+- **Nigde `autoAlpha`**, ni na panelu ni na `span`-ovima reči — `autoAlpha` piše
+  `visibility: hidden`, što je tačno ono što obara SEO argument. Sve je obična `opacity`.
+- Prvi panel čeka `IntersectionObserver` sa istim `enterRatio` (15%) koji koristi globalni
+  kontroler. Bez toga bi odigrao i završio dok je sekcija još metar ispod fold-a, pa bi
+  posetilac stigao na kopiju koja je već sletela.
+- Offseti su iz tabele prelaza Faze E, mereni od promene indeksa (dakle od trenutka kad reel
+  krene): **naslov 0,60 s po reči, kicker 0,78 s, lede + CTA 0,88 s**. Kraj u 1,14 s, unutar
+  swap prozora od 1,36 s. Stagger naslova je ograničen na **0,25 s ukupno**, pa naslov od tri
+  i naslov od pet reči sleću u istom trenutku — i na srpskom i na engleskom.
+
+U sceni: **index 0 je pravi monitor iz Faze A**, indeksi 1-5 su `<boxGeometry>` kocke sa
+brojem discipline dok Faza C ne isporuči preostalih pet GLB-ova. Ivica kocke je `2/√3`, da
+joj je **telesna dijagonala tačno 2.0** — ista brojka na koju export normalizuje svaki pravi
+model, pa placeholder i gotov monitor stoje u istoj težinskoj klasi na istoj kameri.
+
+### Prelaz modela — vertikalni reel
+
+Šest modela visi na **jednoj vertikalnoj traci, sa razmakom između njih**, i korak pomera
+traku. Skrol nadole: model koji je na ekranu **klizi NAGORE** i izlazi iz kadra, a odozdo
+**nagore ulazi sledeći** na njegovo mesto. Skrol nagore je isti pokret u suprotnom smeru —
+zato prelaz unazad nikad ne izgleda kao premotavanje prelaza unapred.
+
+- U sceni su **najviše dva modela**, i to samo dok se traka kreće (odluka 3).
+- Odlazeći stoji u koordinatnom početku trake, ulazni je **jedan slot** dalje u smeru iz
+  kog dolazi, i **jedan tween nad trakom nosi oba**. Zato ovde stoji jedno trajanje i jedan
+  easing, a ne izlazna pa ulazna kriva: to je jedan pokret, ne dva koja se preklapaju.
+- `MODEL_SLOT_GAP = 0.9`, `MODEL_SLOT_SPAN = 2 + gap = 2.9` — bbox je normalizovan na 2.0,
+  pa je razmak čist vazduh. Na `fov 30` i r ≈ 4.44 vidljiva visina je ~2.38, dakle odlazeći
+  model je van kadra pre nego što je ulazni na pola puta.
+- Trajanje i easing su **red „ulaz model" iz tabele prelaza Faze E**: **0,80 s, `power3.out`**.
+  Reel jeste ulaz — oko prati model koji stiže, a usporavajuća kriva je ono što ga spušta na
+  mesto umesto da ga zaustavi.
+- Korak koji stigne usred klizanja uzima onaj koji je ulazio kao svoj odlazeći, pa traka
+  nikad ne drži tri modela.
+- `kill()` na cleanup-u, **ne `ctx.revert()`**: revert bi vratio traku tamo gde je tween
+  počeo, što za završeno klizanje znači vratiti model van ekrana.
 
 **Cleanup** po `.claude/rules/patterns.md`: `gsap.context()` + `ctx.revert()`, ciljanje dece
-preko klasa (`.discipline-panel`, `.discipline-dot`), nikad preko stale refova.
-
-### Mobilni layout ispod 768px — odlučeno, ne pitanje
-
-Odluka 11 kaže da pin i 3D ostaju. Evo kako je složeno:
-
-| Šta | Vrednost |
-|---|---|
-| raspored | jedna kolona; canvas gore, tekst **ispod** canvasa, nikad preko njega |
-| visina canvasa | `42svh`, fiksno, kroz `aspect-ratio` na omotaču — rezervisano pre učitavanja |
-| visina tekstualnog bloka | `min-height: 30svh` — najduži lede od šest diktira broj, da panel ne poskakuje pri swap-u |
-| stepper | **horizontalno**, ispod teksta, tačke u redu; strelice levo i desno od reda |
-| `end` | **`window.innerHeight * 3.0`** — 50svh po panelu, ne 60 |
-
-**Tekst ide ispod, ne preko.** Preko bi tražilo scrim da bi se čitao, scrim bi pojeo model,
-i dobili bismo najgore od oba. Ispod je jasna podela: gore objekat, dole argument.
-
-**Stepper se okreće u horizontalu** iako je na desktopu vertikalan. Strelice ostaju „iznad i
-ispod" po smislu — prethodni i sledeći — ali na uskom ekranu vertikalna kolona tačaka uz ivicu
-sudara se sa palcem i sa Safari-jevom donjom trakom. Tastaturne strelice ostaju iste, obe ose.
-
-**`end` je kraći, 3.0× umesto 3.6×.** Na telefonu je `svh` manji i skrol je brži, pa 60svh po
-panelu znači duže prevlačenje za isti sadržaj. 50svh drži ukupnu dužinu pina podnošljivom.
-Snap ostaje isti — deli na šest bez obzira na ukupnu dužinu.
-
-Prelom je na `768px` i mora biti u `gsap.matchMedia()`, ne u `useState` na resize — inače
-promena orijentacije pravi dva pina.
+preko klasa (`.discipline-panel`, `.discipline-dot`), nikad preko stale refova. Svaki
+listener koji je dodat — `wheel`, `pointerenter`, `pointerleave`, `pointerdown`, `pointerup`,
+`pointercancel`, `keydown` — skida se na unmount.
 
 ### Definicija „gotovo" za Fazu D
 
-1. Šest placeholder kocki, index se menja tačno na `i/6` granicama, potvrđeno sa `markers: true`
-2. `markers` ugašen pre kraja faze
-3. Nula re-rendera između promena indeksa — dokaži React DevTools Profiler-om
-4. Strelice, tačke i tastatura vode na centar panela; pri dnu i vrhu ne izlaze iz pina
-5. Skrol do dna strane pa nazad ne ostavlja sekciju u pogrešnom indeksu
-6. Resize i promena teme ne pomeraju pin (`ScrollTrigger.refresh()` se zove iz
-   `SmoothScrollProvider` na `load`, `fonts.ready`, 250 ms i 1000 ms — sve četiri prolaze čisto)
-7. Reduced-motion: pin se ne pravi uopšte, sekcija je obična vertikalna lista od šest
-8. Snap zaustavlja na centru panela iz oba smera, i na `p = 0` i na `p = 1` ne izleće iz pina
-9. **Provereno na pravom iPhone-u, ne u DevTools emulaciji** — skrol kroz ceo pin dok se
-   traka za adresu skuplja i širi ne pravi skok. Emulacija ovo ne reprodukuje jer nema traku.
-10. Mobilni layout: 3.0× `end`, canvas 42svh, horizontalan stepper — provereno na 360px širine
+1. Kursor nad naslovom, lede-om ili CTA-om → skrol ide ka footeru, index se ne menja
+2. Kursor nad modelom → točkić menja model, strana stoji
+3. **Kursor NAMERNO nad modelom kroz ceo skrol strane → korisnik stigne do footera bez
+   zaglavljivanja.** Snimi ovo — to je jedina provera koja hvata pokvareno otpuštanje na
+   krajevima
+4. Trackpad flick ne prolazi kroz više od jednog modela
+5. Firefox = Chrome — `deltaMode` normalizovan, isti broj gestova za isti put
+6. Strelice, tačke i tastatura rade i poštuju krajeve; `disabled` na 0 nagore i na 5 nadole
+7. Mobilni: strelice i tačke rade, horizontalni swipe radi, **vertikalni skrol netaknut**
+8. Nula re-rendera između promena indeksa — dokaži React DevTools Profiler-om
+9. `next build --turbopack` prolazi, `eslint` čist, nula grešaka i upozorenja u konzoli
+10. Svi listeneri skinuti na unmount, `gsap.context()` + `ctx.revert()`
+11. Šest placeholder kocki sa brojevima na indeksima 1-5, pravi monitor na 0
+12. Reduced-motion: sekcija je obična vertikalna lista od šest, `<Canvas>` se ne montira
+13. Reel klizi vertikalno u oba smera, najviše dva modela u sceni i samo dok traje klizanje;
+    posle više punih krugova `renderer.info.memory` se ne pomera
+14. Naslov se otkriva po reči **na svaki dolazak**, uključujući povratak na već viđenu
+    disciplinu; posle šetnje kroz svih šest i nazad nema zaostalih `.reveal-word` span-ova
+    ni zaostalog `data-no-translate`
 
 ---
 
@@ -805,19 +892,37 @@ stagger **ispod 500 ms**.
 | ulaz | model | 0,48 | 0,80 | `power3.out` | scale 0,92→1 · rotY +0,5→0 · opacity 0→1 |
 | ulaz | emissive akcent | 0,72 | 0,50 | `power2.out` | `emissiveIntensity` 0→1,0 |
 | ulaz | naslov, po reči | 0,60 | 0,46 | `power3.out` | opacity · blur 8→0 · yPercent 22→0 · stagger 0,05 `from:"random"` |
-| ulaz | kicker | 0,78 | 0,32 | `power2.out` | opacity · y 14→0 |
-| ulaz | lede + CTA | 0,88 | 0,26 | `power2.out` | opacity · y 12→0 |
+| ulaz | kicker, po reči | 0,78 | 0,32 | `power3.out` | opacity · blur 5→0 · yPercent 16→0 · stagger 0,04 `from:"random"` (plafon 0,14) |
+| ulaz | lede, po reči | 0,88 | 0,30 | `power3.out` | opacity · blur 6→0 · yPercent 14→0 · stagger 0,028 `from:"random"` (plafon 0,22) |
+| ulaz | CTA | 0,94 | 0,30 | `power2.out` | opacity · y 12→0 |
 | ambient | rotacija u mirovanju | — | 24 s / obrt | `none` | rotY, kontinuirano |
 | ambient | plutanje | — | 6,5 s | `sine.inOut` | y ±0,04 |
 
-**Provere koje ova tabela prolazi:** ukupan swap **1,36 s** (1200 ms × 1,2 = 1440 ms plafon ✓);
-izlaz modela 0,55 / ulaz 0,80 = **69%** ✓; preklop izlaz↔ulaz **0,12 s** ✓; stagger naslova
-0,05 × ~5 reči = **0,25 s**, ispod 500 ms ✓; nigde overshoot ✓.
+**Provere koje ova tabela prolazi:** ukupan swap **1,40 s** — lede je poslednji i on ga meri
+(0,88 + 0,22 + 0,30), i dalje ispod plafona (1200 ms × 1,2 = 1440 ms ✓); izlaz modela 0,55 /
+ulaz 0,80 = **69%** ✓; preklop izlaz↔ulaz **0,12 s** ✓; stagger naslova 0,05 × ~5 reči =
+**0,25 s**, ispod 500 ms ✓; nigde overshoot ✓.
+
+**Zašto kicker i lede idu po reči, a CTA ne.** Reveal po reči je *jedini* način na koji tekst
+stiže na ovaj sajt (`.claude/skills/text-reveal`), pa panel u kojem se samo naslov sklapa iz
+reči čita kao dva različita sajta. CTA ostaje blok jer je kontrola, a kontrola koja se sklapa
+iz reči čita kao tekst. Razlika između tri linije je **širina staggera i dubina blura**, ne
+vrsta pokreta — naslov najširi, kicker najuži, lede između.
+
+**Dva reda o modelu su u Fazi D već potrošena — i to namerno.** Prelaz modela je
+**vertikalni reel** (Faza D, „Prelaz modela"), dakle jedan tween nad trakom koja nosi oba
+modela, na **0,80 s / `power3.out`** — brojevima reda „ulaz model". Redovi „izlaz model" i
+„ulaz model" se zato **ne implementiraju kao dva odvojena tween-a**: nema odlaska koji bi
+skalirao i rotirao odvojeno od dolaska, ima jednog pokreta. Ostatak tabele — tačka, tekst,
+akcent — ostaje kakav jeste i vezuje se za početak tog istog klizanja.
 
 Sve ovo živi u `disciplinesTiming.ts` kao imenovane konstante, po obrascu `heroTiming.ts` —
 lokalne vrednosti se **izvode** iz njih, ne prepisuju. Stagger reči reši tako da poslednja
 reč uvek sleće na isti trenutak bez obzira na broj reči i jezik; `HeroContent.tsx:64-67` je
 gotovo rešenje.
+
+**Redovi za tekst su već implementirani u Fazi D** („Tekst reveal", tamo), zajedno sa
+pravilom da se reveal ponavlja na svaki dolazak. Ostaje samo stepper tačka.
 
 **Reveal naslova po reči** koristi `splitWords`/`restoreWords` iz `lib/textReveal.ts`, ne
 lokalni splitter — inače pada ugovor sa `LanguageProvider`-om (pomeri tekstualni čvor, nosi
@@ -836,9 +941,9 @@ staje čim se kursor smiri. Sirovi `window` listener, ne R3F event
 
 ### Učitavanje — dva pravila koja se lako promaše
 
-**1. Prvi model se preload-uje pre nego što se uđe u pin.** `useGLTF.preload()` za index 0
-okida `IntersectionObserver` sa **`rootMargin: "150%"`**, ne mount komponente i ne prvi
-`onUpdate`. Posetilac koji brzo skroluje ne sme da uleti u pin i zatekne praznu kutiju —
+**1. Prvi model se preload-uje pre nego što sekcija uđe u kadar.** `useGLTF.preload()` za
+index 0 okida `IntersectionObserver` sa **`rootMargin: "150%"`**, ne mount komponente.
+Posetilac koji brzo skroluje ne sme da zatekne praznu kutiju —
 150% viewporta unapred je otprilike jedan ekran skrola vremena za 90 KB.
 Susedi (`index ± 1`) idu i dalje na `requestIdleCallback`, po odluci 3.
 
@@ -911,16 +1016,17 @@ Ni u jednoj varijanti nema SSAO (AO je zapečen) ni DOF-a.
 1. Šest modela zamenjuju placeholder kocke, prelaz je jedan potez a ne dva odvojena
 2. Tabela prelaza je implementirana i vidi se u `disciplinesTiming.ts` kao konstante
 3. Prelaz nazad (skrol nagore) izgleda isto kao unapred, ne kao reverse
-4. Skok od 3 panela ne igra 3 prelaza — dokaži screen recording-om
+4. Skok od 3 panela — moguć samo klikom na tačku — ne igra 3 prelaza; dokaži screen recording-om
 5. Obe teme: model se čita na `#f4f7fb` i na `#070d19`, cyan akcent živ u obe
 6. Ambient rotacija nema vidljiv šav pri obrtu
 7. `renderer.info.render.calls` **≤ 3 u mirovanju** (`seo-geo` 4), **≤ 6 u swap prozoru** —
    prijavi obe brojke
 8. **Tajming nije zaključan dok mi ne pošalješ poređenje.** Snimi isti prelaz na **1,36 s**
    i na **0,75× toga (1,02 s)**, side-by-side, i javi mi koji je bolji. Tabela iz ove faze je
-   izvedena iz `motion-design`, ali ona ne zna da snap drži model u mirovanju — možda je
-   prostora za sporije, možda je 1,36 s presporo kad se panel ionako zaustavi. Ja odlučujem.
-9. Ulazak u pin sa brzim skrolom odozgo ne pokazuje praznu kutiju — `rootMargin: "150%"` radi
+   izvedena iz `motion-design`, ali ona ne zna da cooldown od 450 ms drži model u mirovanju
+   između koraka — možda ima prostora za sporije, možda je 1,36 s presporo kad model ionako
+   stoji dok korisnik ne zatraži sledeći. Ja odlučujem.
+9. Ulazak u kadar sa brzim skrolom odozgo ne pokazuje praznu kutiju — `rootMargin: "150%"` radi
 10. Odlazeći model odigra ceo izlaz i kad model koji ulazi još nije učitan — dokaz da je
     `<Suspense>` po modelu, a ne oko scene
 
@@ -952,20 +1058,21 @@ sa `aria-label` koji nosi naziv discipline — jer je vidljivi tekst na svih še
 - Strelice su pravi `<button>` sa `aria-label`, ne divovi.
 - Canvas nosi `role="img"` sa `aria-label` koji se menja sa modelom — `HeroCube.tsx:302-307`
   je gotov obrazac.
-- Fokus unutar pina ne sme da odskroluje stranu ispod pina.
+- Fokus na 3D koloni ne sme da pomeri stranu; `tabIndex={0}` je tu zbog tastature, a
+  `outline` ostaje vidljiv.
 
 ### Fallback-ovi
 
 | Uslov | Šta se dešava |
 |---|---|
-| `usePrefersReducedMotion()` | pin se ne pravi, sekcija je obična vertikalna lista od šest; `<Canvas>` se ne montira |
+| `usePrefersReducedMotion()` | sekcija je obična vertikalna lista od šest; `<Canvas>` se ne montira, wheel capture se ne postavlja |
 | Save-Data / slaba baterija | isto — pokriveno istim hook-om, ne piši drugi detektor |
 | WebGL nedostupan | `<Canvas>` se ne montira, na njegovo mesto ide WebP still; **detektor ne postoji u repou, pišeš ga** |
-| `<768px` | pin i 3D **ostaju**; `dpr [1, 1.5]`, bez posta, bez transmission-a, instance /2 |
+| `<768px` | 3D **ostaje**; `dpr [1, 1.5]`, bez posta, bez transmission-a, instance /2; bez wheel capture-a |
 | sekcija van ekrana ili `document.hidden` | `frameloop={active ? "always" : "never"}`, gde je `active` presek `useIntersectionActive` i `!document.hidden` |
 
 Fallback nikad nije crn canvas. Kutija canvasa je rezervisana kroz `aspect-ratio` pre nego
-što se išta učita, da `ScrollTrigger.refresh()` ne zatekne drugačiju visinu i pomeri pin.
+što se išta učita, da učitavanje modela ne pomeri sadržaj ispod sebe.
 
 ### Definicija „gotovo" za Fazu F
 
@@ -973,7 +1080,7 @@ Fallback nikad nije crn canvas. Kutija canvasa je rezervisana kroz `aspect-ratio
 2. Tab kroz sekciju dodiruje samo aktivni panel i stepper
 3. Screen reader ne čita neaktivne panele
 4. `ItemList` prolazi Rich Results Test
-5. Sa `prefers-reduced-motion: reduce` sekcija je upotrebljiva lista, bez pina i bez canvasa
+5. Sa `prefers-reduced-motion: reduce` sekcija je upotrebljiva lista, bez canvasa
 6. Sa ugašenim WebGL-om (Chrome flag) sekcija radi i pokazuje still
 
 ---
@@ -991,11 +1098,12 @@ Fallback nikad nije crn canvas. Kutija canvasa je rezervisana kroz `aspect-ratio
 6. **≥ 45 fps na mid-range Androidu** — prijavi brojku i uređaj
 7. `dpr` `[1, 1.75]` desktop, `[1, 1.5]` ispod 768px
 8. Prelaz traje vrednost zaključanu u `disciplinesTiming.ts` posle poređenja iz Faze E
-   (1,36 s ili 1,02 s) i ne pravi thrash pri brzom skrolu
+   (1,36 s ili 1,02 s) i ne pravi thrash pri brzom nizu koraka
 9. Tekst svih šest disciplina u DOM-u u produkcionom buildu; nula `display:none` i nula
    `visibility:hidden` na tim panelima
 10. Šest CTA-ova su pravi `<Link>`-ovi ka `/services/<key>`
-11. Stepper radi mišem, tastaturom i preko `lenis.scrollTo`; `aria-current` tačan
+11. Stepper radi mišem i tastaturom, poštuje krajeve, bez wrap-a; `aria-current` tačan
+    (a na dodiru radi i horizontalni swipe preko modela)
 12. Zamena placeholder slike pravom je **jedna linija po disciplini** u `constants/disciplines.ts`
 13. `next build --turbopack` prolazi, `eslint` čist, TypeScript bez grešaka
 14. Obe teme provereno; `data-mood="alt"` ne lomi sekciju
@@ -1042,13 +1150,11 @@ učitava ih samo klijent bez WebGL-a ili sa Save-Data, i taj klijent nikad ne po
 |---|---|
 | **`COLOR_0` AO nevidljiv na metalu** — na `metalness 1.0` nema difuzne komponente koju bi AO množio, pa ceo rad iz Faze A nestane | drži `metalness` u prozoru `0.78-0.9`; ako i dalje ne čita, AO ide kao poseban term kroz `onBeforeCompile` |
 | **AO zapečen kroz AgX** — scena je na `view_transform = 'AgX'` (`blender/CLAUDE.md:14`), a `HERO_SPEC.md:191` tvrdi da je Blender na `Standard`; dokumenti se ne slažu | AO bake ide u **Non-Color**, nikad kroz view transform; proveri stvarno stanje scene pre Faze A i javi mi koje je |
-| Pin skoči na ulazu jer Lenis i ScrollTrigger nisu poravnati | `anticipatePin: 1`; `MoodScrollController.tsx:29-40` je gotov obrazac za čist ulaz u pin |
-| Pin-spacer se bije sa `.app-shell { isolate }` i `VideoBackgroundGlobal` na `fixed z-0` | testiraj stacking u obe teme **pre** Faze E, dok je još placeholder kocka — kasnije je skuplje |
-| `ScrollTrigger.refresh()` se zove pet puta iz `SmoothScrollProvider` (`load`, `fonts.ready`, resize, 250 ms, 1000 ms) i zatekne drugu visinu | `invalidateOnRefresh: true` + kutija canvasa rezervisana `aspect-ratio`-om, nula CLS-a |
-| **iOS Safari: traka za adresu menja visinu viewporta pri skrolu** → `ScrollTrigger.refresh()` usred pina → skok. Ovo je najgori mogući trenutak za refresh i **ne reprodukuje se u DevTools emulaciji** | `ScrollTrigger.config({ ignoreMobileResize: true })`; `end` se računa **jednom po orijentaciji**, ne na svaki resize. Provera ide na pravom telefonu, u Definiciji „gotovo" za Fazu D |
-| Snap se potuče sa Lenis-om — oba pišu scroll poziciju, pa se otimaju ili snap nikad ne slegne | fallback je ručni snap: debounce-ovan `lenis.on("scroll")` (~120 ms bez pomeraja) → izračunaj najbliži centar → `lenis.scrollTo(centar)`. Tada **ukloni `snap` iz ScrollTrigger config-a** — ne ostavljaj oba uključena i ne nadaj se da će se složiti |
-| Brzo skrolovanje pravi swap thrash | skok > 1 panela → kill + 0,25 s crossfade (Faza D) |
-| Index titra na granici panela | ako se pojavi, histereza ±0,015 oko `(i+0.5)/6`. **Ne rešavaj unapred** — možda se ne pojavi, a histereza koja ne treba je kod koji niko ne ume da ukloni |
+| **ZAGLAVLJIVANJE — korisnik ne može da prođe sekciju.** Ako otpuštanje na krajevima ne radi, kursor koji stoji nad 3D kolonom pojede svaku deltu i strana više ne skroluje ka footeru. Ovo je najgori mogući bug ove sekcije: nije ružan, nego blokira sajt | provera kraja ide **pre** cooldown-a i pre akumulacije, i na indeksu 0 nagore / 5 nadole se ne zove ni `preventDefault()` ni `stopPropagation()`. Kriterijum prijema Faze D, tačka 3, i traži se **screen recording**, ne izjava da radi |
+| Lenis i naš wheel listener se otimaju o istu deltu | naš listener je na elementu, Lenis-ov na `window`-u, pa `stopPropagation()` presreće pre njega. Ako se izmeri da strana i dalje beži, `lenis.stop()` na `pointerenter` + `lenis.start()` na `pointerleave` i na unmount — i to se **javi**, ne uvodi ćutke |
+| Wheel capture uhvati i kursor koji samo prelazi preko kolone ka nečemu drugom | capture je vezan za kontejner 3D kolone, ne za sekciju, i traži `(pointer: fine)` + `(min-width: 768px)`; bafer se resetuje posle 200 ms bez eventa, pa jedan slučajan „zarez" delte ne ostane da čeka |
+| Firefox se ponaša drugačije od Chrome-a | `deltaMode` se normalizuje pre praga: LINE × 16, PAGE × visina viewporta. Bez toga je prag od 120 u Firefox-u ~40 gestova, u Chrome-u ~1,2 |
+| Brz niz koraka pravi swap thrash | skok > 1 panela je moguć samo klikom na tačku → kill + 0,25 s crossfade (Faza E); točkić je ograničen cooldown-om od 450 ms i ne može da preskoči panel |
 | 45 fps na Androidu uz zadržan 3D (odluka 11) | `dpr [1, 1.5]`, bez posta, bez transmission-a, instance /2; ako i dalje pada, **javi brojku pre nego što sam nešto isključiš** |
 | `seo-geo` probije budžet zbog nazubljenog hvata | to je najskuplji model od šest; ako probije, smanji broj zubaca pre nego što diraš siluetu — hvat se čita i sa upola manje zubaca, tubus bez hvata ne |
 | `transmission` na `seo-geo` ubije mid-range GPU | već je ograničen na jedan element jednog modela (sočivo lupe) i gasi se ispod 768px; ako i na desktopu košta, pada na `MAT_STEEL` i javi mi. Tablet ga **ne dobija** — `ui-ux-design` je bez transmission-a |
@@ -1068,7 +1174,10 @@ učitava ih samo klijent bez WebGL-a ili sa Save-Data, i taj klijent nikad ne po
   `gltf-transform`, i oba su otvorena pitanja, ne odluke
 - Ne diraj `SmoothScrollProvider`, `ThemeProvider`, ni njihovu ScrollTrigger integraciju
 - Ne pravi drugi Lenis i ne zovi `ScrollTrigger.scrollerProxy` — Lenis vozi nativni scroll
-- Ne hvataj `wheel`, ne zovi `preventDefault`, ne pravi svoj scroll
+- Ne pinuj sekciju i ne vezuj index za scroll poziciju — ni `pin`, ni `snap`, ni `scrub`
+- Ne hvataj `wheel` nigde osim na kontejneru 3D kolone, i nikad na dodiru
+- Ne presreći vertikalni dodir na telefonu — to je skrol strane
+- Ne zovi `preventDefault()` na kraju liste u smeru gesta; to je zaglavljivanje, ne feature
 - Ne mount-uj uslovno šest tekstualnih panela i ne stavljaj im `display:none`,
   `visibility:hidden` ni `autoAlpha` — to je jedina stvar koja obara ceo SEO argument
 - Ne izvozi PBR teksture iz Blendera — **nula tekstura u GLB-u**, odluka 4. Ekran je primitiv
