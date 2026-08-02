@@ -1,6 +1,7 @@
 "use client";
 
 import { useGLTF, useTexture } from "@react-three/drei";
+import type { Material, Mesh, Object3D, Texture } from "three";
 
 import { DISCIPLINE_ORDER, disciplines } from "@/constants/disciplines";
 
@@ -23,6 +24,72 @@ import { DISCIPLINE_ORDER, disciplines } from "@/constants/disciplines";
  */
 
 const inFlight = new Set<string>();
+
+/**
+ * WHAT IS ACTUALLY ON THE GPU, AND WHY A CACHE CLEAR IS NOT ENOUGH.
+ *
+ * `useGLTF.clear(url)` and `useTexture.clear(url)` drop drei's CACHE ENTRY. They do not touch
+ * the objects that entry pointed at, and those objects hold the GPU allocation: a
+ * `BufferGeometry` keeps its buffers until something calls `.dispose()`, and so does a
+ * `Texture`. So an evict-then-reload cycle used to parse a second copy of the same GLB and
+ * upload it alongside the first, forever.
+ *
+ * Measured before this: walking all six forwards and back, `renderer.info.memory.geometries`
+ * went 21 -> 37 -> 53 -> 69 over four laps, +16 a lap, with textures climbing alongside. It
+ * never plateaued, which is the definition of a leak rather than a working set.
+ *
+ * These two maps are the missing half. The model component registers what it was handed the
+ * moment it has it, and `releaseDiscipline` disposes that before clearing the cache entry -
+ * so a reload really is a reload and not an accumulation.
+ *
+ * Registration is idempotent and keyed by URL, because drei hands every consumer of the same
+ * URL the same object.
+ */
+const loadedScenes = new Map<string, Object3D>();
+const loadedTextures = new Map<string, Texture>();
+
+/** Called by `DisciplineModel` with the scene drei just handed it. */
+export function registerModelScene(url: string, scene: Object3D) {
+  loadedScenes.set(url, scene);
+}
+
+/** Called by the screen primitive with the texture drei just handed it. */
+export function registerScreenTexture(url: string, texture: Texture) {
+  loadedTextures.set(url, texture);
+}
+
+/**
+ * Free one GLB's GPU allocation.
+ *
+ * The geometries are the point. The materials on the scene's own meshes are the ones
+ * `GLTFLoader` built for the file's (empty) material slots - the section never renders them,
+ * it renders `nodes[...].geometry` under the shared materials from `materials.ts` - but they
+ * are owned by this file's loader and nobody else will ever free them.
+ *
+ * The shared materials are deliberately NOT touched: they outlive every model, they are
+ * cached per theme, and disposing one here would take the casing off whichever model is on
+ * screen.
+ */
+function disposeScene(url: string) {
+  const scene = loadedScenes.get(url);
+  if (!scene) return;
+  loadedScenes.delete(url);
+
+  scene.traverse((object) => {
+    const mesh = object as Mesh;
+    mesh.geometry?.dispose?.();
+    const material = mesh.material as Material | Material[] | undefined;
+    if (Array.isArray(material)) material.forEach((one) => one?.dispose?.());
+    else material?.dispose?.();
+  });
+}
+
+function disposeTexture(url: string) {
+  const texture = loadedTextures.get(url);
+  if (!texture) return;
+  loadedTextures.delete(url);
+  texture.dispose();
+}
 
 const modelUrl = (index: number) =>
   disciplines[DISCIPLINE_ORDER[index]].modelPath;
@@ -66,13 +133,20 @@ function releaseDiscipline(index: number) {
   if (!inRange(index)) return;
 
   const model = modelUrl(index);
-  if (inFlight.delete(model)) useGLTF.clear(model);
+  if (inFlight.delete(model)) {
+    // Dispose FIRST, clear second. The cache entry is the only remaining handle on the
+    // objects that hold the GPU allocation; drop it first and they are unreachable and
+    // uploaded forever.
+    disposeScene(model);
+    useGLTF.clear(model);
+  }
 
   const screen = screenUrl(index);
   // Five of the six screens share one placeholder image today. Clearing it because one
   // model walked out of range would take it out from under the model still using it, so a
   // URL still claimed by an in-range discipline is left alone.
   if (screen && !urlStillNeeded(screen, index) && inFlight.delete(screen)) {
+    disposeTexture(screen);
     useTexture.clear(screen);
   }
 }

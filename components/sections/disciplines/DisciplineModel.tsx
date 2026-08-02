@@ -14,6 +14,7 @@ import {
 import type { BufferGeometry, Group, Material, Mesh } from "three";
 
 import type { Discipline } from "@/constants/disciplines";
+import { registerModelScene, registerScreenTexture } from "./disciplinePrefetch";
 import {
   createLensMaterial,
   createScreenMaterial,
@@ -58,9 +59,17 @@ export default function DisciplineModel({
   theme,
   animated,
 }: DisciplineModelProps) {
-  const { nodes } = useGLTF(discipline.modelPath);
+  const { nodes, scene } = useGLTF(discipline.modelPath);
   const groupRef = useRef<Group>(null);
   const gl = useThree((state) => state.gl);
+
+  /**
+   * Hand the prefetcher the objects it will one day have to free. Drei's cache is keyed by
+   * URL and hands every consumer the same scene, so this is idempotent, and it is a plain
+   * registration rather than an effect because the eviction can happen long after this
+   * component has unmounted - which is precisely when it is allowed to.
+   */
+  registerModelScene(discipline.modelPath, scene);
 
   const bodyGeometry = (nodes[discipline.meshName] as Mesh | undefined)
     ?.geometry;
@@ -245,6 +254,10 @@ function DisplayPrimitive({
 }) {
   const texture = useTexture(image);
   const gl = useThree((state) => state.gl);
+
+  // Same debt as the GLB: drei's cache holds the only handle once this unmounts, and a
+  // `Texture` keeps its upload until something disposes it. See `disciplinePrefetch.ts`.
+  registerScreenTexture(image, texture);
 
   const material = useMemo(() => {
     prepareScreenTexture(texture, gl.capabilities.getMaxAnisotropy());

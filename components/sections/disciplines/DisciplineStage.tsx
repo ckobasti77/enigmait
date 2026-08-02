@@ -30,7 +30,40 @@ import {
 export const CAMERA_POSITION: [number, number, number] = [-1.86, 1.4, 3.72];
 export const CAMERA_FOV = 30;
 
-const DPR: [number, number] = [1, 1.75];
+/**
+ * The pixel budget, and it is TWO budgets.
+ *
+ * SECTION_SPEC's "Budzeti" table: `[1, 1.75]` on the desktop, `[1, 1.5]` below 768px. The
+ * ceiling is what actually costs money - a phone at dpr 3 renders 3.5x the pixels of one at
+ * 1.75, for a model that is a third of the size on screen - so the narrow branch is the one
+ * carrying the 45 fps target on mid-range Android, not a rounding detail.
+ *
+ * The same 768px line as `LENS_TRANSMISSION_MIN_WIDTH`, and for the same reason: below it
+ * the section is deliberately cheaper.
+ */
+const DPR_DESKTOP: [number, number] = [1, 1.75];
+const DPR_NARROW: [number, number] = [1, 1.5];
+const NARROW_QUERY = "(max-width: 767px)";
+
+/**
+ * Live, not sampled at mount. A window dragged across 768px, or a phone turned on its side,
+ * changes which budget applies - and R3F re-configures the renderer when `dpr` changes, so
+ * the answer only has to be correct, not stable. `matchMedia` rather than a resize listener
+ * because the query fires once on the crossing instead of on every intermediate pixel.
+ */
+function useCanvasDpr(): [number, number] {
+  const [narrow, setNarrow] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia(NARROW_QUERY);
+    const sync = () => setNarrow(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+
+  return narrow ? DPR_NARROW : DPR_DESKTOP;
+}
 
 /**
  * Environment lives inside the Canvas because it needs the renderer, but its colours are
@@ -82,6 +115,7 @@ export default function DisciplineStage({
   const { ref, isIntersecting } = useIntersectionActive<HTMLDivElement>({
     threshold: 0,
   });
+  const dpr = useCanvasDpr();
   const [documentVisible, setDocumentVisible] = useState(true);
 
   useEffect(() => {
@@ -104,7 +138,7 @@ export default function DisciplineStage({
         // "never" is the parked state costing literally nothing, and the last frame stays
         // on the canvas until the section comes back.
         frameloop={animated ? "always" : "never"}
-        dpr={DPR}
+        dpr={dpr}
         gl={{
           alpha: true,
           antialias: true,
