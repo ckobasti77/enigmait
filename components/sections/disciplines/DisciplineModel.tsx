@@ -27,7 +27,6 @@ import {
 import {
   AMBIENT_FLOAT_AMPLITUDE,
   AMBIENT_FLOAT_SPEED,
-  AMBIENT_YAW_SPEED,
   MAX_FRAME_DELTA,
   MODEL_BASE_YAW,
   POINTER_LERP,
@@ -129,13 +128,21 @@ export default function DisciplineModel({
    * Pointer tracking. A raw `window` listener, no R3F event and no raycast - nothing in the
    * scene is picked, and the pointer has to be tracked even where `pointer-events` is off.
    *
-   * Both axes are measured about the CENTRE OF THE CANVAS and both run -1..1, because the
-   * parallax is symmetric: it is a lean towards the cursor, not a pose. The rect is cached
-   * and refreshed on scroll and resize rather than measured inside the handler, so a
-   * pointer move never forces layout.
+   * THE TWO AXES ARE MEASURED AGAINST DIFFERENT THINGS, and that is not an oversight.
    *
-   * Both start at 0, so with no cursor yet - first paint, a touch device, a pointer that
-   * never enters the window - the model sits square on its ambient turn and nothing else.
+   * `x` runs 0..1 across the WINDOW, because the yaw is described in terms of the window:
+   * cursor at the left edge of the screen means the rest pose, cursor at the right edge means
+   * fully turned, 30 degrees away. Measured against the canvas instead, the model would reach
+   * full yaw somewhere in the middle of the page and then sit there for the whole right-hand
+   * half of it.
+   *
+   * `y` stays -1..1 about the CENTRE OF THE CANVAS, because the tilt is a reaction to where
+   * the cursor is relative to the model, and the model travels up the screen as the page
+   * scrolls. The rect is cached and refreshed on scroll and resize rather than measured
+   * inside the handler, so a pointer move never forces layout.
+   *
+   * `x` starts at 0, so with no cursor yet - first paint, a touch device, a pointer that
+   * never enters the window - the model rests exactly where the far-left cursor would put it.
    */
   const pointerTarget = useRef({ x: 0, y: 0 });
   const pointerCurrent = useRef({ x: 0, y: 0 });
@@ -150,11 +157,12 @@ export default function DisciplineModel({
     };
 
     const onPointerMove = (event: PointerEvent) => {
-      if (rect.width === 0 || rect.height === 0) return;
-      const x = (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+      const width = window.innerWidth;
+      if (width === 0 || rect.height === 0) return;
+      const x = event.clientX / width;
       const y =
         (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-      pointerTarget.current.x = Math.max(-1, Math.min(1, x));
+      pointerTarget.current.x = Math.max(0, Math.min(1, x));
       pointerTarget.current.y = Math.max(-1, Math.min(1, y));
     };
 
@@ -173,25 +181,28 @@ export default function DisciplineModel({
   }, [gl]);
 
   const floatPhaseRef = useRef(0);
-  const yawRef = useRef(0);
 
   /**
    * ONE WRITER PER VALUE, AND THIS IS THE ONE FOR ROTATION.
    *
-   *   rotation.y = MODEL_BASE_YAW + ambient turn + pointer yaw
-   *   rotation.x = pointer pitch
+   *   rotation.y = MODEL_BASE_YAW + pointer yaw   (0 at the left edge of the window,
+   *                                                +30 deg at the right edge)
+   *   rotation.x = pointer pitch                  (symmetric about the canvas centre)
    *   position.y = ambient float
    *
-   * The three terms of the yaw are summed HERE, in one assignment, and nowhere else. The
-   * swap timeline owns `scale`, `opacity` and `emissiveIntensity` and deliberately touches
-   * none of these - two schedulers over one value is jitter that does not debug, and the
-   * reel's tween moves the strip's `position.y`, which is the parent of this group, not
-   * this group's own.
+   * The terms are summed HERE, in one assignment, and nowhere else. The swap timeline owns
+   * `scale`, `opacity` and `emissiveIntensity` and deliberately touches none of these - two
+   * schedulers over one value is jitter that does not debug, and the reel's tween moves the
+   * STRIP's `position.y`, which is the parent of this group, not this group's own.
    *
-   * The ambient turn is accumulated as an angle and wrapped into [0, 2pi). Wrapping a
-   * rotation by a full turn is the identity, so there is no seam at the wrap; what it buys
-   * is that the number driving the sine tables stays small no matter how long the tab has
-   * been open, instead of growing without bound and losing its low bits.
+   * There is no ambient turn in the sum any more, and that is the point: the model is still
+   * until the cursor moves it. A model that also turned on its own clock would spend half of
+   * every cycle facing away from the cursor it is meant to be answering, and would hide the
+   * screen - which is the content of this section, not decoration on it.
+   *
+   * The float still needs a clock, so its phase is accumulated and wrapped into [0, 2pi):
+   * wrapping a sine by a full period is the identity, and it keeps the number small however
+   * long the tab has been open instead of letting it grow and lose its low bits.
    */
   useFrame((_, delta) => {
     const group = groupRef.current;
@@ -199,8 +210,8 @@ export default function DisciplineModel({
 
     const step = Math.min(delta, MAX_FRAME_DELTA);
     if (animated) {
-      floatPhaseRef.current = (floatPhaseRef.current + step * AMBIENT_FLOAT_SPEED) % TWO_PI;
-      yawRef.current = (yawRef.current + step * AMBIENT_YAW_SPEED) % TWO_PI;
+      floatPhaseRef.current =
+        (floatPhaseRef.current + step * AMBIENT_FLOAT_SPEED) % TWO_PI;
     }
 
     const current = pointerCurrent.current;
@@ -208,8 +219,7 @@ export default function DisciplineModel({
     current.x += (target.x - current.x) * POINTER_LERP;
     current.y += (target.y - current.y) * POINTER_LERP;
 
-    group.rotation.y =
-      MODEL_BASE_YAW + yawRef.current + current.x * POINTER_YAW_MAX;
+    group.rotation.y = MODEL_BASE_YAW + current.x * POINTER_YAW_MAX;
     group.rotation.x = current.y * POINTER_PITCH_MAX;
     group.position.y = animated
       ? Math.sin(floatPhaseRef.current) * AMBIENT_FLOAT_AMPLITUDE

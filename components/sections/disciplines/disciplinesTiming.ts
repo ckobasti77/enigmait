@@ -26,42 +26,56 @@ export const AMBIENT_FLOAT_AMPLITUDE = 0.04;
 export const AMBIENT_FLOAT_SPEED = TAU / AMBIENT_FLOAT_SECONDS;
 
 /**
- * Ambient rotation: one full turn every 24 s, linear, continuous - SECTION_SPEC's transition
- * table, the `ambient` row, taken literally.
+ * NO AMBIENT ROTATION, DELIBERATELY. SECTION_SPEC's transition table has an `ambient` row
+ * asking for one full turn every 24 s, and it was built and then taken back out.
  *
- * Linear is not laziness here, it is the requirement. Any easing on a looping full turn has
- * to slow down somewhere and speed up somewhere else, and the point where the curve restarts
- * is a seam you can see even at 24 s. A constant angular velocity has no such point: the
- * loop closes because a full turn IS the identity, not because the animation was told to
- * repeat. That is also why the frame loop accumulates an angle and wraps it modulo 2pi
- * rather than tweening a value from 0 to 2pi.
+ * The table was written for the abstract machined forms the section originally had, which
+ * have no front. Faza C replaced them with devices, and a device that turns on its own spends
+ * half of every cycle showing the viewer its back - including, at random, the moment a swap
+ * lands. The screen is the content of this section; a rotation that hides it for twelve
+ * seconds at a time is not ambience, it is a shutter.
+ *
+ * All the turning is the pointer's, and only the pointer's. That also removes the seam
+ * question the ambient row came with: there is no loop to close.
  */
-export const AMBIENT_YAW_SECONDS = 24;
-export const AMBIENT_YAW_SPEED = TAU / AMBIENT_YAW_SECONDS;
 
 /**
- * The model's resting yaw, before the ambient turn and the pointer are added.
+ * The model's resting yaw: where it sits with the cursor at the far LEFT of the window, and
+ * where it sits with no cursor at all - first paint, a touch device, a pointer that never
+ * enters the window.
  *
- * Zero for all six, and it is written down rather than left implicit because the sum in
- * `DisciplineModel`'s frame loop is the ONE place rotation.y is assigned, and a sum reads
- * better with all of its terms named. The 3/4 pose is baked into the geometry by the export
- * (SECTION_SPEC: "orijentacija je deo modela"), so there is nothing for this to correct -
- * if a model ever needs a nudge, it gets one here and not by re-exporting.
+ * Not zero. Dead square to the camera flattens a machined object into an elevation drawing;
+ * a few degrees off-axis is what keeps a second face in the frame and the bevels catching
+ * light. Negative turns the model's front slightly towards screen-left.
  */
-export const MODEL_BASE_YAW = 0;
+export const MODEL_BASE_YAW = -0.1; // rad, ~6 deg
 
 /**
- * Pointer parallax: +-0.06 rad on both axes, lerp 0.06, fine pointers only - SECTION_SPEC
- * Faza E, "Pointer parallax", verbatim.
+ * Yaw, and the whole of the model's turning.
  *
- * Symmetric on both axes, measured about the centre of the canvas. Faza D had the yaw
- * running one-directionally from a rest pose that faced the viewer; the ambient turn removes
- * that rest pose, so a one-directional yaw would now be a lean that never comes back. What
- * is left is a parallax: a small, even lean towards the cursor riding on top of the turn.
+ * It is NOT symmetric. The cursor's x runs 0..1 across the WINDOW, and the model travels from
+ * `MODEL_BASE_YAW` at the left edge to `MODEL_BASE_YAW + POINTER_YAW_MAX` at the right edge.
+ * One-directional on purpose: the model has a rest pose it can be found in, and the cursor
+ * only ever turns it away from that pose and back.
+ *
+ * Measured against the window rather than against the canvas because the yaw is described in
+ * terms of the window - cursor at the left edge of the screen means the rest pose, cursor at
+ * the right edge means fully turned. Measured against the canvas, the model would hit full
+ * yaw somewhere in the middle of the page and then sit there for the whole right-hand half.
+ *
+ * 30 degrees is the whole travel. Far enough to read as the object turning, short enough that
+ * the screen never rotates out of legibility at the far end.
  */
-export const POINTER_YAW_MAX = 0.06; // rad
-export const POINTER_PITCH_MAX = 0.06; // rad
-export const POINTER_LERP = 0.06;
+export const POINTER_YAW_MAX = 0.5236; // rad, 30 deg
+
+/**
+ * Tilt. This one IS symmetric, measured about the centre of the CANVAS rather than the
+ * window, because the tilt reacts to where the cursor is relative to the model and the model
+ * travels up the screen as the page scrolls. It stays small - it is the nod that sells the
+ * yaw, not a second axis of its own.
+ */
+export const POINTER_PITCH_MAX = 0.05; // rad
+export const POINTER_LERP = 0.08;
 
 /** Frame time is clamped before it drives anything, so a tab wake-up cannot jump the model. */
 export const MAX_FRAME_DELTA = 0.05; // s
