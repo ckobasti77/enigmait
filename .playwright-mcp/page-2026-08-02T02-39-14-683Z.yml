@@ -1,0 +1,204 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e3]:
+    - generic [ref=f2e5]:
+      - link "Enigma Digital — početna" [ref=f2e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f2e8]:
+        - link "Početna" [ref=f2e10] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f2e12]:
+          - link "Usluge" [ref=f2e13] [cursor=pointer]:
+            - /url: /services
+          - button "Prikaži usluge" [ref=f2e15]
+        - link "Projekti" [ref=f2e19] [cursor=pointer]:
+          - /url: /projects
+      - generic [ref=f2e21]:
+        - generic [ref=f2e22]:
+          - button "Otvori social linkove" [ref=f2e23]
+          - menu:
+            - generic:
+              - menuitem "Instagram"
+              - menuitem "TikTok"
+              - menuitem "Facebook"
+              - menuitem "Email"
+              - menuitem "Telefon"
+        - button "Promeni temu" [pressed] [ref=f2e30]
+        - generic "Prebaci jezik sajta" [ref=f2e37]:
+          - button "Prikaži sajt na srpskom" [pressed] [ref=f2e38]: SR
+          - button "Prikaži sajt na engleskom" [ref=f2e39]: EN
+        - link "Kontakt" [ref=f2e40] [cursor=pointer]:
+          - /url: /contact
+    - generic [ref=f2e42]:
+      - generic [ref=f2e44]:
+        - generic [ref=f2e45]:
+          - generic [ref=f2e46]: Gradimo zajedno
+          - heading "Pošaljite brief. Mi dovodimo tim." [level=1] [ref=f2e47]
+          - paragraph [ref=f2e48]: Recite nam koji ishod vam treba u naredna dva kvartala. Sastavićemo pravi tim stratega, dizajnera i inženjera, zatim ostati uz vas dok playbook ne zaživi u vašem timu.
+          - generic [ref=f2e49]:
+            - generic [ref=f2e50]:
+              - paragraph [ref=f2e51]: <12h
+              - generic [ref=f2e52]: Prosečan odgovor
+            - generic [ref=f2e53]:
+              - paragraph [ref=f2e54]: 24/5
+              - generic [ref=f2e55]: Pokrivenost
+            - generic [ref=f2e56]:
+              - paragraph [ref=f2e57]: "5"
+              - generic [ref=f2e58]: Vremenske zone
+          - generic [ref=f2e59]:
+            - generic [ref=f2e60]:
+              - generic [ref=f2e66]:
+                - heading "Pišite partnerima" [level=3] [ref=f2e67]
+                - paragraph [ref=f2e68]: hello@enigmadigital.studio - pošaljite prezentaciju, Loom snimak ili kratak opis gde vam treba zamah.
+              - button "Otvori e-poštu" [ref=f2e69]
+            - generic [ref=f2e70]:
+              - generic [ref=f2e77]:
+                - heading "Zakažite strateški poziv" [level=3] [ref=f2e78]
+                - paragraph [ref=f2e79]: Izaberite termin od 30 minuta da prođemo ciljeve, ograničenja i metrike važne vašem executive timu.
+              - button "Pogledaj kalendar" [ref=f2e80]
+            - generic [ref=f2e81]:
+              - generic [ref=f2e86]:
+                - heading "Asinhrona glasovna poruka" [level=3] [ref=f2e87]
+                - paragraph [ref=f2e88]: Više vam odgovara asinhrono? Pošaljite glasovnu poruku ili transkript, a mi ćemo odgovoriti u formatu koji koristite interno.
+              - button "Pošalji poruku" [ref=f2e89]
+        - generic [ref=f2e91]:
+          - generic [ref=f2e92]:
+            - heading "Započnite skicu projekta" [level=2] [ref=f2e93]
+            - paragraph [ref=f2e94]: Podelite što više konteksta. North-star metrika, blokade, rokovi ili postojeće istraživanje pomoći će nam da odgovorimo prilagođenim planom.
+          - generic [ref=f2e95]:
+            - generic [ref=f2e96]:
+              - generic [ref=f2e97]:
+                - text: Ime
+                - textbox "Ime" [ref=f2e98]:
+                  - /placeholder: Ada Lovelace
+              - generic [ref=f2e99]:
+                - text: Poslovna e-pošta
+                - textbox "Poslovna e-pošta" [ref=f2e100]:
+                  - /placeholder: you@company.com
+            - generic [ref=f2e101]:
+              - text: Kompanija
+              - textbox "Kompanija" [ref=f2e102]:
+                - /placeholder: Kompanija ili kolektiv
+            - generic [ref=f2e103]:
+              - text: Čime treba zajedno da se pozabavimo?
+              - textbox "Čime treba zajedno da se pozabavimo?" [ref=f2e104]:
+                - /placeholder: Podelite proizvodne ciljeve, tehnološki okvir, rokove ili bilo šta što nam pomaže da se pripremimo.
+            - generic [ref=f2e105]:
+              - generic [ref=f2e106]:
+                - text: Željeni format odgovora
+                - combobox "Željeni format odgovora" [ref=f2e107]:
+                  - option "Sažetak e-poštom" [selected]
+                  - option "Deck sa opcijama"
+                  - option "Asinhroni Loom"
+                  - option "Radna sesija uživo"
+              - button "Pošalji skicu" [ref=f2e108]
+      - generic [ref=f2e113]:
+        - generic [ref=f2e114]:
+          - text: Gde radimo
+          - heading "Globalno prisustvo, isti radni ritam" [level=2] [ref=f2e115]
+          - paragraph [ref=f2e116]: Distribuirani smo po dizajnu. Preklapamo se kroz EMEA i podržavamo severnoamerička jutra asinhronim ritualima, snimljenim stand-up-ovima i deljenim dashboard-ima.
+        - generic [ref=f2e117]:
+          - generic [ref=f2e118]:
+            - generic [ref=f2e119]:
+              - generic [ref=f2e120]:
+                - heading "Manchester" [level=3] [ref=f2e121]
+                - paragraph [ref=f2e122]: 48 Lever Street, Northern Quarter
+              - generic [ref=f2e123]: GMT(+0)
+            - generic [ref=f2e124]:
+              - generic [ref=f2e125]:
+                - heading "Dubai" [level=3] [ref=f2e126]
+                - paragraph [ref=f2e127]: DIFC Innovation Hub, Gate Avenue
+              - generic [ref=f2e128]: GST(+4)
+            - generic [ref=f2e129]:
+              - generic [ref=f2e130]:
+                - heading "Barcelona" [level=3] [ref=f2e131]
+                - paragraph [ref=f2e132]: Carrer de Pamplona, 88
+              - generic [ref=f2e133]: CET(+1)
+          - generic [ref=f2e138]:
+            - paragraph [ref=f2e139]: Mapa pokrivenosti
+            - paragraph [ref=f2e140]: EMEA core sati sa prozorima preklapanja za Severnu Ameriku.
+      - generic [ref=f2e142]:
+        - heading "Spremni smo kada ste i vi" [level=2] [ref=f2e143]
+        - paragraph [ref=f2e144]: Podelite fazu finansiranja, KPI-jeve ili izazove i prilagodićemo agendu prve radionice. Ako nismo najbolji partner, uputićemo vas na nekoga iz naše mreže ko jeste.
+        - button "Započnite razgovor" [ref=f2e145] [cursor=pointer]
+        - generic [ref=f2e146]: Uvodni telefonski razgovori dostupni su na zahtev
+    - contentinfo [ref=f2e151]:
+      - generic [ref=f2e152]:
+        - generic [ref=f2e153]:
+          - generic [ref=f2e154]:
+            - generic [ref=f2e155]:
+              - generic [ref=f2e156]: Enigma Digital
+              - heading "Isporučujemo iskustva koja definišu brend uz odgovoran inženjering." [level=2] [ref=f2e157]
+              - paragraph [ref=f2e158]: Strategija, dizajn i inženjering rade zajedno kako bi svako lansiranje podiglo metrike koje su važne. Uključujemo timove u vaš product tim i održavamo visok tempo od početka do iteracije.
+            - generic [ref=f2e159]:
+              - link "Pokreni projekat" [ref=f2e160] [cursor=pointer]:
+                - /url: /contact
+              - link "hello@enigma.digital" [ref=f2e161] [cursor=pointer]:
+                - /url: mailto:hello@enigma.digital
+          - generic [ref=f2e162]:
+            - generic [ref=f2e163]:
+              - heading "Kompanija" [level=3] [ref=f2e164]
+              - list [ref=f2e165]:
+                - listitem [ref=f2e166]:
+                  - link "Početna" [ref=f2e167] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=f2e172]:
+                  - link "Projekti" [ref=f2e173] [cursor=pointer]:
+                    - /url: /projects
+            - generic [ref=f2e178]:
+              - heading "Usluge" [level=3] [ref=f2e179]
+              - list [ref=f2e180]:
+                - listitem [ref=f2e181]:
+                  - link "Izrada web sajtova" [ref=f2e182] [cursor=pointer]:
+                    - /url: /services/web-development
+                - listitem [ref=f2e184]:
+                  - link "UI | UX dizajn" [ref=f2e185] [cursor=pointer]:
+                    - /url: /services/ui-ux-design
+                - listitem [ref=f2e187]:
+                  - link "Izrada mobilnih aplikacija" [ref=f2e188] [cursor=pointer]:
+                    - /url: /services/mobile-app-development
+                - listitem [ref=f2e190]:
+                  - link "SEO i GEO" [ref=f2e191] [cursor=pointer]:
+                    - /url: /services/seo-geo
+                - listitem [ref=f2e193]:
+                  - link "Brending" [ref=f2e194] [cursor=pointer]:
+                    - /url: /services/branding
+                - listitem [ref=f2e196]:
+                  - link "Društvene mreže" [ref=f2e197] [cursor=pointer]:
+                    - /url: /services/social-media
+            - generic [ref=f2e199]:
+              - heading "Poseta i kontakt" [level=3] [ref=f2e200]
+              - generic [ref=f2e201]:
+                - generic [ref=f2e206]:
+                  - paragraph [ref=f2e207]: Evropa / prvo na daljinu
+                  - paragraph [ref=f2e208]: Partnerstva sa timovima širom EMEA regiona i Severne Amerike.
+                - generic [ref=f2e212]:
+                  - paragraph [ref=f2e213]: Poziv
+                  - link "+44 20 4577 1943" [ref=f2e214] [cursor=pointer]:
+                    - /url: tel:+442045771943
+                - generic [ref=f2e219]:
+                  - paragraph [ref=f2e220]: E-pošta
+                  - link "hello@enigma.digital" [ref=f2e221] [cursor=pointer]:
+                    - /url: mailto:hello@enigma.digital
+        - generic [ref=f2e222]:
+          - paragraph [ref=f2e223]: © 2026 Enigma Digital. Sva prava zadržana.
+          - generic [ref=f2e224]:
+            - link "Politika privatnosti" [ref=f2e225] [cursor=pointer]:
+              - /url: /privacy
+            - link "Uslovi korišćenja" [ref=f2e226] [cursor=pointer]:
+              - /url: /terms
+            - link "Smernice brenda" [ref=f2e227] [cursor=pointer]:
+              - /url: /brand
+    - button "Vrati se na vrh"
+  - dialog:
+    - generic [ref=f2e230]:
+      - generic [ref=f2e231]:
+        - heading "Upravljajte podešavanjima kolačića" [level=2] [ref=f2e232]
+        - paragraph [ref=f2e233]: Koristimo neophodne kolačiće da bi sajt radio. Omogućite funkcionalne kolačiće da zapamtimo izbore kao što su tema ili jezik.
+        - generic [ref=f2e234]:
+          - generic [ref=f2e235]: Funkcionalni kolačići
+          - switch "Funkcionalni kolačići" [ref=f2e236] [cursor=pointer]
+      - generic [ref=f2e238]:
+        - button "Prihvati sve" [ref=f2e239] [cursor=pointer]
+        - button "Sačuvaj izbor" [ref=f2e240] [cursor=pointer]
+        - button "Samo neophodni" [ref=f2e241] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f2e247] [cursor=pointer]
