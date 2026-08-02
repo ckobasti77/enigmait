@@ -21,6 +21,14 @@ gsap.registerPlugin(ScrollTrigger);
 /** Matches `--process-card-radius`; the trace has to follow the same corner. */
 const CARD_RADIUS = 16;
 
+/**
+ * Where the connector lands on a side edge, in border-box pixels from the top:
+ * the seam between image and body. Matches `--process-media-h` (12rem) plus the
+ * shell's 1px border - change one and the streaks split away from the line the
+ * connector visibly hits.
+ */
+const TRACE_ENTRY_Y = 193;
+
 /** Streak length, in the same normalised units the paths are rendered at. */
 const TRACE_DASH = TRACE_LENGTH * 0.17;
 
@@ -99,7 +107,13 @@ export default function ProcessCard({ step, position }: ProcessCardProps) {
 
   const tracePaths = useMemo(
     () =>
-      buildBorderTracePaths(size.width, size.height, CARD_RADIUS, entry),
+      buildBorderTracePaths(
+        size.width,
+        size.height,
+        CARD_RADIUS,
+        entry,
+        entry === "top" ? undefined : TRACE_ENTRY_Y
+      ),
     [size.width, size.height, entry]
   );
 

@@ -3,12 +3,13 @@
  *
  * The connector from the spine lands on one edge of the card and splits there.
  * Both halves then run the card's border in opposite directions and meet at the
- * point diametrically opposite the entry, where they vanish. That only works if
- * the two halves are exactly the same length - otherwise one arrives first and
- * the "meeting" reads as a glitch - which is why the entry is always an edge
- * midpoint: a rounded rectangle is symmetric about both midlines, so splitting
- * at a midpoint splits the perimeter in half by construction. Don't move the
- * entry to a corner.
+ * mirrored point on the opposite edge, where they vanish. The two halves arrive
+ * *together* even when they are not the same geometric length, because both are
+ * rendered with the same `pathLength` and animated over the same duration - the
+ * normalisation makes each streak cover its own path in the same time. What an
+ * off-midpoint entry does cost is symmetry of *speed*: the longer half visibly
+ * runs faster. Near the midline that difference is invisible; at a corner it
+ * reads as a glitch, so keep the entry away from corners.
  *
  * Both paths are rendered with `pathLength={TRACE_LENGTH}`, so callers animate
  * `strokeDashoffset` in normalised units and never have to measure. The length
@@ -25,8 +26,13 @@ export const TRACE_LENGTH = 1000;
 const round = (value: number) => Math.round(value * 100) / 100;
 
 /**
- * Two half-perimeter paths from `entry` to the opposite midpoint - the first
- * clockwise, the second counter-clockwise.
+ * Two half-perimeter paths from `entry` to the mirrored point on the opposite
+ * edge - the first clockwise, the second counter-clockwise.
+ *
+ * `entryY` (left/right entries only) moves the entry off the vertical midpoint
+ * to an absolute y in the same pixel space as `width`/`height` - the process
+ * cards use it to land the connector exactly on the image/body seam. It is
+ * clamped clear of the corner arcs. `top` entries ignore it.
  *
  * `inset` pulls the stroke inside the box by half its width so a 1px trace sits
  * on the border rather than straddling it.
@@ -36,6 +42,7 @@ export function buildBorderTracePaths(
   height: number,
   radius: number,
   entry: BorderTraceEntry,
+  entryY?: number,
   inset = 0.5
 ): [string, string] {
   const x0 = inset;
@@ -47,7 +54,11 @@ export function buildBorderTracePaths(
 
   const r = Math.max(0, Math.min(radius, (x1 - x0) / 2, (y1 - y0) / 2));
   const cx = round((x0 + x1) / 2);
-  const cy = round((y0 + y1) / 2);
+  const cy = round(
+    entryY === undefined
+      ? (y0 + y1) / 2
+      : Math.min(Math.max(entryY, y0 + r), y1 - r)
+  );
 
   // sweep 1 = clockwise in SVG's y-down space.
   const arc = (x: number, y: number, sweep: 0 | 1) =>

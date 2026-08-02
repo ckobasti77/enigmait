@@ -138,68 +138,68 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #f4f7fb;
-  --foreground: #142233;
-  --card: rgba(255, 255, 255, 0.94);
-  --card-foreground: #142233;
-  --popover: rgba(255, 255, 255, 0.98);
-  --popover-foreground: #142233;
+  --background: #f2ede3;
+  --foreground: #2d2820;
+  --card: rgba(252, 248, 240, 0.94);
+  --card-foreground: #2d2820;
+  --popover: rgba(252, 248, 240, 0.98);
+  --popover-foreground: #2d2820;
   --primary: #1f2c3d;
-  --primary-foreground: #f4f7fb;
-  --secondary: #e4ebf7;
+  --primary-foreground: #f2ede3;
+  --secondary: #e8e1d1;
   --secondary-foreground: #1f2c3d;
-  --muted: rgba(227, 235, 247, 0.65);
-  --muted-foreground: rgba(44, 58, 82, 0.7);
+  --muted: rgba(231, 224, 209, 0.65);
+  --muted-foreground: rgba(82, 73, 58, 0.75);
   --accent: rgba(88, 196, 255, 0.25);
-  --accent-foreground: #142233;
+  --accent-foreground: #2d2820;
   --destructive: #ef626c;
-  --border: rgba(20, 34, 51, 0.14);
-  --input: rgba(20, 34, 51, 0.18);
+  --border: rgba(64, 55, 40, 0.14);
+  --input: rgba(64, 55, 40, 0.18);
   --ring: rgba(31, 44, 61, 0.25);
   --chart-1: #3b82f6;
   --chart-2: #60a5fa;
   --chart-3: #a78bfa;
   --chart-4: #f472b6;
   --chart-5: #facc15;
-  --sidebar: rgba(255, 255, 255, 0.88);
-  --sidebar-foreground: #142233;
+  --sidebar: rgba(252, 248, 240, 0.88);
+  --sidebar-foreground: #2d2820;
   --sidebar-primary: #1f2c3d;
-  --sidebar-primary-foreground: #f4f7fb;
-  --sidebar-accent: rgba(227, 235, 247, 0.7);
+  --sidebar-primary-foreground: #f2ede3;
+  --sidebar-accent: rgba(231, 224, 209, 0.7);
   --sidebar-accent-foreground: #1f2c3d;
-  --sidebar-border: rgba(20, 34, 51, 0.16);
+  --sidebar-border: rgba(64, 55, 40, 0.16);
   --sidebar-ring: rgba(31, 44, 61, 0.28);
 
-  --surface-section: #e9f0fb;
-  --surface-card-muted: rgba(227, 235, 247, 0.75);
-  --surface-overlay: rgba(244, 247, 251, 0.82);
+  --surface-section: #eae3d3;
+  --surface-card-muted: rgba(231, 224, 209, 0.75);
+  --surface-overlay: rgba(242, 237, 227, 0.82);
   /* Background video — inverted for light, so the clip reads as ink dots on
      paper instead of a black slab. `multiply` then drops the (now white)
      backdrop and keeps only the dots. */
   --bg-video-blend: multiply;
-  --bg-video-filter: invert(1) hue-rotate(180deg) saturate(0.85);
-  --bg-video-opacity: 0.3;
-  --bg-video-vignette: radial-gradient(115% 85% at 50% 42%, transparent 45%, rgba(20, 34, 51, 0.08) 100%);
+  --bg-video-filter: invert(1) hue-rotate(180deg) saturate(0.8) sepia(0.14);
+  --bg-video-opacity: 0.26;
+  --bg-video-vignette: radial-gradient(115% 85% at 50% 42%, transparent 45%, rgba(64, 55, 40, 0.08) 100%);
   /* Dot field — inverted for light: ink dots on paper, accent stays brand blue. */
   --field-dot: #8f5ba8;
   --field-accent: #1f7fc8;
   --field-core: #1a6fae;
-  --field-overlay: rgba(244, 247, 251, 0.12);
+  --field-overlay: rgba(242, 237, 227, 0.12);
   --field-blend: source-over;
   --field-rest: 0.62;
-  --text-primary: #132238;
-  --text-secondary: rgba(44, 58, 82, 1);
-  --text-inverse: #f4f7fb;
-  --border-soft: rgba(20, 34, 51, 0.14);
-  --border-strong: rgba(20, 34, 51, 0.22);
-  --shadow-elevated: rgba(15, 23, 42, 0.18);
+  --text-primary: #2c2720;
+  --text-secondary: rgba(82, 73, 58, 1);
+  --text-inverse: #f2ede3;
+  --border-soft: rgba(64, 55, 40, 0.14);
+  --border-strong: rgba(64, 55, 40, 0.22);
+  --shadow-elevated: rgba(56, 46, 30, 0.16);
   --glow-accent-1: rgba(56, 189, 248, 0.24);
   --glow-accent-2: rgba(124, 58, 237, 0.18);
-  --timeline-spotlight-highlight: rgba(255, 255, 255, 0.85);
-  --timeline-spotlight-mid: rgba(200, 212, 235, 0.55);
-  --timeline-spotlight-shadow: rgba(29, 45, 78, 0.15);
-  --timeline-line-idle: rgba(44, 58, 82, 0.18);
-  --timeline-line-active: rgba(31, 44, 61, 0.55);
+  --timeline-spotlight-highlight: rgba(255, 252, 244, 0.85);
+  --timeline-spotlight-mid: rgba(226, 216, 195, 0.55);
+  --timeline-spotlight-shadow: rgba(74, 62, 40, 0.15);
+  --timeline-line-idle: rgba(82, 73, 58, 0.18);
+  --timeline-line-active: rgba(64, 55, 40, 0.55);
   /* Process run — one accent per phase, cool to warm. Cards read the pair as
      `--card-accent` / `--card-glow`, set per card from `constants/processSteps`,
      so the whole ramp re-tunes per palette without the component knowing.
@@ -216,21 +216,21 @@
   --process-glow-3: rgba(109, 40, 217, 0.22);
   --process-glow-4: rgba(124, 58, 237, 0.22);
   --process-glow-5: rgba(147, 51, 234, 0.2);
-  --process-node-face: #ffffff;
+  --process-node-face: #fffdf6;
   --process-node-tail: #7c3aed;
-  --process-media-bg: #dbe5f4;
+  --process-media-bg: #e6ddc9;
   --process-media-scrim: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.14) 0%,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(233, 240, 251, 0.3) 70%,
-    rgba(233, 240, 251, 0.85) 100%
+    rgba(255, 252, 244, 0.14) 0%,
+    rgba(255, 252, 244, 0) 30%,
+    rgba(234, 227, 211, 0.3) 70%,
+    rgba(234, 227, 211, 0.85) 100%
   );
   --process-sheen: linear-gradient(
     145deg,
     color-mix(in srgb, var(--card-accent) 12%, transparent) 0%,
-    rgba(255, 255, 255, 0.45) 34%,
-    rgba(226, 235, 248, 0.4) 100%
+    rgba(255, 252, 244, 0.45) 34%,
+    rgba(238, 231, 216, 0.4) 100%
   );
   /* Liquid glass CTA. Both rims are defined here rather than one per palette,
      because a button can need the dark rim while the page is light: the mobile
@@ -1105,6 +1105,13 @@ html[data-mood="alt"] {
   /* Kept in step with CARD_RADIUS in ProcessCard - the trace follows this
      corner, and a mismatch shows as a streak cutting across it. */
   --process-card-radius: 16px;
+  /* Media pane height. TRACE_ENTRY_Y in ProcessCard is this plus the shell's
+     1px border - the side connector lands on that seam, so the two move
+     together or the streaks split away from the line they appear to ride. */
+  --process-media-h: 12rem;
+  /* How far the off-centre cards step in from the container edge, toward the
+     spine. The connector spans account for it below. */
+  --process-card-inset: 3rem;
   /* How far above a centred card its connector starts. Must stay under the row
      gap or the line reaches into the card above it. */
   --process-drop: 2.5rem;
@@ -1270,7 +1277,7 @@ html[data-mood="alt"] {
 .process-card-media {
   position: relative;
   z-index: 1;
-  height: 12rem;
+  height: var(--process-media-h);
   flex: 0 0 auto;
   overflow: hidden;
   border-bottom: 1px solid var(--border-soft);
@@ -1407,29 +1414,32 @@ html[data-mood="alt"] {
 
   .process-row[data-position="left"] {
     justify-content: flex-start;
+    padding-left: var(--process-card-inset);
   }
 
   .process-row[data-position="right"] {
     justify-content: flex-end;
+    padding-right: var(--process-card-inset);
   }
 
   /* Off-centre cards take their connector horizontally, from the spine to the
-     near edge - which is `--process-card-w` in from whichever side they hug. */
+     card's near edge, landing on the image/body seam rather than the vertical
+     midpoint - it reads as the key that opens the card at that line. */
   .process-row[data-position="left"] .process-node,
   .process-row[data-position="right"] .process-node {
-    top: calc(50% - 0.375rem);
+    top: calc(var(--process-media-h) + 1px - 0.375rem);
   }
 
   .process-row[data-position="left"] .process-connector,
   .process-row[data-position="right"] .process-connector {
-    top: calc(50% - 0.5px);
+    top: calc(var(--process-media-h) + 1px - 0.5px);
     height: 1px;
     width: auto;
   }
 
   .process-row[data-position="left"] .process-connector {
     right: 50%;
-    left: var(--process-card-w);
+    left: calc(var(--process-card-inset) + var(--process-card-w));
     background: linear-gradient(
       270deg,
       color-mix(in srgb, var(--card-accent) 32%, transparent),
@@ -1439,7 +1449,7 @@ html[data-mood="alt"] {
 
   .process-row[data-position="right"] .process-connector {
     left: 50%;
-    right: var(--process-card-w);
+    right: calc(var(--process-card-inset) + var(--process-card-w));
     background: linear-gradient(
       90deg,
       color-mix(in srgb, var(--card-accent) 32%, transparent),

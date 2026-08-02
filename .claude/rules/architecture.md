@@ -67,13 +67,14 @@ Five phase cards threaded onto one vertical spine. `Timeline` owns the section a
 
 Timing is two constants in `ProcessCard`, and both exist because the obvious values read wrong. `TRIGGER_START` fires at the card's centre a third up from the bottom edge, not at dead centre - the unlock has to run *while* the card travels into view, or the reader is already past it by the time it finishes. `SEQUENCE_SPEED` is a `timeScale` on the whole chain rather than shorter durations on each step, so speeding it up cannot drift the overlaps apart. Together the run lands in ~0.9s.
 
-The unlock is one chain and it only reads if the geometry lines up: a node lands on the spine, a connector grows from it to the card's near edge, and on contact **two streaks split off and run the border in opposite directions**, meeting at the point opposite the entry, where they vanish. The card - blur, image, copy, icon - comes up inside that trace.
+The unlock is one chain and it only reads if the geometry lines up: a node lands on the spine, a connector grows from it to the card's near edge, and on contact **two streaks split off and run the border in opposite directions**, meeting at the mirrored point on the opposite edge, where they vanish. The card - blur, image, copy, icon - comes up inside that trace.
 
-The two halves must arrive together, so the entry is always an **edge midpoint**: a rounded rectangle is symmetric about both midlines, so splitting there splits the perimeter in half by construction. Move the entry to a corner and the halves desync. `buildBorderTracePaths` is the geometry; paths carry `pathLength={TRACE_LENGTH}` (1000, not 1 - GSAP rounds what it writes, and a `0.17` dash offset reaches the DOM as `0px`), so the streak is a travelling dash and needs no measuring.
+The two halves always arrive together because both paths carry the same `pathLength={TRACE_LENGTH}` (1000, not 1 - GSAP rounds what it writes, and a `0.17` dash offset reaches the DOM as `0px`) and animate over the same duration - the normalisation makes each streak cover its own path in the same time, so the streak is a travelling dash and needs no measuring. On desktop the side entry sits on the **image/body seam** (`entryY` in `buildBorderTracePaths`), not the vertical midpoint; the halves differ slightly in visible speed, which is invisible near the midline - keep the entry away from corners, where it reads as a glitch.
 
-Three couplings are load-bearing and live in two files each:
+Four couplings are load-bearing and live in two files each:
 
-- `--process-card-w` (CSS) fixes the card width above `lg`, and the connector spans from that width to the centre line. Change one without the other and the line stops touching the card.
+- `--process-card-w` (CSS) fixes the card width above `lg`, and the connector spans from `--process-card-inset + --process-card-w` (the off-centre cards step in toward the spine) to the centre line. Change one without the others and the line stops touching the card.
+- `--process-media-h` (CSS, 12rem) and `TRACE_ENTRY_Y` (ProcessCard, that plus the shell's 1px border) put the connector, the node and the trace split on the seam between image and body. Change one and the streaks split away from the line the connector visibly hits.
 - `--process-card-radius` (CSS) and `CARD_RADIUS` (ProcessCard) must match, or the streak cuts across the corner it is meant to follow.
 - The `lg` breakpoint decides both the card's side and its entry edge. Below it every card straddles the spine and the connector drops in from above.
 

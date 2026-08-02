@@ -20,7 +20,7 @@ export type EnvironmentColors = {
 
 const FALLBACKS: Record<"dark" | "light", EnvironmentColors> = {
   dark: { background: "#070d19", surface: "#0e1729", primary: "#58c4ff" },
-  light: { background: "#f4f7fb", surface: "#e9f0fb", primary: "#1f2c3d" },
+  light: { background: "#f2ede3", surface: "#eae3d3", primary: "#1f2c3d" },
 };
 
 /**
