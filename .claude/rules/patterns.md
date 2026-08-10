@@ -31,7 +31,8 @@
 
 ## Service Pages
 
-- Look up data via `serviceDetails["<slug>"]` from `constants/serviceDetails.ts`
-- Open with `<PageHero {...detail} />`
-- 3D floating objects per service are configured in `constants/serviceFloatingObjects.ts`
-- Embed JSON-LD at the bottom for SEO (`<Script type="application/ld+json">`)
+- `page.tsx` is a **server component**: exports `metadata` from `buildServiceMetadata(slug)` and renders `<ServicePageTemplate slug="…" />` plus a plain `<script type="application/ld+json">` from `buildServiceJsonLd(slug)` (never `next/script` — it does not reach the served HTML)
+- All visible content comes from `constants/services/` — one file per slug, registry in `index.ts` keyed `Record<DisciplineKey, ServicePageContent>` so the compiler guarantees all six
+- The hero's 3D model is the homepage discipline GLB, rendered by `app/(pages)/services/_components/ServiceModelStage.tsx` (reuses `DisciplineModel`, camera, environment and prefetch from `components/sections/disciplines/` — never edit that folder for service-page needs)
+- Every user-facing Serbian string in a content file needs an `[en, sr]` pair in `lib/i18n.ts` (grep both sides before adding — neither side may repeat)
+- `PageHero` + `FloatingServiceObjects` (procedural primitives) remain only for the `/services` index

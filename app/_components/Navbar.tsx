@@ -11,7 +11,6 @@ import { usePathname } from "next/navigation";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
-import SocialDropdown from "./SocialDropdown";
 import CtaButton from "@/components/ui/cta-button";
 import { navLinks } from "@/constants/navLinks";
 import { useNavVisibility } from "@/hooks/useNavVisibility";
@@ -166,6 +165,45 @@ const Navbar = () => {
     setNavOpen((prev) => !prev);
   }, [navOpen]);
 
+  /** Functional bail-outs, so the common no-op case commits nothing. */
+  const closeMenu = useCallback(() => {
+    setNavOpen((open) => (open ? false : open));
+    setCurrentDropdown((current) => (current === 0 ? current : 0));
+  }, []);
+
+  // Crossing the lg boundary in either direction resets menu state: the mobile
+  // overlay's inline display:flex outlives `lg:hidden` (open at tablet width,
+  // rotate, and the menu is stuck with no burger and a locked scroll), and
+  // `currentDropdown` is shared with the desktop mega panel, so a leaked
+  // accordion id would render that panel open with no pointer near it.
+  // Both the media-query event and a resize fallback drive the same check -
+  // some engines only deliver one of the two reliably.
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)");
+    let wasDesktop = query.matches;
+    const sync = () => {
+      if (query.matches === wasDesktop) return;
+      wasDesktop = query.matches;
+      closeMenu();
+    };
+    query.addEventListener("change", sync);
+    window.addEventListener("resize", sync);
+    return () => {
+      query.removeEventListener("change", sync);
+      window.removeEventListener("resize", sync);
+    };
+  }, [closeMenu]);
+
+  // Browser back/forward with the menu open: nothing else closes it, and the
+  // scroll lock would survive onto the new page. Adjusted during render (the
+  // DisciplineReel pattern), so the menu is already closed in the same commit
+  // that paints the new route - an effect would flash it for a frame.
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (lastPathname !== pathname) {
+    setLastPathname(pathname);
+    closeMenu();
+  }
+
   return (
     <>
       <div
@@ -183,7 +221,7 @@ const Navbar = () => {
 
           <Link
             href="/"
-            className="relative z-10 inline-flex w-[112px] min-w-0 items-center justify-self-start gap-1.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 sm:w-[160px] sm:gap-2.5 lg:w-[224px] xl:w-[244px]"
+            className="relative z-10 inline-flex w-[112px] min-w-0 items-center justify-self-start gap-1.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 max-[359px]:w-auto sm:w-[160px] sm:gap-2.5 lg:w-[224px] xl:w-[244px]"
             aria-label="Enigma Digital — početna"
           >
             <Image
@@ -198,7 +236,9 @@ const Navbar = () => {
             />
             <span
               ref={wordmarkMaskRef}
-              className="invisible relative flex h-7 w-[60px] shrink-0 items-center overflow-hidden sm:h-8 sm:w-[104px] lg:w-[162px] xl:w-[180px]"
+              // Below 360px the control row plus wordmark outgrows the
+              // viewport; the emblem alone is the logo there.
+              className="invisible relative flex h-7 w-[60px] shrink-0 items-center overflow-hidden max-[359px]:hidden sm:h-8 sm:w-[104px] lg:w-[162px] xl:w-[180px]"
               aria-hidden="true"
               style={{ willChange: "clip-path, opacity" }}
             >
@@ -222,11 +262,11 @@ const Navbar = () => {
           />
 
           <div className="relative z-10 flex items-center justify-self-end gap-1 sm:gap-2 lg:gap-3">
-            {/* Two ghost icon buttons, one segmented chip, one CTA. The
+            {/* One ghost icon button, one segmented chip, one CTA. The
                 language switcher keeps its track because SR/EN needs a
-                readable segmented control; three equal-weight bordered chips
-                inside a bordered island read as clutter. */}
-            <SocialDropdown variant="ghost" />
+                readable segmented control; equal-weight bordered chips inside a
+                bordered island read as clutter. Social moved out to a fixed
+                bottom-left launcher - see layout.tsx. */}
             <ThemeSwitcher variant="ghost" />
             <LanguageSwitcher />
             {ctaLink && (

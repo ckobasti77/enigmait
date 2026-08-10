@@ -1,143 +1,177 @@
-﻿'use client';
+import type { Metadata } from "next";
+import { Rocket, Sparkles, Users } from "lucide-react";
 
-import { ArrowRight, PlayCircle, Rocket, Users, Sparkles } from 'lucide-react';
-import { LiquidButton } from '@/components/ui/liquid-glass-button';
+import AutoTypingConsole from "@/components/ui/auto-typing-console";
+import CtaButton from "@/components/ui/cta-button";
+import ShowcaseVideo from "@/components/ui/showcase-video";
+import { projects } from "@/constants/projects";
 
-const caseStudies = [
-  {
-    tag: 'SaaS',
-    title: 'Helios Labs – analytics platform relaunch',
-    outcome: '58% rast trial-to-paid konverzije kroz modularni onboarding i dashboard-e metrika rasta.',
-  },
-  {
-    tag: 'Travel',
-    title: 'Orbit Airlines – global booking overhaul',
-    outcome: '6 tržišta lansirano za 120 dana uz real-time vidljivost operacija i automatizaciju oporavka usluge.',
-  },
-  {
-    tag: 'Fintech',
-    title: 'Northwind Bank – digital onboarding playbook',
-    outcome: 'Aktivacija naloga skraćena na 5 minuta, CSAT porastao na 92%, opterećenje podrške smanjeno 38%.',
-  },
-  {
-    tag: 'Retail',
-    title: 'Mercury Collective – omnichannel membership',
-    outcome: '+34% ponovljenih kupovina kroz loyalty tokove, mobile wallet pass i CRM sinhronizaciju.',
-  },
-];
+export const metadata: Metadata = {
+  title: "Projekti — Enigma Digital",
+  description:
+    "Sajtovi i web-shopovi koje smo izradili: frizerski salon, turistička agencija, e-commerce, građevina, video nadzor i digitalni marketing.",
+};
 
 const capabilities = [
   {
-    title: 'Discovery sprintovi',
-    description: 'Intervjui sa korisnicima, analiza funnel podataka i service blueprinting otkrivaju eksperimente visokog uticaja.',
+    title: "Razgovor i plan",
+    body: "Prvo razumemo posao i ljude koji na sajt dolaze, pa tek onda određujemo šta sajtu zaista treba i kojim redom.",
     icon: Users,
   },
   {
-    title: 'Prototip scena',
-    description: 'Klikabilna putovanja, motion studije i engineering spike-ovi validiraju product priče pre roadmap-a.',
+    title: "Dizajn i izrada",
+    body: "Dizajn pravimo za vaš sadržaj, ne za šablon. Sajt gradimo tako da bude brz i da radi jednako dobro na telefonu i na velikom ekranu.",
     icon: Sparkles,
   },
   {
-    title: 'Operacije lansiranja',
-    description: 'Orkestracija izdanja, povezivanje analitike i QA automatizacija vode od bete do skaliranja bez trenja.',
+    title: "Lansiranje i podrška",
+    body: "Postavljamo sajt, predajemo pristupe i ostajemo dostupni za izmene, dopune i sadržaj koji stiže kasnije.",
     icon: Rocket,
   },
 ];
 
-const testimonials = [
-  {
-    quote:
-      'Enigma je spojila proizvod, dizajn i inženjering u isti radni ritam. Isporučili su ono o čemu je naš interni tim mesecima raspravljao - bez haosa.',
-    person: 'Amelia Rhodes',
-    role: 'Chief Product Officer, Helios Labs',
-  },
-  {
-    quote:
-      'Njihov embedded model je delovao kao da smo angažovali tim koji već poznaje naš stack. Od migracije do merenja, proces je tekao prirodno.',
-    person: 'Jonas Richter',
-    role: 'VP Engineering, Orbit Airlines',
-  },
-];
+/** The domain, shown as the card's proof: the site is live, go look. */
+const displayHost = (url: string) =>
+  url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
-export default function Projects() {
+export default function ProjectsPage() {
   return (
-    <div className="theme-section transition-theme text-theme-primary">
-      <section className="site-gutter relative overflow-hidden py-24">
+    <>
+      <section className="site-gutter theme-section relative overflow-hidden py-20 transition-theme md:py-24">
         <div
-          className="pointer-events-none absolute inset-x-0 -top-24 h-[420px] bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.2),rgba(168,85,247,0.1)_45%,rgba(15,23,42,0)_80%)] blur-[140px]"
           aria-hidden
+          className="pointer-events-none absolute left-1/2 top-8 z-0 h-[440px] w-[440px] -translate-x-1/2 rounded-full glow-accent blur-[150px]"
         />
-        <div className="site-container relative flex flex-col gap-12 lg:flex-row">
-          <div className="space-y-6 lg:w-3/5">
-            <span className="inline-flex items-center gap-2 rounded-full border border-theme px-4 py-2 text-xs uppercase tracking-[0.4em] text-cyan-300">
-              Dokazana isporuka
+        <div className="site-container relative z-10 flex flex-col gap-10">
+          <div className="flex max-w-3xl flex-col gap-6">
+            <span className="text-xs uppercase tracking-[0.6em] text-cyan-400">
+              Naši radovi
             </span>
-            <h1 className="font-aeonik text-4xl font-medium leading-tight text-theme-primary md:text-5xl">
-              Product priče projektovane za merljive ishode
-            </h1>
-            <p className="max-w-xl text-base leading-relaxed text-slate-300/85">
-              Specijalizovani smo za lansiranja gde su ulozi visoki: nova tržišta, monetizacijski zaokreti ili potpune promene iskustva. Svaki projekat spaja brzo eksperimentisanje i odgovornu isporuku.
+            <AutoTypingConsole
+              text="Sajtovi koje smo izradili, svi otvoreni za proveru"
+              className="text-left text-3xl md:text-4xl"
+            />
+            <p className="max-w-xl text-base leading-relaxed text-theme-muted">
+              Radimo sa salonima, agencijama, prodavnicama i izvođačima radova.
+              Ispod je šest projekata: za svaki piše čime se klijent bavi i šta
+              je posao obuhvatio, a adresa vodi na sajt uživo.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <LiquidButton>
-                Zatražite kompletan deck <ArrowRight className="h-4 w-4" />
-              </LiquidButton>
-              <LiquidButton variant="secondary">
-                Pogledajte case study <PlayCircle className="h-5 w-5" />
-              </LiquidButton>
-            </div>
-          </div>
-          <div className="flex-1 space-y-5">
-            <div className="flex h-[220px] items-center justify-center rounded-3xl border border-dashed border-theme theme-card-muted text-xs uppercase tracking-[0.45em] text-theme-muted">
-              Mesto za case study reel
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {capabilities.map((capability) => (
-                <div key={capability.title} className="rounded-3xl border border-theme theme-card p-5">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-theme theme-card text-cyan-200">
-                    <capability.icon className="h-5 w-5" aria-hidden />
-                  </span>
-                  <h3 className="mt-3 text-base font-semibold text-theme-primary">{capability.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-300/80">{capability.description}</p>
-                </div>
-              ))}
+            <div className="flex flex-wrap gap-3 pt-2">
+              <CtaButton href="/contact">Pokreni projekat</CtaButton>
+              <CtaButton href="/services" variant="secondary">
+                Pogledajte usluge
+              </CtaButton>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="site-gutter py-24">
-        <div className="site-container flex flex-col gap-10">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div className="space-y-3">
-              <span className="text-xs uppercase tracking-[0.4em] text-cyan-200/75">Odabrani case fajlovi</span>
-              <h2 className="text-3xl font-medium text-theme-primary md:text-4xl">
-                Svaki angažman isporučuje merljivo pre i posle
+      <section className="site-gutter theme-section border-t border-theme py-20 transition-theme sm:py-24">
+        <div className="site-container space-y-12">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <header className="max-w-2xl space-y-4">
+              <span className="text-xs uppercase tracking-[0.6em] text-cyan-400">
+                Izbor iz radova
+              </span>
+              <h2 className="text-2xl leading-snug text-theme-primary md:text-3xl">
+                Šest projekata koje možete otvoriti i proveriti
               </h2>
-            </div>
-            <p className="max-w-md text-sm leading-relaxed text-slate-300/80">
-              Istražite uzorak product priča koje možemo javno da podelimo. Svaka kartica vodi ka kratkom pregledu bez lozinke. Kompletna biblioteka case study-ja dostupna je na zahtev.
+            </header>
+            <p className="max-w-md text-sm leading-relaxed text-theme-muted">
+              Bez izvučenih procenata i bez tuđih brojeva. Piše šta je urađeno,
+              a ostalo vidite na samom sajtu.
             </p>
           </div>
+
           <div className="grid gap-6 md:grid-cols-2">
-            {caseStudies.map((study) => (
-              <article key={study.title} className="group relative overflow-hidden rounded-3xl border border-theme theme-card transition-theme card-lift transform-gpu translate-y-0 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-theme">
-                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{
-                  background: 'linear-gradient(135deg, rgba(56,189,248,0.18), rgba(168,85,247,0.16))',
-                  mixBlendMode: 'screen',
-                }} />
-                <div className="relative space-y-4">
-                  <span className="inline-flex items-center rounded-full border border-theme px-3 py-1 text-[10px] uppercase tracking-[0.45em] text-cyan-300">
-                    {study.tag}
-                  </span>
-                  <h3 className="text-lg font-semibold text-theme-primary">{study.title}</h3>
-                  <p className="text-sm leading-relaxed text-slate-300/85">{study.outcome}</p>
-                  <div className="flex h-32 items-center justify-center rounded-2xl border border-dashed border-theme theme-card-muted text-[11px] uppercase tracking-[0.4em] text-theme-muted">
-                    Mesto za vizual
+            {projects.map((project, index) => (
+              <article
+                key={project.id}
+                className="card-lift group relative flex h-full flex-col overflow-hidden rounded-3xl border border-theme theme-card transition-theme hover:border-cyan-400/50"
+              >
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent opacity-80"
+                />
+
+                {/* Media pane, the homepage process-card grammar: image on
+                    top, body below. The browser chrome bar is the frame - it is
+                    theme-aware DOM, and the recording sits edge-to-edge in the
+                    space below it, carrying no frame of its own. Without media
+                    the pane stays the DESIGNED cover: grid, glow, monogram. */}
+                <div
+                  aria-hidden
+                  data-reveal="off"
+                  className="relative aspect-[16/10] overflow-hidden border-b border-theme theme-card-muted"
+                >
+                  <div className="absolute inset-x-0 top-0 z-10 flex h-9 items-center gap-1.5 border-b border-theme px-4">
+                    <span className="h-2 w-2 rounded-full bg-[var(--border-strong)]" />
+                    <span className="h-2 w-2 rounded-full bg-[var(--border-strong)]" />
+                    <span className="h-2 w-2 rounded-full bg-[var(--border-strong)]" />
                   </div>
-                  <button className="inline-flex items-center gap-2 text-sm font-medium text-cyan-300 transition hover:text-cyan-200">
-                    Otvori sažetak <ArrowRight className="h-4 w-4" />
-                  </button>
+
+                  {project.media ? (
+                    <ShowcaseVideo
+                      media={project.media}
+                      className="absolute inset-0 top-9"
+                    />
+                  ) : (
+                    <>
+                      <div
+                        className="absolute inset-0 top-9 opacity-[0.05]"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(var(--text-primary) 1px, transparent 1px), linear-gradient(90deg, var(--text-primary) 1px, transparent 1px)",
+                          backgroundSize: "36px 36px",
+                        }}
+                      />
+                      <div className="absolute -left-14 -top-10 h-44 w-44 rounded-full glow-accent blur-[80px]" />
+                      <div className="absolute inset-0 flex items-center justify-center pt-9">
+                        <span className="font-accent text-5xl tracking-[0.2em] text-theme-primary opacity-20 transition-opacity duration-500 group-hover:opacity-35 md:text-6xl">
+                          {project.monogram}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex flex-1 flex-col gap-4 p-6">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="inline-flex items-center rounded-full border border-theme px-3 py-1 text-[10px] uppercase tracking-[0.45em] text-cyan-300">
+                      {project.tag}
+                    </span>
+                    <span
+                      aria-hidden
+                      className="font-accent text-xl text-theme-muted opacity-60"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-theme-primary">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-theme-muted">
+                    {project.summary}
+                  </p>
+                  <ul className="flex flex-wrap gap-2">
+                    {project.scope.map((item) => (
+                      <li
+                        key={item}
+                        className="rounded-full border border-theme px-3 py-1 text-[11px] text-theme-muted"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-auto inline-flex w-fit items-center gap-2 pt-2 font-accent text-xs text-theme-muted transition-colors hover:text-cyan-300"
+                  >
+                    {displayHost(project.url)}
+                    <span aria-hidden>↗</span>
+                  </a>
                 </div>
               </article>
             ))}
@@ -145,52 +179,59 @@ export default function Projects() {
         </div>
       </section>
 
-      <section className="site-gutter bg-slate-900/35 py-24">
-        <div className="site-container flex flex-col gap-12">
-          <div className="space-y-3 text-center">
-            <span className="text-xs uppercase tracking-[0.4em] text-cyan-200/75">Utisci klijenata</span>
-            <h2 className="text-3xl font-medium text-theme-primary md:text-4xl">Partneri sa druge strane lansiranja</h2>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {testimonials.map((testimonial) => (
-              <blockquote key={testimonial.person} className="relative overflow-hidden rounded-3xl border border-theme theme-card p-6 text-left">
-                <div className="space-y-4">
-                  <p className="text-base italic leading-relaxed text-slate-200/85">“{testimonial.quote}”</p>
-                  <footer className="space-y-1 text-sm">
-                    <div className="font-semibold text-theme-primary">{testimonial.person}</div>
-                    <div className="text-xs uppercase tracking-[0.3em] text-slate-400/80">{testimonial.role}</div>
-                  </footer>
+      <section className="site-gutter theme-section border-t border-theme py-20 transition-theme sm:py-24">
+        <div className="site-container space-y-12">
+          <header className="max-w-2xl space-y-4">
+            <span className="text-xs uppercase tracking-[0.6em] text-cyan-400">
+              Kako radimo
+            </span>
+            <h2 className="text-2xl leading-snug text-theme-primary md:text-3xl">
+              Od prvog razgovora do sajta koji radi
+            </h2>
+          </header>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {capabilities.map(({ title, body, icon: Icon }) => (
+              <article
+                key={title}
+                className="card-lift relative flex h-full flex-col gap-4 overflow-hidden rounded-3xl border border-theme theme-card p-6 transition-theme hover:border-cyan-400/50"
+              >
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent opacity-80"
+                />
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-theme theme-card-muted text-cyan-300">
+                  <Icon className="h-5 w-5" aria-hidden />
                 </div>
-              </blockquote>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold text-theme-primary">
+                    {title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-theme-muted">
+                    {body}
+                  </p>
+                </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="site-gutter py-24">
-        <div className="site-container flex flex-col gap-10 rounded-3xl border border-theme theme-card px-8 py-10 text-center shadow-theme">
-          <h2 className="text-3xl font-medium text-theme-primary md:text-4xl">Planirate lansiranje visokog uloga?</h2>
-          <p className="mx-auto max-w-2xl text-sm leading-relaxed text-slate-300/80">
-            Pokažite nam brief, prezentaciju ili KPI koji treba pomeriti. Mapiraćemo tim, rokove i dokaze iz sličnih lansiranja kako biste mogli da donesete informisanu odluku.
+      <section className="site-gutter theme-section border-t border-theme py-20 transition-theme sm:py-24">
+        <div className="site-container flex flex-col items-center gap-6 text-center">
+          <h2 className="max-w-3xl text-2xl leading-snug text-theme-primary md:text-3xl">
+            Treba vam nov sajt ili obnova postojećeg?
+          </h2>
+          <p className="max-w-2xl text-base leading-relaxed text-theme-muted">
+            Recite nam čime se bavite i šta vas na trenutnom sajtu koči. Vraćamo
+            se sa predlogom opsega posla, rokom i cenom, pa odluku donosite sa
+            svim brojevima pred sobom.
           </p>
-          <LiquidButton className="mx-auto">
-            Zakažite uvodni razgovor <ArrowRight className="h-4 w-4" />
-          </LiquidButton>
+          <div className="pt-2">
+            <CtaButton href="/contact">Zakažite uvodni razgovor</CtaButton>
+          </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

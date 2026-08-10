@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "./_components/Navbar";
 import ScrollToTopButton from "./_components/ScrollToTopButton";
+import SocialDropdown from "./_components/SocialDropdown";
 import Footer from "./_components/Footer";
 import VideoBackgroundGlobal from "./_components/VideoBackgroundGlobal";
 import localFont from "next/font/local";
@@ -108,6 +109,16 @@ export const metadata: Metadata = {
   description: "Digitalni proizvodi koji pretvaraju radoznalost u lojalne klijente.",
 };
 
+// viewport-fit=cover is what makes every env(safe-area-inset-*) in the app
+// resolve to a real value - without it the navbar's inset padding and the
+// site-gutter safe-area terms all compute to 0. No themeColor on purpose:
+// the theme switches by class, and the meta only follows the OS scheme.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -140,6 +151,16 @@ export default function RootLayout({
                     <div className="h-full w-full">{children}</div>
                     <Footer />
                     <ScrollToTopButton />
+                    {/* Always-on social launcher, anchored bottom-left as the
+                        mirror of the bottom-right scroll button. Chrome, so it
+                        opts out of the site-wide reveal; its panel unfurls up
+                        into the page rather than off the bottom edge. */}
+                    <div
+                      className="fixed bottom-6 left-6 z-40"
+                      data-reveal="off"
+                    >
+                      <SocialDropdown menuPlacement="up-left" />
+                    </div>
                   </div>
                 </div>
               </SmoothScrollProvider>

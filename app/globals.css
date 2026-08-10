@@ -449,6 +449,17 @@
     min-height: 100%;
     transition: background-color 0.6s ease, color 0.6s ease, transform 0.3s ease;
   }
+
+  /* No section may widen the page: a single stray pixel of horizontal
+     overflow makes a phone render the layout viewport wider than the visual
+     one, and every centred section then reads as shifted. `clip`, not
+     `hidden` - hidden can promote body to a scroll container (breaking
+     position: sticky descendants); clip forbids the axis without creating
+     one, and Lenis only drives the vertical axis either way. */
+  html,
+  body {
+    overflow-x: clip;
+  }
 }
 
 html.lenis,
@@ -830,6 +841,34 @@ html.lenis body {
     background: var(--bg-video-vignette);
   }
 
+  /* ── Showcase video (kartice na `/projects`) ─────────────────────────────
+     Namerno bez `mix-blend-mode`, `filter` i palete: pozadinski klip se
+     blenduje da bi crno izašlo, a ovo je snimak tuđeg sajta i mora da se vidi
+     tačno onakav kakav jeste, u obe teme. Ram i radijus nosi DOM oko njega. */
+  .showcase-video-layer {
+    overflow: hidden;
+    background-image: var(--showcase-video-poster);
+    background-size: cover;
+    background-position: top center;
+  }
+
+  .showcase-video-el {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: top center;
+    /* Isti razlog kao kod pozadine: držano na 0 do prvog dekodovanog frejma,
+       da spor dekod pokaže poster umesto rupe. Poster JE prvi frejm. */
+    opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+
+  .showcase-video-el[data-playing="true"] {
+    opacity: 1;
+  }
+
   .theme-section {
     background-color: transparent;
     color: var(--text-primary);
@@ -894,6 +933,13 @@ html.lenis body {
     transition-duration: 0.5s;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
     will-change: background-color, color, border-color, box-shadow, transform, translate, filter;
+  }
+
+  /* Referenced across the app but never defined until now - every usage was a
+     silent no-op. The token is the one the process cards already prove out in
+     all three palettes. */
+  .shadow-theme {
+    box-shadow: 0 18px 48px var(--shadow-elevated);
   }
 }
 
@@ -1874,6 +1920,16 @@ html[data-mood="alt"] {
    model, image or fallback decision can move the footer. Putting the ratio on the canvas
    itself (where it used to live) would have tied it to one of the three branches. */
 .discipline-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+
+/* The service hero's model box - a deliberate sibling of `.discipline-viewport`
+   (sections own their CSS), reserved for the same zero-CLS reason: the ratio is
+   settled at first paint, before React mounts the canvas, the still, or nothing
+   at all while the WebGL probe answers. */
+.service-hero-viewport {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;

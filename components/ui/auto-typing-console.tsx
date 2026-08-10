@@ -8,9 +8,12 @@ import { translateText } from "@/lib/i18n";
 type AutoTypingConsoleType = {
     text: string;
     className?: string;
+    /** Heading level. The typing is the homepage's section-title voice, but a
+     *  page may only carry one h1 - sections pass "h2". */
+    as?: "h1" | "h2";
 }
 
-export default function AutoTypingConsole({ text, className } : AutoTypingConsoleType) {
+export default function AutoTypingConsole({ text, className, as: Tag = "h1" } : AutoTypingConsoleType) {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
   const { locale } = useLanguage();
@@ -55,15 +58,15 @@ export default function AutoTypingConsole({ text, className } : AutoTypingConsol
   }, [currentText]);
 
   return (
-    <h1
+    <Tag
       ref={titleRef}
       // This headline types itself one letter at a time; the site-wide word
       // reveal would be a second animation on the same glyphs.
       data-reveal="off"
       className={`
-        relative  text-white leading-tight
+        relative text-white leading-tight
         text-5xl
-        whitespace -normal font-broken-console
+        whitespace-normal font-broken-console
         ${className}
       `}
     >
@@ -74,6 +77,6 @@ export default function AutoTypingConsole({ text, className } : AutoTypingConsol
       ))}
 
       <span ref={cursorRef} className="absolute -top-2.5 -left-[0.65em] w-[0.65em] h-[1em] bg-white" />
-    </h1>
+    </Tag>
   );
 }

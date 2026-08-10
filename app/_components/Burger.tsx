@@ -13,6 +13,7 @@ const Burger = ({ navOpen, toggleNav }: BurgerProps) => {
       onClick={toggleNav}
       aria-label={navOpen ? "Zatvori meni" : "Otvori meni"}
       aria-expanded={navOpen}
+      data-nav-burger
       className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-[6px] cursor-pointer lg:hidden"
     >
       <span

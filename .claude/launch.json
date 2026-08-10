@@ -7,6 +7,24 @@
       "runtimeArgs": ["run", "dev"],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "scanme-mvp-web",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "cd",
+        "/d",
+        "C:\\Users\\admin\\Desktop\\Web Dev Projects\\scanme-mvp",
+        "&&",
+        "npm",
+        "run",
+        "dev:web",
+        "--",
+        "-p",
+        "3405"
+      ],
+      "port": 3405
     }
   ]
 }

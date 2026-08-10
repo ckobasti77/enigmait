@@ -44,9 +44,14 @@ const NavLinksMobile = ({
   setCurrentDropdown,
 }: NavLinksMobileProps) => {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const footerRef = useRef<HTMLDivElement>(null);
   const blobRef = useRef<HTMLDivElement>(null);
+  /** The close branch below must never run for a menu that was never opened -
+   *  on mount it would play a 0.68s hidden animation and write stale inline
+   *  opacity onto rows, and call unlockScroll before Lenis even exists. */
+  const hasOpenedRef = useRef(false);
   const smoothScrollRef = useSmoothScroll();
 
   const mainLinks = navLinks.filter((l) => !l.cta);
@@ -61,9 +66,10 @@ const NavLinksMobile = ({
    * provider never constructs a Lenis instance at all.
    */
   const lockScroll = useCallback(() => {
-    const lenis = smoothScrollRef?.current;
-    if (lenis) lenis.stop();
-    else document.documentElement.style.overflow = "hidden";
+    smoothScrollRef?.current?.stop();
+    // Root overflow unconditionally: body alone is the element iOS Safari
+    // historically ignores, and lenis.stop() does not stop native touch scroll.
+    document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
   }, [smoothScrollRef]);
 
@@ -80,9 +86,11 @@ const NavLinksMobile = ({
     const validItems = itemRefs.current.filter(Boolean) as HTMLDivElement[];
 
     if (navOpen) {
+      hasOpenedRef.current = true;
       lockScroll();
       overlay.style.display = "flex";
       overlay.style.pointerEvents = "auto";
+      innerRef.current?.focus({ preventScroll: true });
 
       gsap.killTweensOf([overlay, ...validItems, footerRef.current, blobRef.current]);
 
@@ -125,9 +133,11 @@ const NavLinksMobile = ({
         );
       }
     } else {
-      unlockScroll();
+      if (!hasOpenedRef.current) return;
 
-      gsap.killTweensOf([overlay, ...validItems]);
+      document.querySelector<HTMLElement>("[data-nav-burger]")?.focus();
+
+      gsap.killTweensOf([overlay, ...validItems, footerRef.current, blobRef.current]);
 
       // Items exit
       if (validItems.length) {
@@ -140,13 +150,15 @@ const NavLinksMobile = ({
         });
       }
 
-      // Panel close
+      // Panel close. The scroll unlock waits for the curtain: releasing it up
+      // front left the page scrollable under a still-opaque overlay for 0.68s.
       gsap.to(overlay, {
         clipPath: "inset(0 0 100% 0)",
         duration: 0.6,
         ease: "expo.inOut",
         delay: 0.08,
         onComplete: () => {
+          unlockScroll();
           overlay.style.pointerEvents = "none";
           overlay.style.display = "none";
         },
@@ -158,10 +170,48 @@ const NavLinksMobile = ({
     };
   }, [lockScroll, navOpen, unlockScroll]);
 
-  // Escape key support
+  // Escape closes; Tab cycles inside the dialog. The burger lives outside the
+  // overlay but is the close control, so it is part of the cycle.
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && navOpen) toggleNav();
+      if (!navOpen) return;
+
+      if (e.key === "Escape") {
+        toggleNav();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const overlay = overlayRef.current;
+      if (!overlay) return;
+
+      const burger = document.querySelector<HTMLElement>("[data-nav-burger]");
+      const inOverlay = Array.from(
+        overlay.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")
+      ).filter(
+        // visibility:hidden covers the collapsed accordion links - they are
+        // unfocusable, so wrapping onto one would silently drop the trap.
+        (el) => el.offsetParent !== null && getComputedStyle(el).visibility !== "hidden"
+      );
+      const focusables = [burger, ...inOverlay].filter(
+        (el): el is HTMLElement => el !== null
+      );
+      if (!focusables.length) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (!active || !focusables.includes(active)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -170,10 +220,16 @@ const NavLinksMobile = ({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-40 hidden flex-col overflow-hidden lg:hidden"
+      // z-[45]: above ScrollToTopButton (z-40, later in the DOM, would paint
+      // over the curtain on a z tie), below the bar (z-50 - the burger must
+      // stay tappable). `lg:hidden!` because the open path writes an inline
+      // display:flex that a plain utility cannot beat past the breakpoint.
+      className="fixed inset-0 z-[45] hidden flex-col overflow-hidden lg:hidden!"
       style={{ pointerEvents: "none", clipPath: "inset(0 0 100% 0)" }}
+      role="dialog"
       aria-modal="true"
       aria-label="Meni navigacije"
+      data-reveal="off"
     >
       {/* Base background */}
       <div className="absolute inset-0 bg-[#07090d]" />
@@ -208,10 +264,17 @@ const NavLinksMobile = ({
       />
 
       {/* ── Main content ───────────────────────────────── */}
-      <div className="relative z-10 flex h-full flex-col overflow-y-auto px-7 pb-8 pt-[calc(var(--nav-bar-height)+1rem)] sm:px-10">
+      <div
+        ref={innerRef}
+        tabIndex={-1}
+        data-lenis-prevent
+        className="overscroll-contain relative z-10 flex h-full flex-col overflow-y-auto px-[max(1.75rem,env(safe-area-inset-left),env(safe-area-inset-right))] pb-[max(2rem,env(safe-area-inset-bottom))] pt-[calc(var(--nav-bar-height)+1rem+env(safe-area-inset-top))] outline-none sm:px-[max(2.5rem,env(safe-area-inset-left),env(safe-area-inset-right))]"
+      >
 
-        {/* Navigation links */}
-        <nav className="flex flex-1 flex-col justify-center" aria-label="Mobilna navigacija">
+        {/* Navigation links. `my-auto`, not flex-1 + justify-center: auto
+            margins collapse once content outgrows the scroller, so a short
+            screen scrolls from the first row instead of clipping both ends. */}
+        <nav className="my-auto flex w-full flex-col py-4" aria-label="Mobilna navigacija">
           {mainLinks.map((link, i) => {
             const hasDropdown = !!link.dropdownLinks?.length;
             const isOpen = currentDropdown === link.id;
@@ -233,6 +296,8 @@ const NavLinksMobile = ({
                   {hasDropdown ? (
                     <button
                       type="button"
+                      aria-expanded={isOpen}
+                      aria-controls={`mobile-nav-panel-${link.id}`}
                       onClick={() =>
                         setCurrentDropdown((prev) =>
                           prev === link.id ? 0 : link.id
@@ -281,9 +346,15 @@ const NavLinksMobile = ({
                 {/* ── Services sub-grid ── */}
                 {hasDropdown && (
                   <div
+                    id={`mobile-nav-panel-${link.id}`}
                     className={clsx(
                       "overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
-                      isOpen ? "max-h-[420px] opacity-100 py-4" : "max-h-0 opacity-0"
+                      // `invisible` takes the collapsed links out of the tab
+                      // order; transition-all flips visibility at the right
+                      // end of each transition, so nothing pops.
+                      isOpen
+                        ? "visible max-h-[420px] opacity-100 py-4"
+                        : "invisible max-h-0 opacity-0"
                     )}
                   >
                     <div className="grid grid-cols-2 gap-2">

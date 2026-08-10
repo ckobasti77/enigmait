@@ -23,6 +23,6 @@
 
 ## New Files
 
-- New service page → `app/(pages)/services/<slug>/page.tsx` + entry in `constants/serviceDetails.ts` + entry in `constants/serviceFloatingObjects.ts`
+- New service page → `app/(pages)/services/<slug>/page.tsx` (server, ~25 lines) + content file in `constants/services/<slug>.ts` + registry entry in `constants/services/index.ts` + slug in `ServiceFloatingKey` union + discipline entry (GLB, still, copy) in `constants/disciplines.ts` + `[en, sr]` pairs in `lib/i18n.ts`
 - New UI primitive → `components/ui/`
 - New app-level component → `app/_components/`

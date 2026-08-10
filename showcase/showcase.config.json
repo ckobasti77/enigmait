@@ -1,0 +1,149 @@
+{
+  "$schema": "./showcase.schema.json",
+  "defaults": {
+    "fps": 30,
+    "durations": { "card": 9, "case": 25 },
+    "jpegQuality": 80,
+    "maxPxPerFrame": 45,
+    "deviceScaleFactorByVariant": { "card": 1, "case": 2 },
+    "desktop": { "width": 1440, "height": 900 },
+    "mobile": { "width": 390, "height": 844 },
+    "pauseVideos": true,
+    "cookieAcceptText": [
+      "Prihvatam sve",
+      "Prihvatam",
+      "Prihvati",
+      "Slažem se",
+      "Razumem",
+      "Accept all",
+      "Accept",
+      "I agree"
+    ]
+  },
+
+  "projects": [
+    {
+      "id": "lady-gaga-studio",
+      "name": "Studio Lady Gaga",
+      "url": "https://ladygagastudio.rs/",
+      "category": "web",
+      "variant": "card",
+      "enabled": true,
+      "captureMobile": true,
+      "dismissSelectors": [".cookie-starport button.ghost-btn"],
+      "hideSelectors": [".cookie-orbit-launcher"],
+      "waitForSelector": null,
+      "journey": { "from": 0, "to": 0.5 },
+      "stops": [
+        { "at": 0.0, "holdMs": 400 },
+        { "at": 0.5, "holdMs": 350 },
+        { "at": 1.0, "holdMs": 350 }
+      ],
+      "notes": "Frizerski salon + prodaja proizvoda, Sabac. SSR, sadrzaj citljiv. Cookie banner .cookie-starport, ghost-btn = 'SAMO NEOPHODNI'. Posle odbijanja ostaje .cookie-orbit-launcher (PRIVATNOST pilula, dole levo) - zato je u hideSelectors. NE dodaji .cookie-starport u hideSelectors: hideWidgets ide pre dismissCookies, pa bi sakriveno dugme palo na isVisible() i banner ne bi bio odbijen. Ima <video> (webm) i interaktivni before/after komparator. maxScroll 12655 desktop / 18067 mobile - najduzi sajt u setu, zato je jedini sa rucno zadatim journey prozorom (0-0.5); mobilni je i preko toga prebrz, pa ga maxPxPerFrame automatika jos skrati (vidi journeyAdjusted u meta.json)."
+    },
+    {
+      "id": "ablux-travel",
+      "name": "ABLux Travel",
+      "url": "https://abluxtravel.com",
+      "category": "web",
+      "variant": "card",
+      "enabled": true,
+      "captureMobile": true,
+      "dismissSelectors": [],
+      "hideSelectors": [".qa-fab"],
+      "waitForSelector": null,
+      "stops": [
+        { "at": 0.0, "holdMs": 400 },
+        { "at": 0.5, "holdMs": 350 },
+        { "at": 1.0, "holdMs": 350 }
+      ],
+      "notes": "Turisticka agencija - verski turizam, aranzmani, rent-a-bus. SSR, dvojezicno (sr/en). Nema cookie banner. .qa-fab je fiksni quick-action stack (INSTAGRAM/POZIV/EMAIL) dole desno, u svakom frejmu. maxScroll 3558 desktop / 5590 mobile."
+    },
+    {
+      "id": "gbmt",
+      "name": "GBMT",
+      "url": "https://gbmt.rs/",
+      "category": "web",
+      "variant": "card",
+      "enabled": true,
+      "captureMobile": true,
+      "dismissSelectors": [],
+      "hideSelectors": ["button[title=\"Skroluj do vrha\"]"],
+      "waitForSelector": null,
+      "stops": [
+        { "at": 0.0, "holdMs": 400 },
+        { "at": 0.5, "holdMs": 350 },
+        { "at": 1.0, "holdMs": 350 }
+      ],
+      "notes": "CSR - HTML je prazan bez JS-a. Playwright ga renderuje bez problema (body text ~1966 znakova). Nema cookie banner. Fiksno kruzno dugme za povratak na vrh dole desno. maxScroll 1948 desktop / 3424 mobile - najkraci sajt, referentna brzina skrola za ceo set."
+    },
+    {
+      "id": "the-original-way",
+      "name": "The Original Way",
+      "url": "https://the-original-way.vercel.app/",
+      "category": "web",
+      "variant": "card",
+      "enabled": true,
+      "captureMobile": true,
+      "dismissSelectors": [],
+      "hideSelectors": ["div[class*='z-[65]']"],
+      "waitForSelector": null,
+      "stops": [
+        { "at": 0.0, "holdMs": 400 },
+        { "at": 0.5, "holdMs": 350 },
+        { "at": 1.0, "holdMs": 350 }
+      ],
+      "notes": "Fashion e-commerce, kurirana evropska garderoba. Dvojezicno, / redirektuje na /en. Hero ima dva videa (story-forward.mp4 i story-reverse.mp4, oba 5.38s) - pauseVideos ih zaustavlja na 1.5s. Nema cookie banner. Fiksni kontakt FAB dole levo (z-[65]). Fiksni header je navigacija, NE skriva se. maxScroll 8209 desktop / 9674 mobile."
+    },
+    {
+      "id": "fides-gradnja",
+      "name": "Fides Gradnja",
+      "url": "https://fidesgradnja.vercel.app/",
+      "category": "web",
+      "variant": "card",
+      "enabled": true,
+      "captureMobile": true,
+      "dismissSelectors": [],
+      "hideSelectors": ["div.outer[class*='z-[9999999]']"],
+      "waitForSelector": null,
+      "stops": [
+        { "at": 0.0, "holdMs": 400 },
+        { "at": 0.5, "holdMs": 350 },
+        { "at": 1.0, "holdMs": 350 }
+      ],
+      "notes": "CSR, gradjevinska firma. Playwright renderuje (body text ~1770 znakova). Nema cookie banner. Back-to-top je div.outer sa z-[9999999] koji obavija button.scrollToTop - skriva se wrapper, inace ostaje gradijentni prsten. Fiksni nav.navbar je navigacija, NE skriva se. maxScroll 2454 desktop / 3459 mobile."
+    },
+    {
+      "id": "digist",
+      "name": "Digist",
+      "url": "https://digist.vercel.app/",
+      "category": "web",
+      "variant": "card",
+      "enabled": true,
+      "captureMobile": true,
+      "dismissSelectors": [],
+      "hideSelectors": ["a[title=\"Scroll To Top\"]"],
+      "waitForSelector": null,
+      "stops": [
+        { "at": 0.0, "holdMs": 400 },
+        { "at": 0.5, "holdMs": 350 },
+        { "at": 1.0, "holdMs": 350 }
+      ],
+      "notes": "CSR, tamna tema (meta theme-color #000000). Playwright renderuje (body text ~3631 znakova). Nema cookie banner. Back-to-top je <a title='Scroll To Top'> dole desno. Fiksni .navbar je navigacija, NE skriva se. maxScroll 4650 desktop / 7792 mobile."
+    },
+    {
+      "id": "jeveux-travel",
+      "name": "Je Veux Travel",
+      "url": "https://jeveuxtravel.vercel.app/",
+      "category": "web",
+      "variant": "card",
+      "enabled": false,
+      "captureMobile": true,
+      "dismissSelectors": [],
+      "hideSelectors": [],
+      "waitForSelector": null,
+      "stops": null,
+      "notes": "ISKLJUCEN - URL vraca 404. Vercel deploy je verovatno obrisan ili preimenovan. Ukljuci enabled:true kad Jovan da tacan URL, pa izmeri maxScroll i postavi journey."
+    }
+  ]
+}

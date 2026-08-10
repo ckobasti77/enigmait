@@ -102,7 +102,7 @@ export function TechSection() {
     >
       {/* Subtle Title Badge */}
       <div className="text-center z-10 mb-6 sm:mb-8">
-        <span className="font-accent text-[9px] md:text-[10.5px] tracking-[0.25em] text-[#D7DCE5]/35 uppercase font-bold">
+        <span className="font-accent text-[9px] md:text-[10.5px] tracking-[0.25em] text-theme-muted opacity-60 uppercase font-bold">
           TEHNOLOGIJE KOJE KORISTIMO
         </span>
       </div>
@@ -139,7 +139,7 @@ export function TechSection() {
 
       {/* Section-level Tooltip Speech Bubble (can overlap boundary/Hero cleanly) */}
       <div
-        className={`absolute z-50 w-52 sm:w-56 p-3.5 rounded-xl border border-white/10 bg-[#070B18]/95 backdrop-blur-md text-center pointer-events-none transition-all duration-300 ease-out ${
+        className={`absolute z-50 w-52 sm:w-56 p-3.5 rounded-xl border border-theme bg-[var(--popover)] backdrop-blur-md text-center pointer-events-none transition-all duration-300 ease-out ${
           isTooltipActive && tooltipPos
             ? "opacity-100 visible"
             : "opacity-0 invisible"
@@ -148,21 +148,21 @@ export function TechSection() {
           left: tooltipPos ? `${tooltipPos.left}px` : "0px",
           top: tooltipPos ? `${tooltipPos.top}px` : "0px",
           transform: tooltipTransform,
-          boxShadow: hoveredTech ? `0 16px 40px rgba(0,0,0,0.6), 0 0 30px ${hoveredTech.glowColor}` : undefined,
+          boxShadow: hoveredTech ? `0 16px 40px var(--shadow-elevated), 0 0 30px ${hoveredTech.glowColor}` : undefined,
         }}
       >
         {hoveredTech && (
           <>
-            <div className="font-accent text-[9px] tracking-wider text-[#D7DCE5]/40 uppercase mb-1.5 font-extrabold">
+            <div className="font-accent text-[9px] tracking-wider text-theme-muted uppercase mb-1.5 font-extrabold">
               {hoveredTech.name}
             </div>
-            <p className="text-[11px] leading-relaxed text-[#F5F7FA]/85 font-sans">
+            <p className="text-[11px] leading-relaxed text-theme-primary font-sans">
               {hoveredTech.eli5}
             </p>
-            
+
             {/* Speech Bubble Arrow */}
-            <div 
-              className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-2 h-2 rotate-45 border-r border-b border-white/10 bg-[#070B18]"
+            <div
+              className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-2 h-2 rotate-45 border-r border-b border-theme bg-[var(--popover)]"
             />
           </>
         )}

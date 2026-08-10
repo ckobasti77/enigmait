@@ -1,83 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { AtSign, Mail, Phone, Share2 } from "lucide-react";
+import { AtSign, Share2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
-type SocialLink = {
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
-  external?: boolean;
-};
-
-const InstagramIcon = ({ className, ...props }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="none" className={className} {...props}>
-    <rect x="5" y="5" width="14" height="14" rx="4" stroke="currentColor" strokeWidth="1.8" />
-    <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.8" />
-    <circle cx="16.5" cy="7.5" r="1" fill="currentColor" />
-  </svg>
-);
-
-const TikTokIcon = ({ className, ...props }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="none" className={className} {...props}>
-    <path
-      d="M14 5v9.2a4.3 4.3 0 1 1-3.8-4.27"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.8"
-    />
-    <path
-      d="M14 5c.55 2.75 2.2 4.35 5 4.75"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.8"
-    />
-  </svg>
-);
-
-const FacebookIcon = ({ className, ...props }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="none" className={className} {...props}>
-    <path
-      d="M14.4 8.2H16V5.5h-2.15c-2.25 0-3.45 1.35-3.45 3.55v1.55H8v2.8h2.4V19h3v-5.6h2.25l.35-2.8h-2.6V9.35c0-.75.32-1.15 1-1.15Z"
-      fill="currentColor"
-    />
-  </svg>
-);
-
-const socialLinks: SocialLink[] = [
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/enigmadigital.studio",
-    icon: InstagramIcon,
-    external: true,
-  },
-  {
-    label: "TikTok",
-    href: "https://www.tiktok.com/@enigmadigital.studio",
-    icon: TikTokIcon,
-    external: true,
-  },
-  {
-    label: "Facebook",
-    href: "https://www.facebook.com/enigmadigital.studio",
-    icon: FacebookIcon,
-    external: true,
-  },
-  {
-    label: "Email",
-    href: "mailto:hello@enigma.digital",
-    icon: Mail,
-  },
-  {
-    label: "Telefon",
-    href: "tel:+442045771943",
-    icon: Phone,
-  },
-];
+import { socialLinks } from "@/constants/socialLinks";
 
 const canUseHover = () =>
   typeof window !== "undefined" &&
@@ -87,11 +15,17 @@ type SocialDropdownProps = {
   /** `ghost` drops the resting border and fill - for use inside the nav island,
    *  where a bordered chip inside a bordered capsule reads as clutter. */
   variant?: "solid" | "ghost";
+  /** Which corner the panel unfurls toward, relative to the trigger.
+   *  `down-right` sits under a top-bar button; `up-left` sits over a
+   *  bottom-left launcher so the panel opens up into the page, not off-screen. */
+  menuPlacement?: "down-right" | "up-left";
 };
 
 export default function SocialDropdown({
   variant = "solid",
+  menuPlacement = "down-right",
 }: SocialDropdownProps) {
+  const opensUp = menuPlacement === "up-left";
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -159,13 +93,32 @@ export default function SocialDropdown({
         />
       </button>
 
+      {/* Hover bridge. The panel stands a gap (`mb-3`/`mt-3`) off the trigger,
+          and that gap is dead space: dragging the pointer across it to reach
+          the panel leaves the root and fires `onMouseLeave`, closing the panel
+          before it can be clicked. This transparent strip fills exactly that
+          gap (h-3 = the 0.75rem margin) as a child of the root, so the pointer
+          never leaves the hover target in transit. Only live while open. */}
+      <div
+        aria-hidden
+        className={clsx(
+          "absolute h-3 w-[min(20rem,calc(100vw-2rem))]",
+          opensUp ? "bottom-full left-0" : "top-full right-0",
+          open ? "pointer-events-auto" : "pointer-events-none"
+        )}
+      />
+
       <div
         role="menu"
         className={clsx(
-          "absolute right-0 top-full mt-3 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-theme theme-card shadow-theme backdrop-blur-xl transition-all duration-200",
+          "absolute w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-theme theme-card shadow-theme backdrop-blur-xl transition-all duration-200",
+          opensUp ? "bottom-full left-0 mb-3" : "right-0 top-full mt-3",
           open
             ? "pointer-events-auto translate-y-0 opacity-100"
-            : "pointer-events-none -translate-y-1 opacity-0"
+            : clsx(
+                "pointer-events-none opacity-0",
+                opensUp ? "translate-y-1" : "-translate-y-1"
+              )
         )}
         style={{
           background:

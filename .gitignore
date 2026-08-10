@@ -40,6 +40,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# showcase capture frames
+showcase/captures/
+
+# playwright mcp session logs
+.playwright-mcp/
+
 # Blender
 blender/renders/
 blender/scenes/_versions/

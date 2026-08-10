@@ -1,9 +1,8 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { ReactNode } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
 import type { Group } from "three";
 import clsx from "clsx";
 import {
@@ -95,19 +94,6 @@ function FloatingObject({ instance, children }: { instance: FloatingInstanceConf
   );
 }
 
-function FloatingGLTFAsset({ config, instance }: { config: FloatingModelConfig; instance: FloatingInstanceConfig }) {
-  if (!config.modelPath) {
-    throw new Error("GLTF asset requested without a modelPath");
-  }
-  const { scene } = useGLTF(config.modelPath);
-  const cloned = useMemo(() => scene.clone(true), [scene]);
-  return (
-    <FloatingObject instance={instance}>
-      <primitive object={cloned} />
-    </FloatingObject>
-  );
-}
-
 function FloatingPrimitiveAsset({ instance }: { instance: FloatingInstanceConfig }) {
   const Asset = instance.assetKey ? primitiveAssetFactories[instance.assetKey] : undefined;
   return (
@@ -124,9 +110,9 @@ function FloatingPrimitiveAsset({ instance }: { instance: FloatingInstanceConfig
   );
 }
 
+/** Every config is `assetType: "primitive"` - the GLTF branch this component
+ *  once carried was dead code (an always-empty preload set) and is gone. */
 function FloatingScene({ config }: { config: FloatingModelConfig }) {
-  const assetType = config.assetType ?? "gltf";
-  const usePrimitiveAssets = assetType === "primitive";
   return (
     <>
       <ambientLight intensity={config.ambient ?? 0.7} />
@@ -136,24 +122,11 @@ function FloatingScene({ config }: { config: FloatingModelConfig }) {
         color={config.light?.color ?? "#7DE4FF"}
       />
       {config.instances.map((instance) => (
-        usePrimitiveAssets ? (
-          <FloatingPrimitiveAsset key={instance.id} instance={instance} />
-        ) : (
-          <FloatingGLTFAsset key={instance.id} config={config} instance={instance} />
-        )
+        <FloatingPrimitiveAsset key={instance.id} instance={instance} />
       ))}
     </>
   );
 }
-
-const MODEL_PATHS = new Set(
-  Object.values(serviceFloatingObjects)
-    .filter((config) => (config.assetType ?? "gltf") === "gltf" && config.modelPath)
-    .map((config) => config.modelPath as string)
-);
-MODEL_PATHS.forEach((path) => {
-  useGLTF.preload(path);
-});
 
 export default function FloatingServiceObjects({ serviceKey = "default", className }: FloatingServiceObjectsProps) {
   const config = useMemo(() => {
@@ -177,9 +150,7 @@ export default function FloatingServiceObjects({ serviceKey = "default", classNa
         dpr={[1, 1.75]}
         style={{ mixBlendMode: "screen" }}
       >
-        <Suspense fallback={null}>
-          <FloatingScene config={config} />
-        </Suspense>
+        <FloatingScene config={config} />
       </Canvas>
     </div>
   );
