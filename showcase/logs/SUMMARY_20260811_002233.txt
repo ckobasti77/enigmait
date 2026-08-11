@@ -1,0 +1,18 @@
+﻿Enigma Digital - nocni lanac
+Start: 11.08.2026 00:22:38   Kraj: 11.08.2026 01:31:38   Ukupno: 01:08:59
+
+
+Korak Naziv                                           Status Trajanje Log  
+----- -----                                           ------ -------- ---  
+01    Popravke capture-a + snimanje svih projekata    OK     00:14:28 01...
+02    Enkodiranje u mp4/webm + poster                 OK     00:05:54 02...
+03    Pravi podaci + izbacivanje izmisljenog sadrzaja OK     00:14:27 03...
+04    ShowcaseVideo komponenta + ugradnja u kartice   OK     00:18:03 04...
+05    Review, vizuelna verifikacija, commit           OK     00:16:06 05...
+
+
+
+
+Izvestaji:     showcase\REPORT-01.md ... REPORT-04.md i showcase\REPORT-FINAL.md
+Screenshotovi: showcase\review\
+Grana:         feat/project-showcase (nije push-ovana)
