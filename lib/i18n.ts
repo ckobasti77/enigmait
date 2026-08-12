@@ -419,34 +419,20 @@ export const englishToSerbianEntries = [
 
   // Projects
   ["Our work", "Naši radovi"],
-  ["Sites we have built, all open to inspection", "Sajtovi koje smo izradili, svi otvoreni za proveru"],
+  ["Our work, open to inspection", "Radovi otvoreni za proveru"],
   [
-    "We work with salons, agencies, shops and contractors. Below are six projects: each one says what the client does and what the job covered, and the address takes you to the live site.",
-    "Radimo sa salonima, agencijama, prodavnicama i izvođačima radova. Ispod je šest projekata: za svaki piše čime se klijent bavi i šta je posao obuhvatio, a adresa vodi na sajt uživo.",
+    "Six sites for salons, agencies, shops and contractors — every address opens the live site.",
+    "Šest sajtova za salone, agencije, prodavnice i izvođače — svaka adresa otvara živ sajt.",
   ],
-  ["Selected work", "Izbor iz radova"],
-  ["Six projects you can open and check for yourself", "Šest projekata koje možete otvoriti i proveriti"],
-  [
-    "No cherry-picked percentages and no borrowed numbers. It says what was done; the rest you see on the site itself.",
-    "Bez izvučenih procenata i bez tuđih brojeva. Piše šta je urađeno, a ostalo vidite na samom sajtu.",
-  ],
-  ["How we work", "Kako radimo"],
-  ["From the first conversation to a site that works", "Od prvog razgovora do sajta koji radi"],
+  ["Live projects", "Projekata uživo"],
+  ["Web shops with checkout", "Web-shopa sa naplatom"],
+  ["Addresses lead to a live site", "Adresa vodi na živ sajt"],
+  ["Featured", "Izdvojeno"],
+  ["Open the site", "Otvori sajt"],
+  // Tri koraka, sažeta u jedan red u hero-u stranice Projekti.
   ["Conversation and plan", "Razgovor i plan"],
-  [
-    "First we understand the business and the people who come to the site, and only then decide what the site actually needs and in what order.",
-    "Prvo razumemo posao i ljude koji na sajt dolaze, pa tek onda određujemo šta sajtu zaista treba i kojim redom.",
-  ],
   ["Design and build", "Dizajn i izrada"],
-  [
-    "We design for your content, not for a template. The site is built to be fast and to work equally well on a phone and on a large screen.",
-    "Dizajn pravimo za vaš sadržaj, ne za šablon. Sajt gradimo tako da bude brz i da radi jednako dobro na telefonu i na velikom ekranu.",
-  ],
   ["Launch and support", "Lansiranje i podrška"],
-  [
-    "We put the site live, hand over the credentials and stay available for changes, additions and content that arrives later.",
-    "Postavljamo sajt, predajemo pristupe i ostajemo dostupni za izmene, dopune i sadržaj koji stiže kasnije.",
-  ],
   ["Need a new site or a rebuild of the current one?", "Treba vam nov sajt ili obnova postojećeg?"],
   [
     "Tell us what you do and what is holding you back on your current site. We come back with a proposed scope, timeline and price, so you decide with all the numbers in front of you.",
