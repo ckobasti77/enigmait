@@ -40,11 +40,21 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# showcase capture frames
+# showcase — sirovi frejmovi (~223 MB). Ostaju na disku, potrebni su za
+# ponovni encode; u git nemaju sta da traze.
 showcase/captures/
+
+# showcase — dnevnici nocnog lanca i screenshotovi za review. Oboje se
+# regenerise pokretanjem lanca ponovo, pa su artefakt procesa, ne kod.
+showcase/logs/
+showcase/review/
 
 # playwright mcp session logs
 .playwright-mcp/
+
+# Claude Code — licna podesavanja masine (permission allowlist).
+# Deljena konfiguracija (.claude/rules, .claude/skills, CLAUDE.md) SE komituje.
+.claude/settings.local.json
 
 # Blender
 blender/renders/
