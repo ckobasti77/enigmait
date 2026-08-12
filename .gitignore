@@ -48,6 +48,7 @@ showcase/captures/
 # regenerise pokretanjem lanca ponovo, pa su artefakt procesa, ne kod.
 showcase/logs/
 showcase/review/
+showcase/redesign/review/
 
 # playwright mcp session logs
 .playwright-mcp/

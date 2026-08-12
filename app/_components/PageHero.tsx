@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import AutoTypingConsole from "@/components/ui/auto-typing-console";
+import { Card } from "@/components/ui/card";
 import CtaButton from "@/components/ui/cta-button";
 import FloatingServiceObjects from "@/app/(pages)/services/_components/FloatingServiceObjects";
 import type { ServiceFloatingKey } from "@/constants/serviceFloatingObjects";
@@ -106,36 +107,29 @@ export default function PageHero({
           <div className="grid gap-5 lg:justify-self-end lg:max-w-[520px]">
             {children}
             {highlights?.map(({ title: highlightTitle, body, icon: Icon, badge }) => (
-              <article
+              <Card
+                as="article"
+                cursorGlow
                 key={highlightTitle}
-                className="group relative overflow-hidden rounded-3xl border border-theme theme-card px-5 py-4 card-lift transform-gpu translate-y-0 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-theme"
+                className="flex gap-3 px-5 py-4"
               >
-                <div
-                  className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(56,189,248,0.16), rgba(168,85,247,0.16))",
-                    mixBlendMode: "screen",
-                  }}
-                />
-                <div className="relative flex gap-3">
-                  {Icon ? (
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-theme theme-card text-cyan-400">
-                      <Icon className="h-5 w-5" aria-hidden />
-                    </span>
-                  ) : null}
-                  <div className="space-y-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-xl font-semibold text-theme-primary">{highlightTitle}</h3>
-                      {badge ? (
-                        <span className="rounded-full border border-theme px-3 py-1 text-xs uppercase tracking-[0.3em] text-cyan-400">
-                          {badge}
-                        </span>
-                      ) : null}
-                    </div>
-                    <p className="text-base leading-relaxed text-theme-muted">{body}</p>
+                {Icon ? (
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-theme theme-card text-cyan-400">
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </span>
+                ) : null}
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-xl font-semibold text-theme-primary">{highlightTitle}</h3>
+                    {badge ? (
+                      <span className="rounded-full border border-theme px-3 py-1 text-xs uppercase tracking-[0.3em] text-cyan-400">
+                        {badge}
+                      </span>
+                    ) : null}
                   </div>
+                  <p className="text-base leading-relaxed text-theme-muted">{body}</p>
                 </div>
-              </article>
+              </Card>
             ))}
           </div>
         ) : null}

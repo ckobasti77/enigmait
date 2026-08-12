@@ -201,6 +201,10 @@
      same blue as `--process-accent-1` rather than a re-alpha'd #58c4ff. */
   --cta-line: rgba(2, 132, 199, 0.45);
   --cta-sweep: linear-gradient(115deg, transparent 20%, #0284c7, #6d28d9, transparent 80%);
+  /* Card primitive — the hairline and the unlock streak. Same blue as the CTA
+     rim, at full opacity: a 1px stroke over paper has nothing to spare. */
+  --card-trace: #0284c7;
+  --card-trace-glow: rgba(2, 132, 199, 0.3);
   --timeline-spotlight-highlight: rgba(255, 252, 244, 0.85);
   --timeline-spotlight-mid: rgba(226, 216, 195, 0.55);
   --timeline-spotlight-shadow: rgba(74, 62, 40, 0.15);
@@ -381,6 +385,10 @@
      same pair the process cards and the services dropdown trace with. */
   --cta-line: rgba(88, 196, 255, 0.55);
   --cta-sweep: linear-gradient(115deg, transparent 20%, #38bdf8, #c084fc, transparent 80%);
+  /* Card primitive — brand blue for the hairline and the unlock streak, the
+     same read as the process cards' first phase. */
+  --card-trace: #58c4ff;
+  --card-trace-glow: rgba(56, 189, 248, 0.45);
   --timeline-spotlight-highlight: rgba(255, 255, 255, 0.2);
   --timeline-spotlight-mid: rgba(18, 28, 44, 0.75);
   --timeline-spotlight-shadow: rgba(7, 11, 22, 0.95);
@@ -1060,6 +1068,9 @@ html[data-mood="alt"] {
      the rim by brightness, not by a second colour. */
   --cta-line: rgba(0, 255, 65, 0.45);
   --cta-sweep: linear-gradient(115deg, transparent 20%, #00ff41, #86ffb8, transparent 80%);
+  /* Card primitive — one hue here too; the streak reads by brightness. */
+  --card-trace: #00ff41;
+  --card-trace-glow: rgba(0, 255, 65, 0.45);
   --border-soft: rgba(0, 255, 65, 0.2);
   --border-strong: rgba(0, 255, 65, 0.4);
   --shadow-elevated: rgba(0, 0, 0, 0.5);
@@ -2047,6 +2058,120 @@ html[data-mood="alt"] {
 
   .trace-cta--primary:hover {
     border-color: color-mix(in srgb, var(--primary) 70%, transparent);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Card primitive (components/ui/card.tsx, hooks/useBorderTraceReveal.ts)
+
+   The process card's language on an ordinary grid card: a blue rim that is
+   always there, a cyan hairline along the top, and - for `RevealCard` - two
+   streaks that run the border once as the card enters the viewport.
+
+   The root/shell split is the same one `ProcessCard` makes and for the same
+   reason: the shell clips (flush media has to stay inside the corners) and the
+   trace has to glow past the edge it is drawn on, so the streak and the hover
+   shadow live on the root, outside that clip.
+   --------------------------------------------------------------------------- */
+.ui-card {
+  /* Kept in step with CARD_RADIUS in hooks/useBorderTraceReveal.ts - the trace
+     follows this corner, and a mismatch shows as a streak cutting across it. */
+  --ui-card-radius: 16px;
+  position: relative;
+  height: 100%;
+  border-radius: var(--ui-card-radius);
+}
+
+.ui-card-shell {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  /* The resting rim. `--border-strong` is already the brand blue in the dark
+     and alt palettes, but on paper it is a warm structural line - so the card's
+     own hue is mixed in and the rim reads blue in every theme, which is the
+     whole point of it being there when nothing is happening. */
+  border: 1px solid color-mix(in srgb, var(--card-trace) 22%, var(--border-strong));
+}
+
+/* The homepage accent every card on the site shares. */
+.ui-card-hairline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 1px;
+  pointer-events: none;
+  opacity: 0.75;
+  background: linear-gradient(90deg, transparent, var(--card-trace), transparent);
+}
+
+.ui-card-cursor-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    220px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    var(--glow-accent-2),
+    transparent 70%
+  );
+}
+
+.ui-card:hover .ui-card-cursor-glow {
+  opacity: 1;
+}
+
+.ui-card-content {
+  position: relative;
+  z-index: 1;
+}
+
+.ui-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 18px 46px var(--shadow-elevated),
+    0 0 0 1px color-mix(in srgb, var(--card-trace) 22%, transparent),
+    0 0 28px var(--glow-accent-1);
+}
+
+.ui-card:hover .ui-card-shell {
+  border-color: color-mix(in srgb, var(--card-trace) 55%, transparent);
+}
+
+/* Blur and lift only - the copy inside is the site-wide reveal's to fade. */
+.ui-card-veil {
+  will-change: transform, filter;
+}
+
+/* `overflow: visible` keeps the glow from being clipped at the card edge, which
+   is exactly where the stroke sits. */
+.ui-card-trace {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ui-card-trace-path {
+  fill: none;
+  stroke: var(--card-trace);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px var(--card-trace-glow))
+    drop-shadow(0 0 10px var(--card-trace-glow));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The glow stays - it is state, not motion. Only the lift goes. */
+  .ui-card:hover {
+    transform: none;
   }
 }
 

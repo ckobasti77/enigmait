@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Rocket, Sparkles, Users } from "lucide-react";
 
 import AutoTypingConsole from "@/components/ui/auto-typing-console";
+import { RevealCard } from "@/components/ui/card";
 import CtaButton from "@/components/ui/cta-button";
 import ShowcaseVideo from "@/components/ui/showcase-video";
 import { projects } from "@/constants/projects";
@@ -84,16 +85,12 @@ export default function ProjectsPage() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-            {projects.map((project, index) => (
-              <article
+            {projects.map((project) => (
+              <RevealCard
+                as="article"
                 key={project.id}
-                className="card-lift group relative flex h-full flex-col overflow-hidden rounded-3xl border border-theme theme-card transition-theme hover:border-cyan-400/50"
+                className="group flex h-full flex-col"
               >
-                <div
-                  aria-hidden
-                  className="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent opacity-80"
-                />
-
                 {/* Media pane, the homepage process-card grammar: image on
                     top, body below. The browser chrome bar is the frame - it is
                     theme-aware DOM, and the recording sits edge-to-edge in the
@@ -136,17 +133,9 @@ export default function ProjectsPage() {
                 </div>
 
                 <div className="flex flex-1 flex-col gap-4 p-6">
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="inline-flex items-center rounded-full border border-theme px-3 py-1 text-[10px] uppercase tracking-[0.45em] text-cyan-300">
-                      {project.tag}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="font-accent text-xl text-theme-muted opacity-60"
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                  </div>
+                  <span className="inline-flex w-fit items-center rounded-full border border-theme px-3 py-1 text-[10px] uppercase tracking-[0.45em] text-cyan-300">
+                    {project.tag}
+                  </span>
                   <h3 className="text-lg font-semibold text-theme-primary">
                     {project.title}
                   </h3>
@@ -173,7 +162,7 @@ export default function ProjectsPage() {
                     <span aria-hidden>↗</span>
                   </a>
                 </div>
-              </article>
+              </RevealCard>
             ))}
           </div>
         </div>
@@ -192,14 +181,11 @@ export default function ProjectsPage() {
 
           <div className="grid gap-6 md:grid-cols-3">
             {capabilities.map(({ title, body, icon: Icon }) => (
-              <article
+              <RevealCard
+                as="article"
                 key={title}
-                className="card-lift relative flex h-full flex-col gap-4 overflow-hidden rounded-3xl border border-theme theme-card p-6 transition-theme hover:border-cyan-400/50"
+                className="flex h-full flex-col gap-4 p-6"
               >
-                <div
-                  aria-hidden
-                  className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent opacity-80"
-                />
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-theme theme-card-muted text-cyan-300">
                   <Icon className="h-5 w-5" aria-hidden />
                 </div>
@@ -211,7 +197,7 @@ export default function ProjectsPage() {
                     {body}
                   </p>
                 </div>
-              </article>
+              </RevealCard>
             ))}
           </div>
         </div>
