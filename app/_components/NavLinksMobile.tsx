@@ -402,14 +402,15 @@ const NavLinksMobile = ({
             <p className="mb-3 text-[10px] uppercase tracking-[0.22em] text-white/30">
               Pokreni projekat
             </p>
-            {/* The menu overlay is dark in both themes, so the glass has to be
-                pinned to its dark rim rather than the page's. */}
+            {/* The menu overlay is dark in both themes, so the button has to be
+                pinned to its dark rim rather than the page's. Both `--on-dark`
+                classes ride along so the pin survives a `look` switch. */}
             {ctaLink && (
               <CtaButton
                 href={absPath(ctaLink.to)}
                 onClick={toggleNav}
                 size="sm"
-                className="liquid-glass--on-dark"
+                className="liquid-glass--on-dark trace-cta--on-dark"
               >
                 {ctaLink.text}
                 <ArrowUpRight className="h-4 w-4" />

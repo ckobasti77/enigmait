@@ -195,6 +195,12 @@
   --shadow-elevated: rgba(56, 46, 30, 0.16);
   --glow-accent-1: rgba(56, 189, 248, 0.24);
   --glow-accent-2: rgba(124, 58, 237, 0.18);
+  /* Trace CTA — the resting rim and the streak that runs it on hover.
+     On paper the sky blue has to go a couple of steps darker than the dark
+     palette's `--primary` or a 1px rim disappears, which is why this is the
+     same blue as `--process-accent-1` rather than a re-alpha'd #58c4ff. */
+  --cta-line: rgba(2, 132, 199, 0.45);
+  --cta-sweep: linear-gradient(115deg, transparent 20%, #0284c7, #6d28d9, transparent 80%);
   --timeline-spotlight-highlight: rgba(255, 252, 244, 0.85);
   --timeline-spotlight-mid: rgba(226, 216, 195, 0.55);
   --timeline-spotlight-shadow: rgba(74, 62, 40, 0.15);
@@ -371,6 +377,10 @@
   --shadow-elevated: rgba(0, 0, 0, 0.45);
   --glow-accent-1: rgba(56, 189, 248, 0.28);
   --glow-accent-2: rgba(124, 58, 237, 0.24);
+  /* Trace CTA — brand blue at rest, cyan into violet-soft on the streak, the
+     same pair the process cards and the services dropdown trace with. */
+  --cta-line: rgba(88, 196, 255, 0.55);
+  --cta-sweep: linear-gradient(115deg, transparent 20%, #38bdf8, #c084fc, transparent 80%);
   --timeline-spotlight-highlight: rgba(255, 255, 255, 0.2);
   --timeline-spotlight-mid: rgba(18, 28, 44, 0.75);
   --timeline-spotlight-shadow: rgba(7, 11, 22, 0.95);
@@ -1046,6 +1056,10 @@ html[data-mood="alt"] {
   --field-rest: 0.7;
   --glow-accent-1: rgba(0, 255, 65, 0.3);
   --glow-accent-2: rgba(0, 200, 100, 0.2);
+  /* Trace CTA — one hue, like the nav trace here: the streak separates from
+     the rim by brightness, not by a second colour. */
+  --cta-line: rgba(0, 255, 65, 0.45);
+  --cta-sweep: linear-gradient(115deg, transparent 20%, #00ff41, #86ffb8, transparent 80%);
   --border-soft: rgba(0, 255, 65, 0.2);
   --border-strong: rgba(0, 255, 65, 0.4);
   --shadow-elevated: rgba(0, 0, 0, 0.5);
@@ -1875,6 +1889,164 @@ html[data-mood="alt"] {
   .liquid-glass:hover,
   .liquid-glass:active {
     transform: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Trace CTA (components/ui/trace-button.tsx)
+
+   The card language put on a button: a resting blue rim, and on hover one
+   light streak that runs the border - the same read as the process-card
+   borderTrace and the services dropdown, so a CTA belongs to the same system
+   as the surfaces around it.
+
+   The streak is a masked gradient on `::before`, not a child element.
+   `asChild` hands the children straight to a `Link`, so a layer would need a
+   wrapper the layout does not want; the rim needs no DOM at all. `padding:
+   1px` + `mask-composite: exclude` paints the border box and punches the
+   content box out, leaving exactly the rim.
+
+   Mask properties are authored unprefixed on purpose. Lightning CSS emits the
+   `-webkit-mask*` aliases itself, and writing both makes it dedupe down to the
+   webkit one alone - the same trap documented on `.liquid-glass__refraction`.
+   --------------------------------------------------------------------------- */
+.trace-cta {
+  /* The hairline is the page's own ink at low alpha - white over dark, dark
+     over paper - kept local so `--on-dark` can pin it without shadowing the
+     palette. The fill is not here on purpose: it is mixed down from
+     `--cta-line`, so rim and wash are always the same hue. Deriving it from
+     `--primary` instead put a navy wash inside a sky-blue rim in light mode. */
+  --trace-cta-hairline: var(--foreground);
+  -webkit-tap-highlight-color: transparent;
+  border: 1px solid var(--cta-line);
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.trace-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Behind the label but above the button's own background - the same reason
+     the liquid glass layers sit here. */
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background-image: var(--cta-sweep);
+  /* The gradient is parked off the right edge and travels left on hover; at
+     250% the lit part of it is short enough to read as a streak, not a wash. */
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.trace-cta:hover::before,
+.trace-cta:focus-visible::before {
+  opacity: 1;
+  animation: trace-cta-sweep 1.1s ease forwards;
+}
+
+@keyframes trace-cta-sweep {
+  from {
+    background-position: 120% 0;
+  }
+
+  to {
+    background-position: -40% 0;
+  }
+}
+
+.trace-cta:hover {
+  transform: translateY(-2px);
+}
+
+.trace-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.trace-cta svg {
+  transition: transform 0.3s ease;
+}
+
+.trace-cta:hover svg,
+.trace-cta:focus-visible svg {
+  transform: translateX(3px);
+}
+
+.trace-cta--primary {
+  /* 18% / 4% of a rim that is itself ~0.5 alpha lands on the prototype's
+     .10 -> .02 wash. */
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--cta-line) 18%, transparent),
+    color-mix(in srgb, var(--cta-line) 4%, transparent)
+  );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--trace-cta-hairline) 7%, transparent);
+}
+
+.trace-cta--primary:hover {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--trace-cta-hairline) 7%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--cta-line) 45%, transparent),
+    0 10px 30px var(--glow-accent-1);
+}
+
+/* Ghost. No fill and no streak - the hierarchy against the primary is the
+   point, so this one only warms its rim and its label. */
+.trace-cta--secondary {
+  background-color: transparent;
+  border-color: var(--border-soft);
+}
+
+.trace-cta--secondary:hover {
+  border-color: var(--cta-line);
+  color: var(--primary);
+}
+
+.trace-cta--secondary::before {
+  content: none;
+}
+
+/* For CTAs on a surface that is dark in every theme - the mobile menu overlay.
+   Unlayered, so it beats the `.text-theme-*` utility on the button. */
+.trace-cta--on-dark {
+  --cta-line: rgba(88, 196, 255, 0.55);
+  --cta-sweep: linear-gradient(115deg, transparent 20%, #38bdf8, #c084fc, transparent 80%);
+  --glow-accent-1: rgba(56, 189, 248, 0.28);
+  --trace-cta-hairline: #ffffff;
+  color: #f3f7ff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The colour still moves, the button does not: no lift, no streak travel,
+     no arrow nudge. The hover glow stays - it is state, not motion. */
+  .trace-cta:hover,
+  .trace-cta:active {
+    transform: none !important;
+  }
+
+  .trace-cta:hover svg,
+  .trace-cta:focus-visible svg {
+    transform: none !important;
+  }
+
+  .trace-cta:hover::before,
+  .trace-cta:focus-visible::before {
+    animation: none;
+    opacity: 0;
+  }
+
+  .trace-cta--primary:hover {
+    border-color: color-mix(in srgb, var(--primary) 70%, transparent);
   }
 }
 
