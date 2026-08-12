@@ -215,6 +215,10 @@ export const englishToSerbianEntries = [
   ["Discipline list", "Lista disciplina"],
   ["Previous discipline", "Prethodna disciplina"],
   ["Next discipline", "Sledeća disciplina"],
+  // The service carousel's arrows. Separate pairs from the discipline reel's:
+  // the table is read backwards for sr -> en, so no two pairs may share a side.
+  ["Previous service", "Prethodna usluga"],
+  ["Next service", "Sledeća usluga"],
 
   // Effective software and services cards
   ["Effective software development", "Efikasan razvoj softvera"],

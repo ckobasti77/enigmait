@@ -2176,6 +2176,233 @@ html[data-mood="alt"] {
 }
 
 /* ---------------------------------------------------------------------------
+   Services carousel
+   (app/(pages)/services/_components/ServiceCarousel.tsx, ServicePanel.tsx)
+
+   Six service pages, one panel at a time, and a push that swaps them. Layout
+   is here, sequence is in the component - the same split the process run makes.
+
+   Two numbers are a contract with the component and nothing else may set them:
+   the track is TWICE the stage and each slot is HALF the track, so a step is
+   exactly `translateX(-50%)` and the panel travels exactly one stage width. A
+   gap, a margin or a third slot in here and the push stops landing on the seam.
+   --------------------------------------------------------------------------- */
+.service-carousel {
+  --service-arrow: 3.25rem;
+  /* How far the clip is held off the panel's edge - see `.service-stage`. */
+  --service-stage-bleed: 0.625rem;
+}
+
+/* THE CLIP, AND WHY IT IS INSET.
+   The panel's rim glow and its reveal streak are drawn ON the border and bleed
+   past it, so a clip flush with the card would shave the edge off both. The
+   padding buys that room and the matching negative margin gives it back, which
+   is what keeps the panel on the same grid line as every other section. */
+.service-stage {
+  position: relative;
+  padding: var(--service-stage-bleed);
+  margin: calc(var(--service-stage-bleed) * -1);
+  overflow: hidden;
+  /* `pan-y` hands the vertical gesture and the pinch straight back to the
+     browser, so only the sideways part ever reaches the swipe handler. Same
+     contract as `.discipline-column`. */
+  touch-action: pan-y pinch-zoom;
+}
+
+.service-track {
+  display: flex;
+  width: 200%;
+  align-items: stretch;
+  will-change: transform;
+}
+
+.service-slide {
+  flex: 0 0 50%;
+  width: 50%;
+  min-width: 0;
+}
+
+/* The panel fills the stage. A 4px hover lift on a surface this size reads as
+   the page twitching rather than as a card responding, and the clip would cut
+   its shadow anyway - so the panel keeps the rim and drops the lift. */
+.service-carousel .ui-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.service-panel {
+  padding: clamp(1.5rem, 3.2vw, 2.75rem);
+}
+
+.service-panel-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .service-panel {
+    /* Panels differ by a line of lede at most, and the push ends by handing the
+       stage back to the incoming panel's natural height. A floor under both is
+       what keeps that handover from being a visible step. */
+    min-height: 30rem;
+  }
+
+  .service-panel-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 3.5rem;
+  }
+}
+
+/* The homepage's ambient glow, kept. The shell clips, so these read as light
+   inside the panel rather than as a halo around it. */
+.service-panel-glow {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(120px);
+}
+
+.service-panel-glow--lead {
+  top: -8rem;
+  left: -6rem;
+  width: 26rem;
+  height: 26rem;
+  opacity: 0.75;
+}
+
+.service-panel-glow--trail {
+  right: -7rem;
+  bottom: -9rem;
+  width: 22rem;
+  height: 22rem;
+  opacity: 0.4;
+}
+
+.service-panel-bullet {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--card-trace) 30%, var(--border-strong));
+  background: var(--surface-card-muted);
+  color: var(--card-trace);
+}
+
+.service-panel-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-soft);
+}
+
+/* THE ARROWS ARE FIXED TO THE SCREEN, not to the stage: they are the carousel's
+   whole affordance and they have to be findable without hunting for the edge of
+   a card. The price is that they would float over the FAQ and the footer too,
+   which is what `data-visible` is for - the component turns them off the moment
+   the stage leaves the viewport. */
+.service-arrow {
+  position: fixed;
+  top: 50%;
+  z-index: 40;
+  translate: 0 -50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--service-arrow);
+  height: var(--service-arrow);
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--card-trace) 30%, var(--border-strong));
+  background: var(--surface-overlay);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  transition: opacity 0.3s ease, visibility 0.3s ease, border-color 0.25s ease,
+    box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.service-arrow--prev {
+  left: max(0.375rem, env(safe-area-inset-left));
+}
+
+.service-arrow--next {
+  right: max(0.375rem, env(safe-area-inset-right));
+}
+
+.service-arrow[data-visible="false"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.service-arrow:hover {
+  border-color: var(--card-trace);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--card-trace) 35%, transparent),
+    0 0 24px var(--card-trace-glow);
+}
+
+.service-arrow:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+@media (max-width: 639px) {
+  .service-carousel {
+    --service-arrow: 2.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .service-arrow--prev {
+    left: 1.25rem;
+  }
+
+  .service-arrow--next {
+    right: 1.25rem;
+  }
+}
+
+.service-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+}
+
+.service-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--text-secondary);
+  opacity: 0.35;
+  transition: width 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.service-dot:hover {
+  opacity: 0.7;
+}
+
+.service-dot:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  opacity: 1;
+}
+
+.service-dot[aria-current="true"] {
+  width: 1.6rem;
+  background: var(--primary);
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
    Pick a discipline
    ---------------------------------------------------------------------------
    The section is NOT pinned. It is an ordinary block in the flow of the page,

@@ -77,6 +77,8 @@ export function useBorderTraceReveal(
   const [size, setSize] = useState({ width: 0, height: 0 });
   /** Survives timeline rebuilds so a resize does not re-lock an opened card. */
   const openedRef = useRef(false);
+  /** When it opened, so a rebuild can resume it instead of ending it - see below. */
+  const openedAtRef = useRef(0);
 
   // A one-shot entrance is the brand and it costs a few hundred milliseconds
   // once, so it follows the OS preference only - never Save-Data or battery.
@@ -167,13 +169,26 @@ export function useBorderTraceReveal(
         once: true,
         onEnter: () => {
           openedRef.current = true;
+          openedAtRef.current = performance.now();
           timeline.play();
         },
       });
 
-      // A resize rebuilds this timeline from scratch; a card that had already
-      // been unlocked must not drop back to its locked state behind the reader.
-      if (openedRef.current) timeline.progress(1).pause();
+      // A rebuild must not re-lock a card that has already been unlocked - but
+      // it must not swallow one that is still opening either, and that second
+      // case is not rare: the first build runs BEFORE the ResizeObserver has
+      // reported, so it has no paths, and a card that is already on screen has
+      // its trigger fire on that build. The measurement then arrives a frame
+      // later and rebuilds. Ending the timeline there is what used to eat the
+      // streak outright on every above-the-fold card - the panel simply
+      // appeared. Resuming from where the previous one had got to keeps the
+      // resize case honest and lets the trace run.
+      if (openedRef.current) {
+        const elapsed = (performance.now() - openedAtRef.current) / 1000;
+
+        if (elapsed >= timeline.duration()) timeline.progress(1).pause();
+        else timeline.seek(elapsed).play();
+      }
     }, ref);
 
     return () => ctx.revert();
