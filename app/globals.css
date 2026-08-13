@@ -2361,6 +2361,20 @@ html[data-mood="alt"] {
   box-shadow: none;
 }
 
+/* THE PANEL HAS NO SURFACE OF ITS OWN - it is a frame around the site's
+   background, not a card sitting on it. `.theme-card` fills every other card on
+   the site with `--card`; at this size that fill is a slab wide enough to hide
+   the dot-wave video behind it, and hiding the background to show one headline
+   was the trade round 2 stopped making. So the fill goes and the rim thins,
+   while everything that made the panel read as one object stays: the border
+   trace still runs it, the hairline still crosses the top, the two ambient
+   glows still burn inside the clip. Unlayered on purpose - `.theme-card` lives
+   in `@layer components`, and a layered rule cannot be beaten on specificity. */
+.service-carousel .ui-card-shell {
+  background-color: transparent;
+  border-color: color-mix(in srgb, var(--card-trace) 18%, var(--border-soft));
+}
+
 .service-panel {
   padding: clamp(1.5rem, 3.2vw, 2.75rem);
 }
@@ -2373,17 +2387,52 @@ html[data-mood="alt"] {
   gap: 2.5rem;
 }
 
+.service-panel-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  /* A grid item's automatic minimum is its min-content width, and the scope row
+     below refuses to shrink - without this the row would push the copy column
+     wide and squeeze the model box down to a stamp instead of running past it,
+     which is the opposite of what the overflow is for. */
+  min-width: 0;
+}
+
+.service-panel-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 @media (min-width: 1024px) {
   .service-panel {
     /* Panels differ by a line of lede at most, and the push ends by handing the
        stage back to the incoming panel's natural height. A floor under both is
        what keeps that handover from being a visible step. */
     min-height: 30rem;
+    /* The floor is only a floor if the grid reaches it. A block child ignores
+       its parent's `min-height`, which left the scope row hanging half a
+       screen above the panel's bottom edge. */
+    display: flex;
+    flex-direction: column;
   }
 
   .service-panel-grid {
+    flex: 1;
     grid-template-columns: 1.05fr 0.95fr;
     gap: 3.5rem;
+  }
+
+  /* The column takes the row's full height (the model box is the taller of the
+     two) so the scope row can sit on the floor, level with the bottom of the
+     model, while the copy above it stays optically centred - `auto` margins on
+     the lead block, not `space-between`, so a short lede does not drift. */
+  .service-panel-copy {
+    align-self: stretch;
+  }
+
+  .service-panel-lead {
+    margin-block: auto;
   }
 }
 
@@ -2427,13 +2476,44 @@ html[data-mood="alt"] {
   color: var(--card-trace);
 }
 
-.service-panel-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+/* THE SCOPE ROW IS ALLOWED OFF ITS COLUMN, and that is the point of it rather
+   than an accident. Three items side by side do not fit the copy column at
+   every width, and the two ways to make them fit - shrinking the labels or
+   wrapping them back into a stack - both undo the row. So the items refuse to
+   shrink, the row runs on into the gap and under the model, and it is lifted
+   above the viewport so the labels stay readable where they cross it. There is
+   room down there: the model is fitted and centred in a 4/3 box, so its bottom
+   corners are empty. The panel's own shell still clips, which is the only
+   boundary this is not allowed past. */
+.service-panel-scope {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.75rem;
   margin: 0;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--border-soft);
+  padding: 0;
+  list-style: none;
+}
+
+.service-panel-scope > li {
+  flex: 0 0 auto;
+}
+
+/* One line from `xl` up, and the breakpoint is measured rather than tidy: at
+   that width the row clears the copy column by a hand's width and no more. Held
+   to one line from `lg` instead, it would cross most of the model box - the row
+   is meant to lean out of its column, not to move into the next one. Below it,
+   the row wraps. */
+@media (min-width: 1280px) {
+  .service-panel-scope {
+    flex-wrap: nowrap;
+  }
+
+  .service-panel-scope > li {
+    white-space: nowrap;
+  }
 }
 
 /* THE ARROWS ARE FIXED TO THE SCREEN, not to the stage: they are the carousel's

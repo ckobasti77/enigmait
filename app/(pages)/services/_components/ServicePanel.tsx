@@ -2,7 +2,7 @@
 
 import { RevealCard } from "@/components/ui/card";
 import CtaButton from "@/components/ui/cta-button";
-import { DISCIPLINE_ORDER, type DisciplineKey } from "@/constants/disciplines";
+import { type DisciplineKey } from "@/constants/disciplines";
 import { servicePages } from "@/constants/services";
 import ServiceModelStage from "./ServiceModelStage";
 
@@ -12,10 +12,16 @@ import ServiceModelStage from "./ServiceModelStage";
  * The eight sections this replaces all read from `servicePages[slug]`, and so
  * does this - nothing new was written for the panel, it just stops rendering
  * most of what the file holds. What survives is the argument in its shortest
- * form: what the service is, one line of why, three numbers that prove it,
- * three things it covers, one ask, and the model.
+ * form: what the service is, one line of why, one ask, three things it covers,
+ * and the model.
  *
- * The rest of the content (`differentiators`, `deliverables`, the full
+ * FOUR THINGS, IN THAT ORDER, AND NOTHING BETWEEN THEM. The eyebrow, the
+ * `01 / 06` counter and the three proof numbers came off in round 2: the
+ * counter repeated what the dots under the stage already say, and the numbers
+ * were an argument the panel does not have room to make. What is left is a
+ * title, a line, a button, and the scope row holding the floor.
+ *
+ * The rest of the content (`stats`, `differentiators`, `deliverables`, the full
  * `process` and `capabilities` lists) stays in the constants files untouched.
  * It is data, not markup, and the sections that used to render it are still on
  * disk - see the note in REPORT-04.
@@ -26,16 +32,12 @@ import ServiceModelStage from "./ServiceModelStage";
  * the other over an opacity.
  */
 
-/** Three is the count the spec fixes for both rows - proof and scope. */
-const PROOF_COUNT = 3;
+/** Three is the count the spec fixes for the scope row. */
 const CAPABILITY_COUNT = 3;
-
-const pad = (value: number) => String(value).padStart(2, "0");
 
 export default function ServicePanel({ slug }: { slug: DisciplineKey }) {
   const content = servicePages[slug];
   const { hero } = content;
-  const position = DISCIPLINE_ORDER.indexOf(slug);
   const ask = hero.ctas[0];
 
   return (
@@ -46,27 +48,30 @@ export default function ServicePanel({ slug }: { slug: DisciplineKey }) {
       <span aria-hidden className="service-panel-glow service-panel-glow--trail glow-accent" />
 
       <div className="service-panel-grid">
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <span className="text-[0.7rem] uppercase tracking-[0.5em] text-cyan-400">
-              {hero.eyebrow}
-            </span>
-            {/* Digits only - a counter that reads the same in both locales and
-                needs no dictionary entry. */}
-            <span className="font-accent text-[0.7rem] tracking-[0.35em] text-theme-muted">
-              {`${pad(position + 1)} / ${pad(DISCIPLINE_ORDER.length)}`}
-            </span>
+        <div className="service-panel-copy">
+          {/* The argument, held together as one block so the scope row can be
+              pushed to the floor without the copy stretching after it. */}
+          <div className="service-panel-lead">
+            <h1 className="text-2xl leading-tight text-theme-primary md:text-3xl lg:text-[2.15rem]">
+              {hero.title}
+            </h1>
+
+            <p className="max-w-xl text-sm leading-relaxed text-theme-muted md:text-base">
+              {hero.lede}
+            </p>
+
+            <div className="pt-1">
+              <CtaButton href={ask.href} variant={ask.variant ?? "primary"}>
+                {ask.label}
+              </CtaButton>
+            </div>
           </div>
 
-          <h1 className="text-2xl leading-tight text-theme-primary md:text-3xl lg:text-[2.15rem]">
-            {hero.title}
-          </h1>
-
-          <p className="max-w-xl text-sm leading-relaxed text-theme-muted md:text-base">
-            {hero.lede}
-          </p>
-
-          <ul className="flex flex-col gap-2.5">
+          {/* The scope row, standing where the proof numbers used to. Same item
+              as before - bullet, then label - turned sideways, and deliberately
+              allowed to run past the column into the empty air under the model
+              rather than being squeezed to fit it. */}
+          <ul className="service-panel-scope">
             {content.capabilities.items
               .slice(0, CAPABILITY_COUNT)
               .map(({ title, icon: Icon }) => (
@@ -81,28 +86,6 @@ export default function ServicePanel({ slug }: { slug: DisciplineKey }) {
                 </li>
               ))}
           </ul>
-
-          <div className="pt-1">
-            <CtaButton href={ask.href} variant={ask.variant ?? "primary"}>
-              {ask.label}
-            </CtaButton>
-          </div>
-
-          {/* `dt` is the label and `dd` the value, which is the honest reading of
-              a definition list; `column-reverse` is what puts the number on top
-              without lying about which one defines which. */}
-          <dl className="service-panel-stats">
-            {content.stats.slice(0, PROOF_COUNT).map((stat) => (
-              <div key={stat.label} className="flex flex-col-reverse gap-1">
-                <dt className="text-[0.65rem] uppercase tracking-[0.16em] text-theme-muted">
-                  {stat.label}
-                </dt>
-                <dd className="m-0 font-accent text-xl text-theme-primary md:text-2xl">
-                  {stat.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
         </div>
 
         <div className="service-hero-viewport">
