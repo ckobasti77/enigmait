@@ -42,11 +42,10 @@ export default function ServicePanel({ slug }: { slug: DisciplineKey }) {
 
   return (
     <RevealCard as="article" className="service-panel">
-      {/* The homepage's ambient glow, kept: the shell clips, so these read as
-          light inside the panel rather than as a halo around it. */}
-      <span aria-hidden className="service-panel-glow service-panel-glow--lead glow-accent" />
-      <span aria-hidden className="service-panel-glow service-panel-glow--trail glow-accent" />
-
+      {/* No fill, no rim, no glow - the slide has no surface of its own at all.
+          The only thing it ever draws is the reveal trace running its edge on
+          each slide; the copy and the model stand straight on the site's own
+          background. */}
       <div className="service-panel-grid">
         <div className="service-panel-copy">
           {/* The argument, held together as one block so the scope row can be
