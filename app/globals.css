@@ -2850,18 +2850,27 @@ select.float-field-input {
   box-shadow: none;
 }
 
-/* THE PANEL HAS NO SURFACE OF ITS OWN - it is a frame around the site's
-   background, not a card sitting on it. `.theme-card` fills every other card on
-   the site with `--card`; at this size that fill is a slab wide enough to hide
-   the dot-wave video behind it, and hiding the background to show one headline
-   was the trade round 2 stopped making. So the fill goes and the rim thins,
-   while everything that made the panel read as one object stays: the border
-   trace still runs it, the hairline still crosses the top, the two ambient
-   glows still burn inside the clip. Unlayered on purpose - `.theme-card` lives
-   in `@layer components`, and a layered rule cannot be beaten on specificity. */
-.service-carousel .ui-card-shell {
+/* THE PANEL HAS NO SURFACE AT ALL - not a card sitting on the background but a
+   frame around it, and between slides not even that. `.theme-card` fills every
+   other card with `--card`; at this size that fill is a slab wide enough to
+   hide the dot-wave video behind it, and hiding the background to show one
+   headline was the trade round 2 stopped making. Round 3 finishes the job: the
+   resting rim and the top hairline go too, so the only line the panel ever
+   shows is the reveal trace running its edge on each slide and then vanishing.
+   The 1px border stays in the box as `transparent` - the trace is measured on
+   the border box, and dropping the border outright would move the edge the
+   streak lands on. The two ambient glows still burn inside the clip; they are
+   light, not a box. Unlayered on purpose - `.theme-card` lives in
+   `@layer components`, and a layered rule cannot be beaten on specificity; the
+   hover pair is spelled out so the rim cannot come back on the way past. */
+.service-carousel .ui-card-shell,
+.service-carousel .ui-card:hover .ui-card-shell {
   background-color: transparent;
-  border-color: color-mix(in srgb, var(--card-trace) 18%, var(--border-soft));
+  border-color: transparent;
+}
+
+.service-carousel .ui-card-hairline {
+  display: none;
 }
 
 .service-panel {
@@ -3167,6 +3176,146 @@ select.float-field-input {
   width: 1.6rem;
   background: var(--primary);
   opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Service FAQ divider sweep
+   (app/(pages)/services/_components/ServiceFaq.tsx)
+
+   Opening a question runs a light through the line under its answer - the same
+   cyan as the border trace and the CTA sweep (`--card-trace` /
+   `--card-trace-glow`), left to right, once, then gone. Two pseudos on the item
+   carry it, and both stay out of the way at rest:
+
+   - `::after` is the resting divider itself, `--border-soft` like the old
+     `divide-y`. On open it does a soft glow-up-and-settle, the CTA-hover breath
+     asked for - the whole line lifts, then calms back to normal.
+   - `::before` is the travelling light: a narrow bright band parked off the
+     left edge, invisible, that sweeps across on open. Its glow is a
+     `drop-shadow` on the band's own alpha, so only the lit part carries the
+     halo - the transparent gutters cast nothing, and the glow travels with it.
+
+   The last item has no line: it butts onto the card's own bottom edge, so there
+   is nothing there to sweep. Under reduced motion neither animation runs - the
+   divider is just a line. */
+.service-faq-item {
+  position: relative;
+}
+
+.service-faq-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+  background: var(--border-soft);
+}
+
+.service-faq-item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, var(--card-trace), transparent);
+  background-repeat: no-repeat;
+  background-size: 55% 100%;
+  background-position: -60% 0;
+  filter: drop-shadow(0 0 5px var(--card-trace-glow))
+    drop-shadow(0 0 10px var(--card-trace-glow));
+}
+
+.service-faq-item[data-open="true"]:not(:last-child)::before {
+  animation: service-faq-sweep 0.9s ease forwards;
+}
+
+.service-faq-item[data-open="true"]:not(:last-child)::after {
+  animation: service-faq-line-glow 0.9s ease;
+}
+
+@keyframes service-faq-sweep {
+  0% {
+    opacity: 0;
+    background-position: -60% 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    background-position: 160% 0;
+  }
+}
+
+@keyframes service-faq-line-glow {
+  0% {
+    background: var(--border-soft);
+    box-shadow: 0 0 0 transparent;
+  }
+
+  35% {
+    background: color-mix(in srgb, var(--card-trace) 55%, var(--border-soft));
+    box-shadow: 0 0 6px var(--card-trace-glow);
+  }
+
+  100% {
+    background: var(--border-soft);
+    box-shadow: 0 0 0 transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-faq-item[data-open="true"]:not(:last-child)::before,
+  .service-faq-item[data-open="true"]:not(:last-child)::after {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Service FAQ closing CTA
+   (app/(pages)/services/_components/ServiceFaqCta.tsx)
+
+   The page's last word to the reader the FAQ didn't answer: kicker, headline,
+   one line and the ask, centred. No box - it is set off from the FAQ card above
+   it by space alone, with one soft glow behind the copy so the band reads as the
+   page's close rather than as another list item. The body stays a plain block so
+   the site-wide reveal can bring the copy up word by word. */
+.service-faq-cta {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.service-faq-cta-glow {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: min(38rem, 92%);
+  height: 20rem;
+  translate: -50% -50%;
+  pointer-events: none;
+  opacity: 0.5;
+  filter: blur(90px);
+  border-radius: 999px;
+}
+
+.service-faq-cta-body {
+  position: relative;
+  z-index: 1;
+  max-width: 40rem;
+  text-align: center;
 }
 
 /* ---------------------------------------------------------------------------

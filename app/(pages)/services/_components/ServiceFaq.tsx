@@ -35,13 +35,20 @@ export default function ServiceFaq({
         <ServiceSectionHeader intro={intro} />
 
         <Card data-reveal="off">
-          {/* divide-y on its own wrapper: the card's absolute hairline must not
-              count as a sibling, or the first question grows a second line. */}
-          <div className="divide-y divide-[var(--border-soft)]">
+          {/* The divider between two questions is each item's own bottom line
+              (`.service-faq-item::after`), not a shared `divide-y`: it has to be
+              an element the sweep can run light through when the question above
+              it opens. The card's absolute hairline stays out of it - it is a
+              child of the shell, not of this list. */}
+          <div className="service-faq-list">
           {items.map((item, index) => {
             const open = active === index;
             return (
-              <div key={item.question}>
+              <div
+                key={item.question}
+                className="service-faq-item"
+                data-open={open}
+              >
                 <button
                   type="button"
                   aria-expanded={open}

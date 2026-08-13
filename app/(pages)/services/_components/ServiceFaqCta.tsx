@@ -1,26 +1,38 @@
 import CtaButton from "@/components/ui/cta-button";
 
 /**
- * One line under the FAQ for the reader it didn't answer: a title and a CTA,
- * side by side. No card, no border - just the gap that already separates every
- * section on the page, because a bordered box here would read as a second FAQ
- * item rather than a way out of the list.
+ * The page's closing invitation, for the reader the FAQ didn't answer: a
+ * kicker, the headline, one line and the ask - centred, borderless, set off
+ * from the FAQ card above by space and a single soft glow rather than by
+ * another bordered box (which here would read as one more FAQ item).
  *
- * The heading opts out of the site's Microgramma display face
- * (`data-display-font="off"`) - it is a label next to a button, not a
- * headline, and Microgramma mis-renders a lowercase "č" mid-word here.
+ * The heading is a real display `h2` now, in the site's Microgramma face like
+ * every other section title - the same face already carries the FAQ header's
+ * own Serbian diacritics above it, so there is nothing to opt out of. Its copy,
+ * the kicker and the line all arrive word by word on the site-wide reveal; the
+ * body is a plain block so the words are not scattered by a flex gap.
  */
 export default function ServiceFaqCta() {
   return (
-    <section className="site-gutter py-14 transition-theme sm:py-16">
-      <div className="site-container flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-        <h2
-          data-display-font="off"
-          className="text-xl leading-snug font-aeonik text-theme-primary md:text-2xl"
-        >
-          Imate specifično pitanje?
-        </h2>
-        <CtaButton href="/contact" text="Pitajte nas" />
+    <section className="site-gutter py-20 transition-theme sm:py-24">
+      <div className="site-container">
+        <div className="service-faq-cta">
+          <span aria-hidden className="service-faq-cta-glow glow-accent" />
+          <div className="service-faq-cta-body">
+            <span className="block text-xs uppercase tracking-[0.6em] text-cyan-400">
+              Sledeći korak
+            </span>
+            <h2 className="mt-4 text-2xl leading-snug text-theme-primary md:text-3xl">
+              Imate specifično pitanje?
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-theme-muted">
+              Pišite nam i dobićete jasan odgovor.
+            </p>
+            <div className="mt-8 flex justify-center">
+              <CtaButton href="/contact" text="Pitajte nas" />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

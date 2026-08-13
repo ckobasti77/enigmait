@@ -1529,7 +1529,9 @@ export const englishToSerbianEntries = [
   ["Share product goals, tech stack, timelines, or anything that helps us prepare.", "Podelite proizvodne ciljeve, tehnološki okvir, rokove ili bilo šta što nam pomaže da se pripremimo."],
 
   // Service FAQ CTA
+  ["Next step", "Sledeći korak"],
   ["Have a specific question?", "Imate specifično pitanje?"],
+  ["Write to us and we'll get you a clear answer.", "Pišite nam i dobićete jasan odgovor."],
   ["Ask us", "Pitajte nas"],
 ] as const satisfies readonly (readonly [string, string])[];
 

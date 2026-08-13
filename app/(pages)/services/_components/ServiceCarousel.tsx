@@ -120,7 +120,6 @@ export default function ServiceCarousel({
     buffer: 0,
     lastEventAt: 0,
     lastStepAt: 0,
-    budget: LENGTH - 1,
   });
 
   // One-shot travel, so the OS preference decides and Save-Data does not.
@@ -273,13 +272,14 @@ export default function ServiceCarousel({
   /**
    * THE WHEEL IS ON THE DOTS ROW AND NOWHERE ELSE. Over the panel the vertical
    * gesture stays the page's scroll - the panel is most of a screen tall and
-   * taking its wheel would trap the visitor on the way to the FAQ.
+   * taking its wheel would trap the visitor on the way to the FAQ. The strip is
+   * a 2rem target that has to be aimed at, so a cursor parked on it is asking to
+   * cycle the services, not to scroll past them.
    *
-   * A wrapping list has no ends to release the wheel at, so the row gets a
-   * budget instead: one list's worth of steps per visit to the carousel, after
-   * which deltas are left alone and the page scrolls on. Without it a cursor
-   * parked on the strip would eat every notch forever. The budget is the
-   * wheel's alone - dots, arrows, keys and swipes wrap without limit.
+   * The row wraps without end, both directions, for as long as the wheel stays
+   * over it - there is no step budget. `threshold` still means one notch is one
+   * slide and `cooldown` still stops a trackpad flick from spending four; the
+   * only thing removed is any ceiling on how many the visit is allowed.
    */
   useEffect(() => {
     const dots = dotsRef.current;
@@ -291,10 +291,6 @@ export default function ServiceCarousel({
       if (delta === 0) return;
 
       const state = wheelRef.current;
-      if (state.budget <= 0) {
-        state.buffer = 0;
-        return;
-      }
 
       // From here the delta is ours: spent on a step, or spent on nothing.
       // Either way it must not also scroll the page - and `stopPropagation`
@@ -320,18 +316,12 @@ export default function ServiceCarousel({
       const direction: 1 | -1 = state.buffer > 0 ? 1 : -1;
       state.buffer = 0;
       state.lastStepAt = now;
-      state.budget -= 1;
       step(direction);
     };
 
     dots.addEventListener("wheel", onWheel, { passive: false });
     return () => dots.removeEventListener("wheel", onWheel);
   }, [step]);
-
-  /** Leaving the viewport hands the budget back, so returning gives it again. */
-  useEffect(() => {
-    if (!isIntersecting) wheelRef.current.budget = LENGTH - 1;
-  }, [isIntersecting]);
 
   const onTouchStart = (event: ReactTouchEvent<HTMLDivElement>) => {
     const touch = event.touches[0];
