@@ -2,66 +2,30 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
 import clsx from "clsx";
-import {
-  ClampToEdgeWrapping,
-  Color,
-  DataTexture,
-  DoubleSide,
-  LinearFilter,
-  NoToneMapping,
-  RGBAFormat,
-  SRGBColorSpace,
-  ShaderMaterial,
-  UnsignedByteType,
-  Vector3,
-} from "three";
-import type { BufferGeometry, Group, Mesh, PerspectiveCamera } from "three";
+import { NoToneMapping, SRGBColorSpace, Vector3 } from "three";
+import type { BufferGeometry, Group, PerspectiveCamera, ShaderMaterial } from "three";
 import { useIntersectionActive } from "@/hooks/useIntersectionActive";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import {
-  heroCubeFragmentShader,
-  heroCubeVertexShader,
-} from "./heroCube.shaders";
+  HERO_CUBE_CAMERA_FOV,
+  HERO_CUBE_CAMERA_POSITION,
+  HeroCubeShape,
+  Y_AXIS,
+  applyRotation,
+  createUniforms,
+  hermite,
+  smoothstep,
+  useGradientCleanup,
+  useHeroCubeGeometry,
+} from "./heroCube.core";
 import { HERO_REVEAL_DURATION } from "./heroTiming";
 
-const MODEL_PATH = "/assets/models/hero-cube.glb";
-const MESH_NAME = "HERO_sq";
-
-// Angle measured off the logo. Direction is what makes it read as a cube instead of a
-// hexagon, so only the distance may ever change.
-const CAMERA_POSITION: [number, number, number] = [-3.592, 3.371, 7.532];
-const CAMERA_FOV = 28.8;
-
-// HERO_SPEC states the gradient axis in Blender's Z-up space: (0.6512, -0.5464, -0.5267).
-// The glTF export rotates the mesh to Y-up, so the same axis is (x, z, -y) here. Verified
-// three ways: it is perpendicular to the view axis (dot = 0.000), it projects to
-// (+0.823, -0.569) in camera space - the measured (+0.823, +0.568) of the logo PNG once
-// y is flipped to image coordinates - and its projection range over the mesh is +-1.652,
-// matching the +-1.647 in the spec.
-const GRADIENT_DIRECTION = new Vector3(0.6512, -0.5267, 0.5464);
 // Quarter turn on top of the logo angle. The camera stays exactly where the spec put it -
 // turning the mesh leaves the projection untouched and only changes which faces point at
 // us. Negate to swing it the other way.
 const CUBE_ROTATION_Y = -Math.PI / 4;
-const Y_AXIS = new Vector3(0, 1, 0);
-// Half-extent of the mesh along the gradient axis. 1.652 at the logo angle, 1.491 once
-// the cube is turned; both are trimmed ~0.3% the way HERO_SPEC trims 1.652 to 1.647, so
-// the end stops stay saturated at the corners.
-const GRADIENT_RANGE = 1.487;
-const GRADIENT_RESOLUTION = 512;
-const GRADIENT_STOPS: readonly (readonly [number, string])[] = [
-  [0, "#01BCF9"],
-  [0.25, "#0084F7"],
-  [0.5, "#0841F4"],
-  [0.75, "#4E1BF3"],
-  [1, "#8405E5"],
-];
-const SPECULAR_COLOR = "#EEF6FE";
-const EMISSIVE_INTENSITY = 0.45;
-const LIGHT_DIRECTION = new Vector3(-2.2, 3.6, 6).normalize();
 
 // The line draws itself once, on the hero's shared clock, so it lands with the
 // last word of the headline instead of running on its own schedule.
@@ -70,7 +34,6 @@ const LOOP_LAP = 5.3; // s per lap of the travelling gap
 const HANDOFF_DURATION = 1.4; // s - the gap opens from "fully drawn" to its loop size
 const MISSING_ARC = 0.05; // the only stretch left undrawn, in normalised path length
 const VISIBLE_ARC = 1 - MISSING_ARC;
-const HEAD_LENGTH = 0.028; // emissive ramp behind the head
 const LOOP_SPEED = 1 / LOOP_LAP;
 // One slow turn about Y, at constant speed. Pinned to a whole number of gap laps so the
 // hero as a whole is exactly periodic (6 x 5.3 = 31.8 s) instead of drifting between two
@@ -96,18 +59,8 @@ const EDGE_ALIGN_SAMPLES = 96;
 // landing exactly on the last pixel column would lose it to antialiasing.
 const EDGE_ALIGN_INSET = 0.006; // NDC
 
-const smoothstep = (x: number) => x * x * (3 - 2 * x);
-
-const revealProgress = (x: number) => {
-  const x2 = x * x;
-  const x3 = x2 * x;
-  return (
-    -2 * x3 +
-    3 * x2 +
-    (x3 - 2 * x2 + x) * REVEAL_ENTRY_SLOPE +
-    (x3 - x2) * REVEAL_EXIT_SLOPE
-  );
-};
+const revealProgress = (x: number) =>
+  hermite(x, REVEAL_ENTRY_SLOPE, REVEAL_EXIT_SLOPE);
 
 /**
  * Head position and visible arc length at `elapsed` seconds.
@@ -133,91 +86,6 @@ const pathWindow = (elapsed: number) => {
     head: distance - Math.floor(distance),
     gap: 1 + (VISIBLE_ARC - 1) * smoothstep(handoff),
   };
-};
-
-const hexToRgb = (hex: string) => [
-  parseInt(hex.slice(1, 3), 16),
-  parseInt(hex.slice(3, 5), 16),
-  parseInt(hex.slice(5, 7), 16),
-];
-
-/**
- * The stops were sampled off the logo PNG and interpolated linearly in sRGB, so the ramp
- * is baked the same way and uploaded as an sRGB texture - the GPU decodes it to linear on
- * sample. At 512 texels the hardware's own filtering between texels is imperceptible.
- */
-const createGradientTexture = () => {
-  const stops = GRADIENT_STOPS.map(([position, hex]) => ({
-    position,
-    rgb: hexToRgb(hex),
-  }));
-  const data = new Uint8Array(GRADIENT_RESOLUTION * 4);
-
-  for (let i = 0; i < GRADIENT_RESOLUTION; i += 1) {
-    const x = i / (GRADIENT_RESOLUTION - 1);
-    let segment = 0;
-    while (segment < stops.length - 2 && x > stops[segment + 1].position) {
-      segment += 1;
-    }
-
-    const from = stops[segment];
-    const to = stops[segment + 1];
-    const mix = (x - from.position) / (to.position - from.position);
-
-    for (let channel = 0; channel < 3; channel += 1) {
-      data[i * 4 + channel] = Math.round(
-        from.rgb[channel] + (to.rgb[channel] - from.rgb[channel]) * mix
-      );
-    }
-    data[i * 4 + 3] = 255;
-  }
-
-  const texture = new DataTexture(
-    data,
-    GRADIENT_RESOLUTION,
-    1,
-    RGBAFormat,
-    UnsignedByteType
-  );
-  texture.colorSpace = SRGBColorSpace;
-  texture.minFilter = LinearFilter;
-  texture.magFilter = LinearFilter;
-  texture.wrapS = ClampToEdgeWrapping;
-  texture.wrapT = ClampToEdgeWrapping;
-  texture.generateMipmaps = false;
-  texture.needsUpdate = true;
-  return texture;
-};
-
-const createUniforms = () => ({
-  uGradient: { value: createGradientTexture() },
-  // Starting value only; applyRotation() keeps it in step with the spin from here on.
-  uGradientDir: {
-    value: GRADIENT_DIRECTION.clone().applyAxisAngle(Y_AXIS, -CUBE_ROTATION_Y),
-  },
-  uGradientRange: { value: GRADIENT_RANGE },
-  uSpecularColor: { value: new Color(SPECULAR_COLOR) },
-  uLightDirection: { value: LIGHT_DIRECTION.clone() },
-  uHead: { value: 0 },
-  uGap: { value: 0 },
-  uHeadLength: { value: HEAD_LENGTH },
-  uEmissiveIntensity: { value: EMISSIVE_INTENSITY },
-});
-
-/**
- * Turns the mesh and counter-turns the gradient axis by the same amount. The shader
- * projects object-space positions, so without the counter-turn the ramp would swing round
- * with the spinning geometry instead of staying the screen diagonal measured off the logo.
- */
-const applyRotation = (
-  group: Group,
-  material: ShaderMaterial,
-  rotationY: number
-) => {
-  group.rotation.y = rotationY;
-  material.uniforms.uGradientDir.value
-    .copy(GRADIENT_DIRECTION)
-    .applyAxisAngle(Y_AXIS, -rotationY);
 };
 
 /**
@@ -264,7 +132,6 @@ function CubeMesh({
   staticFrame: boolean;
   alignToEdge: boolean;
 }) {
-  const { nodes } = useGLTF(MODEL_PATH);
   const groupRef = useRef<Group>(null);
   const materialRef = useRef<ShaderMaterial>(null);
   const elapsedRef = useRef(0);
@@ -275,15 +142,15 @@ function CubeMesh({
   const aspect = useThree((state) => state.viewport.aspect);
   const scale = Math.min(1, aspect);
 
-  const geometry = (nodes[MESH_NAME] as Mesh | undefined)?.geometry;
+  const geometry = useHeroCubeGeometry();
   // Without the baked arc length there is nothing to animate - fall back to the finished
   // frame rather than an empty canvas.
   const frozen = staticFrame || !geometry?.getAttribute("uv");
 
-  const uniforms = useMemo(() => createUniforms(), []);
+  const uniforms = useMemo(() => createUniforms(CUBE_ROTATION_Y), []);
 
   useEffect(() => {
-    camera.position.set(...CAMERA_POSITION);
+    camera.position.set(...HERO_CUBE_CAMERA_POSITION);
     camera.lookAt(0, 0, 0);
     camera.updateMatrixWorld();
   }, [camera]);
@@ -324,15 +191,7 @@ function CubeMesh({
     return () => camera.clearViewOffset();
   }, [alignToEdge, camera, frozen, geometry, invalidate, scale]);
 
-  // R3F disposes the material it built from JSX; the gradient texture rides inside the
-  // uniforms, so it needs disposing by hand. The geometry belongs to drei's GLTF cache
-  // and is deliberately left alone so a remount still has something to draw.
-  useEffect(() => {
-    const material = materialRef.current;
-    return () => {
-      material?.uniforms.uGradient.value.dispose();
-    };
-  }, []);
+  useGradientCleanup(materialRef);
 
   useEffect(() => {
     const group = groupRef.current;
@@ -364,17 +223,14 @@ function CubeMesh({
   if (!geometry) return null;
 
   return (
-    <group ref={groupRef} scale={scale} rotation-y={CUBE_ROTATION_Y}>
-      <mesh geometry={geometry} dispose={null}>
-        <shaderMaterial
-          ref={materialRef}
-          vertexShader={heroCubeVertexShader}
-          fragmentShader={heroCubeFragmentShader}
-          side={DoubleSide}
-          uniforms={uniforms}
-        />
-      </mesh>
-    </group>
+    <HeroCubeShape
+      geometry={geometry}
+      uniforms={uniforms}
+      groupRef={groupRef}
+      materialRef={materialRef}
+      rotationY={CUBE_ROTATION_Y}
+      scale={scale}
+    />
   );
 }
 
@@ -418,8 +274,8 @@ export default function HeroCube({ className }: { className?: string }) {
           outputColorSpace: SRGBColorSpace,
         }}
         camera={{
-          position: CAMERA_POSITION,
-          fov: CAMERA_FOV,
+          position: HERO_CUBE_CAMERA_POSITION,
+          fov: HERO_CUBE_CAMERA_FOV,
           near: 0.1,
           far: 100,
         }}
@@ -434,5 +290,3 @@ export default function HeroCube({ className }: { className?: string }) {
     </div>
   );
 }
-
-useGLTF.preload(MODEL_PATH);

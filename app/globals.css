@@ -2732,73 +2732,8 @@ html[data-mood="alt"] {
   margin: 0;
 }
 
-/* ─── Logo emblem: the cube draws itself, then fades, forever ──────────────
-   The mark is four stroked rings (components/EnigmaCubeMark.tsx), each carrying
-   `pathLength="1000"` so a single duration draws all four at the same speed.
-
-   Draw and fade are deliberately the same length: this is not the hero's
-   travelling gap, it is a line that arrives and then leaves, so there is no
-   head to chase around the shape. The draw itself is 0.55s against the hero's
-   1.35s - the emblem is small, permanent chrome, and it has to finish being
-   interesting well before the eye gets to it.
-
-   Cost is four stroked lines inside a 52px box, which is why the loop is CSS
-   and not a hook: nothing here is worth a `usePrefersReducedMotion()` subscriber
-   or the "use client" boundary that comes with it. The OS preference - the one
-   the user actually asked for - is honoured below. */
-@keyframes logo-cube-draw {
-  0% {
-    stroke-dashoffset: 1000;
-    opacity: 1;
-    animation-timing-function: cubic-bezier(0.33, 0, 0.15, 1);
-  }
-  25% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-    animation-timing-function: linear;
-  }
-  45% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
-  }
-  70% {
-    stroke-dashoffset: 0;
-    opacity: 0;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 0;
-  }
-}
-
-.logo-cube-mark {
-  display: block;
-}
-
-/* `backwards`, or the two staggered rings would sit fully drawn through their
-   own delay and the first frame of every page load would be a finished cube. */
-.logo-cube-ring {
-  stroke-dasharray: 1000;
-  animation: logo-cube-draw 2.2s backwards infinite;
-}
-
-/* Lid first, both side faces together, floor last - a cube being built, rather
-   than four strokes that happen to share a box. `nth-of-type` and not
-   `nth-child`, because <defs> is the first child of the SVG. */
-.logo-cube-ring:nth-of-type(2),
-.logo-cube-ring:nth-of-type(3) {
-  animation-delay: 0.08s;
-}
-
-.logo-cube-ring:nth-of-type(4) {
-  animation-delay: 0.16s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .logo-cube-ring {
-    animation: none;
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-}
+/* ─── Navbar emblem ────────────────────────────────────────────────────────
+   The mark is the hero's own 3D cube, rendered small - see
+   app/_components/NavbarCubeMark.tsx. Nothing to style here: the canvas fills
+   its box, the loop lives in the shader's uniforms, and the OS reduced-motion
+   preference is read by the component itself. */
