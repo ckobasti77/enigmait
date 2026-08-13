@@ -4,7 +4,7 @@ import clsx from "clsx";
 import AutoTypingConsole from "@/components/ui/auto-typing-console";
 import { RevealCard } from "@/components/ui/card";
 import CtaButton from "@/components/ui/cta-button";
-import ShowcaseVideo from "@/components/ui/showcase-video";
+import ProjectMockupCluster from "@/components/ui/project-mockup-cluster";
 import { projects, type Project } from "@/constants/projects";
 
 export const metadata: Metadata = {
@@ -48,17 +48,21 @@ const MAX_CHIPS = 3;
 
 /**
  * Medija pano kartice, homepage process-card gramatika: slika gore, telo ispod.
- * Browser chrome traka je ram - to je tema-svestan DOM, a snimak ispod nje ide
- * od ivice do ivice i nema svoj ram. Bez snimka pano ostaje DIZAJNIRANA korica:
- * rešetka, glow, monogram. `className` nosi samo odnos stranica i ivicu, jer se
- * ona razlikuje između featured panela (levo) i kartice u mreži (gore).
+ * Pano više nema browser chrome traku - ram je sad sam uređaj, četiri njih, i
+ * druga lažna traka iznad njih bila bi ram preko rama. Ostaje ono što je i
+ * ranije bilo pozadina korice: rešetka i glow, sad kao pod pod klasterom.
+ * `className` nosi samo odnos stranica i ivicu, jer se ona razlikuje između
+ * featured panela (levo) i kartice u mreži (gore).
  */
 function ProjectCover({
   project,
   className,
+  priority = false,
 }: {
   project: Project;
   className?: string;
+  /** Samo za izdvojeni projekat: njegova korica je iznad preloma. */
+  priority?: boolean;
 }) {
   return (
     <div
@@ -69,32 +73,22 @@ function ProjectCover({
         className
       )}
     >
-      <div className="absolute inset-x-0 top-0 z-10 flex h-9 items-center gap-1.5 border-b border-theme px-4">
-        <span className="h-2 w-2 rounded-full bg-[var(--border-strong)]" />
-        <span className="h-2 w-2 rounded-full bg-[var(--border-strong)]" />
-        <span className="h-2 w-2 rounded-full bg-[var(--border-strong)]" />
-      </div>
+      <div
+        className="absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--text-primary) 1px, transparent 1px), linear-gradient(90deg, var(--text-primary) 1px, transparent 1px)",
+          backgroundSize: "36px 36px",
+        }}
+      />
+      <div className="absolute -left-14 -top-10 h-44 w-44 rounded-full glow-accent blur-[80px]" />
 
-      {project.media ? (
-        <ShowcaseVideo media={project.media} className="absolute inset-0 top-9" />
-      ) : (
-        <>
-          <div
-            className="absolute inset-0 top-9 opacity-[0.05]"
-            style={{
-              backgroundImage:
-                "linear-gradient(var(--text-primary) 1px, transparent 1px), linear-gradient(90deg, var(--text-primary) 1px, transparent 1px)",
-              backgroundSize: "36px 36px",
-            }}
-          />
-          <div className="absolute -left-14 -top-10 h-44 w-44 rounded-full glow-accent blur-[80px]" />
-          <div className="absolute inset-0 flex items-center justify-center pt-9">
-            <span className="font-accent text-5xl tracking-[0.2em] text-theme-primary opacity-20 transition-opacity duration-500 group-hover:opacity-35 md:text-6xl">
-              {project.monogram}
-            </span>
-          </div>
-        </>
-      )}
+      <ProjectMockupCluster
+        projectId={project.id}
+        media={project.media}
+        monogram={project.monogram}
+        priority={priority}
+      />
     </div>
   );
 }
@@ -204,9 +198,13 @@ export default function ProjectsPage() {
                 as="article"
                 className="group grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]"
               >
+                {/* Featured nosi isti odnos kao ostale korice, ali u široj
+                    koloni - klaster se skalira sa koricom, pa je izdvojeni
+                    projekat i najveći, bez druge geometrije. */}
                 <ProjectCover
                   project={featured}
-                  className="aspect-[16/10] border-b lg:aspect-auto lg:min-h-[24rem] lg:border-b-0 lg:border-r"
+                  className="aspect-[5/4] border-b lg:border-b-0 lg:border-r"
+                  priority
                 />
                 <div className="flex flex-col gap-5 p-7 sm:p-9">
                   <div className="flex flex-wrap items-center gap-2">
@@ -246,10 +244,7 @@ export default function ProjectsPage() {
                 key={project.id}
                 className="group flex h-full flex-col"
               >
-                <ProjectCover
-                  project={project}
-                  className="aspect-[16/10] border-b"
-                />
+                <ProjectCover project={project} className="aspect-[5/4] border-b" />
 
                 <div className="flex flex-1 flex-col gap-4 p-7">
                   <span className="inline-flex w-fit items-center rounded-full border border-theme px-3 py-1 text-[10px] uppercase tracking-[0.45em] text-cyan-300">

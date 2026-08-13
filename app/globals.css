@@ -957,6 +957,289 @@ html.lenis body {
     opacity: 1;
   }
 
+  /* ── Klaster device-mockapa (korica projekta na `/projects`) ─────────────
+     Četiri rama izgrađena ovde, bez ijedne gotove slike mockapa: ram mora da se
+     preboji zajedno sa temom i da ostane oštar na svakoj širini, a slika mockapa
+     ne ume ni jedno ni drugo. Kroz ramove se vidi sadržaj klijentskog sajta —
+     tri statična snimka i jedan video (`components/ui/project-mockup-cluster.tsx`).
+
+     CELA KOMPOZICIJA JE OPISANA U JEDNOJ JEDINICI: `--u`, 100u široko × 80u
+     visoko. `--u: min(1cqw, 1.25cqh)` čita OBE strane korice, pa klaster STANE i
+     u karticu sa fiksnim odnosom 5/4 (tu se poklapa tačno) i u razvučenu
+     featured kolonu — bez ijednog JS mernog koraka i bez druge verzije
+     geometrije. Zbog `cqh` korenu treba `container-type: size`, ne `inline-size`.
+
+     Unutrašnjost svakog uređaja ide preko `--px` (1% širine TOG uređaja, kao
+     dužina), pa ivice, radijusi i kamere ostaju samoslični kad se uređaj skalira
+     ili kad uski raspored udvostruči laptop. Namerno NIJE `em`: korisnikova
+     minimalna veličina fonta zaključala bi donju granicu i razvukla ramove. */
+  .mockup-cluster {
+    position: absolute;
+    inset: 0;
+    /* Dekoracija u kartici koja vodi na drugo mesto. */
+    pointer-events: none;
+    container-type: size;
+    /* Boje se izvode iz palete, pa sve tri teme (i alt mood) rade bez izmene:
+       u tamnoj se ram diže ka beloj i odvaja se od korice, u svetloj pada ka
+       mastilu i čita se kao srebrn uređaj. */
+    --mockup-frame: color-mix(in srgb, var(--text-primary) 10%, var(--surface-section));
+    --mockup-frame-top: color-mix(in srgb, var(--text-primary) 17%, var(--surface-section));
+    --mockup-edge: color-mix(in srgb, var(--text-primary) 22%, transparent);
+    --mockup-hairline: color-mix(in srgb, var(--text-primary) 14%, transparent);
+    --mockup-screen-bg: color-mix(in srgb, var(--text-primary) 6%, var(--surface-section));
+    --mockup-shadow: var(--shadow-elevated);
+  }
+
+  .mockup-stage {
+    --u: min(1cqw, 1.25cqh);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(100 * var(--u));
+    height: calc(80 * var(--u));
+    translate: -50% -50%;
+  }
+
+  .mockup-device {
+    position: absolute;
+    left: calc(var(--x) * var(--u));
+    top: calc(var(--y) * var(--u));
+    width: calc(var(--w) * var(--u));
+    --px: calc(var(--w) * var(--u) / 100);
+  }
+
+  /* Cik-cak: levo, desno, levo, desno. Svaki sledeći prelazi centralnu
+     vertikalu i upada prethodnom u kolonu, a `z-index` raste tim redom, pa manji
+     uređaj uvek stoji ispred većeg — kompozicija, ne četiri boksa u nizu. */
+  .mockup-monitor {
+    --x: 1;
+    --y: 2.5;
+    --w: 60;
+    z-index: 1;
+  }
+
+  .mockup-laptop {
+    --x: 38;
+    --y: 21;
+    --w: 57;
+    z-index: 2;
+  }
+
+  .mockup-tablet {
+    --x: 10;
+    --y: 35;
+    --w: 31;
+    z-index: 3;
+  }
+
+  .mockup-mobile {
+    --x: 55;
+    --y: 43;
+    --w: 16;
+    z-index: 4;
+  }
+
+  .mockup-monitor-panel,
+  .mockup-laptop-lid,
+  .mockup-laptop-base,
+  .mockup-tablet-body,
+  .mockup-mobile-body {
+    position: relative;
+    background-image: linear-gradient(180deg, var(--mockup-frame-top), var(--mockup-frame));
+    box-shadow:
+      0 0 0 1px var(--mockup-edge),
+      inset 0 1px 0 var(--mockup-hairline),
+      0 calc(var(--px) * 1.6) calc(var(--px) * 3.6) var(--mockup-shadow);
+  }
+
+  .mockup-screen {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: var(--screen-aspect);
+    background-color: var(--mockup-screen-bg);
+    /* Ekran je uvučen u ram, ne nalepljen na njega. */
+    box-shadow: inset 0 0 0 1px var(--mockup-shadow);
+  }
+
+  /* Snimci su viši od ekrana (uslikano ~1.5 ekrana), pa se sidre na vrh —
+     kroz ram se vidi hero tog sajta, isto kao kod `showcase-video`. */
+  .mockup-shot {
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .mockup-watermark {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(var(--px) * 11);
+    letter-spacing: 0.18em;
+    color: color-mix(in srgb, var(--text-primary) 20%, transparent);
+  }
+
+  /* ── Monitor ─────────────────────────────────────────────────────────── */
+  .mockup-monitor-panel {
+    padding: calc(var(--px) * 1.6) calc(var(--px) * 1.6) calc(var(--px) * 4.4);
+    border-radius: calc(var(--px) * 1.8);
+  }
+
+  .mockup-monitor-panel::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--px) * 1.5);
+    width: calc(var(--px) * 1.4);
+    height: calc(var(--px) * 1.4);
+    translate: -50% 0;
+    border-radius: 999px;
+    background-color: var(--mockup-hairline);
+  }
+
+  .mockup-screen-monitor {
+    --screen-aspect: 16 / 10;
+    border-radius: calc(var(--px) * 0.5);
+  }
+
+  .mockup-monitor-neck,
+  .mockup-monitor-base {
+    display: block;
+    margin-inline: auto;
+    background-image: linear-gradient(180deg, var(--mockup-frame-top), var(--mockup-frame));
+  }
+
+  .mockup-monitor-neck {
+    width: 13%;
+    height: calc(var(--px) * 5);
+    clip-path: polygon(16% 0, 84% 0, 100% 100%, 0 100%);
+  }
+
+  .mockup-monitor-base {
+    width: 30%;
+    height: calc(var(--px) * 1.4);
+    border-radius: calc(var(--px) * 0.9);
+    box-shadow: 0 calc(var(--px) * 1.2) calc(var(--px) * 2.4) var(--mockup-shadow);
+  }
+
+  /* ── Laptop ──────────────────────────────────────────────────────────── */
+  .mockup-laptop-lid {
+    padding: calc(var(--px) * 1.5) calc(var(--px) * 1.5) calc(var(--px) * 3.4);
+    border-radius: calc(var(--px) * 1.6) calc(var(--px) * 1.6) calc(var(--px) * 0.6)
+      calc(var(--px) * 0.6);
+  }
+
+  .mockup-laptop-lid::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(var(--px) * 0.55);
+    width: calc(var(--px) * 0.6);
+    height: calc(var(--px) * 0.6);
+    translate: -50% 0;
+    border-radius: 999px;
+    background-color: var(--mockup-edge);
+  }
+
+  .mockup-screen-laptop {
+    --screen-aspect: 16 / 10;
+    border-radius: calc(var(--px) * 0.5);
+  }
+
+  /* Baza je šira od poklopca i vraćena ulevo za pola te razlike, pa laptop stoji
+     na svojoj palubi umesto da lebdi. `108%` je gornja granica: preko toga
+     desna ivica izađe iz scene i korica joj odseče zaobljeni ugao. */
+  .mockup-laptop-base {
+    display: block;
+    width: 108%;
+    margin-left: -4%;
+    height: calc(var(--px) * 3.2);
+    border-radius: calc(var(--px) * 0.4) calc(var(--px) * 0.4) calc(var(--px) * 2.4)
+      calc(var(--px) * 2.4);
+  }
+
+  .mockup-laptop-base::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 15%;
+    height: calc(var(--px) * 0.9);
+    translate: -50% 0;
+    border-radius: 0 0 calc(var(--px) * 0.9) calc(var(--px) * 0.9);
+    background-color: var(--mockup-hairline);
+  }
+
+  /* ── Tablet ──────────────────────────────────────────────────────────── */
+  .mockup-tablet-body {
+    padding: calc(var(--px) * 4);
+    border-radius: calc(var(--px) * 6);
+  }
+
+  .mockup-tablet-body::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(var(--px) * 1.5);
+    width: calc(var(--px) * 1.2);
+    height: calc(var(--px) * 1.2);
+    translate: -50% 0;
+    border-radius: 999px;
+    background-color: var(--mockup-edge);
+  }
+
+  .mockup-screen-tablet {
+    --screen-aspect: 3 / 4;
+    border-radius: calc(var(--px) * 2);
+  }
+
+  /* ── Mobilni ─────────────────────────────────────────────────────────── */
+  .mockup-mobile-body {
+    padding: calc(var(--px) * 3.4);
+    border-radius: calc(var(--px) * 11);
+  }
+
+  .mockup-screen-mobile {
+    --screen-aspect: 9 / 19.5;
+    border-radius: calc(var(--px) * 7.6);
+  }
+
+  /* Ostrvo je materijal rama koji ulazi u ekran — zato nosi boju rama, a ne
+     svoju: u svetloj temi je srebrno kao i telefon oko njega. */
+  .mockup-mobile-island {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--px) * 5.4);
+    width: 34%;
+    height: calc(var(--px) * 5);
+    translate: -50% 0;
+    border-radius: 999px;
+    background-color: var(--mockup-frame);
+    box-shadow: 0 0 0 1px var(--mockup-edge);
+  }
+
+  /* Uski raspored: ostaju laptop i mobilni, u istoj cik-cak logici, uvećani da
+     popune isti prostor. Prag je i u `constants/mockupClusterConfig.ts` — CSS
+     ovde sakriva, a JS tamo ni ne montira slike koje se neće videti. */
+  @media (max-width: 639px) {
+    .mockup-monitor,
+    .mockup-tablet {
+      display: none;
+    }
+
+    .mockup-laptop {
+      --x: 4;
+      --y: 9;
+      --w: 84;
+    }
+
+    .mockup-mobile {
+      --x: 64;
+      --y: 22;
+      --w: 26;
+    }
+  }
+
   .theme-section {
     background-color: transparent;
     color: var(--text-primary);
