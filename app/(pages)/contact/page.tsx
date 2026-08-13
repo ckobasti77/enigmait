@@ -18,14 +18,14 @@ const CONTACT_JSON_LD = JSON.stringify({
   mainEntity: {
     "@type": "Organization",
     name: "Enigma Digital",
-    email: "hello@enigma.digital",
+    email: "office@enigmait.rs",
     telephone: "+44 20 4577 1943",
   },
 }).replace(/</g, "\\u003c");
 
 /** Direct lines, not boxed cards - the page is one hero and the form. */
 const directLines = [
-  { href: "mailto:hello@enigma.digital", icon: Mail, label: "hello@enigma.digital" },
+  { href: "mailto:office@enigmait.rs", icon: Mail, label: "office@enigmait.rs" },
   { href: "tel:+442045771943", icon: Phone, label: "+44 20 4577 1943" },
 ];
 
@@ -48,9 +48,6 @@ export default function ContactPage() {
         <div className="site-container relative z-10 grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:gap-20">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-6">
-              <span className="text-xs uppercase tracking-[0.6em] text-cyan-400">
-                Gradimo zajedno
-              </span>
               <AutoTypingConsole
                 text="Pošaljite brief. Mi dovodimo tim."
                 className="text-left text-3xl md:text-4xl"

@@ -343,6 +343,23 @@
     inset 0 0 0 1px rgba(20, 34, 51, 0.07),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --nav-panel-specular: rgba(255, 255, 255, 0.5);
+  /* Contact form glass — the services panel's material on a standing surface.
+     Same reason the nav wash is not built on `--card`: at 0.94 alpha there is
+     nothing left for the blur to sample. Kept a touch flatter than the panel,
+     because this one holds inputs rather than a menu. */
+  --form-glass-wash: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.62) 0%,
+    rgba(255, 255, 255, 0.5) 55%,
+    rgba(124, 58, 237, 0.12) 100%
+  );
+  --form-glass-rim:
+    inset 0 0 0 1px rgba(20, 34, 51, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  /* Fields sit *inside* the glass, so they are a step of paper on top of it,
+     never a second sheet of glass - stacked blurs read as fog. */
+  --form-field-bg: rgba(255, 255, 255, 0.55);
+  --form-field-bg-focus: rgba(255, 255, 255, 0.82);
 }
 
 .dark {
@@ -477,6 +494,17 @@
     inset 0 0 0 1px rgba(255, 255, 255, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
   --nav-panel-specular: rgba(190, 215, 255, 0.16);
+  --form-glass-wash: linear-gradient(
+    135deg,
+    rgba(11, 18, 33, 0.58) 0%,
+    rgba(13, 20, 38, 0.5) 52%,
+    rgba(124, 58, 237, 0.24) 100%
+  );
+  --form-glass-rim:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  --form-field-bg: rgba(148, 180, 235, 0.06);
+  --form-field-bg-focus: rgba(148, 180, 235, 0.11);
 }
 
 @layer base {
@@ -1186,6 +1214,17 @@ html[data-mood="alt"] {
     inset 0 0 0 1px rgba(0, 255, 65, 0.1),
     inset 0 1px 0 rgba(0, 255, 65, 0.18);
   --nav-panel-specular: rgba(0, 255, 65, 0.14);
+  --form-glass-wash: linear-gradient(
+    135deg,
+    rgba(8, 18, 10, 0.6) 0%,
+    rgba(8, 20, 11, 0.52) 52%,
+    rgba(0, 255, 65, 0.16) 100%
+  );
+  --form-glass-rim:
+    inset 0 0 0 1px rgba(0, 255, 65, 0.1),
+    inset 0 1px 0 rgba(0, 255, 65, 0.18);
+  --form-field-bg: rgba(0, 255, 65, 0.05);
+  --form-field-bg-focus: rgba(0, 255, 65, 0.1);
 }
 
 .card-lift {
@@ -2132,7 +2171,8 @@ html[data-mood="alt"] {
 }
 
 .trace-cta--primary::after,
-.cta-rim::after {
+.cta-rim::after,
+.interest-pill-input:checked + .interest-pill::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -2183,11 +2223,199 @@ html[data-mood="alt"] {
   }
 
   /* No breath. The rim and its halo stay, parked at a steady value between the
-     trough and the peak - the CTA still reads as lit, it just does not move. */
+     trough and the peak - the CTA still reads as lit, it just does not move.
+     The checked pill rides the same rule: "selected" is state, and state has to
+     survive reduced motion. */
   .trace-cta--primary::after,
-  .cta-rim::after {
+  .cta-rim::after,
+  .interest-pill-input:checked + .interest-pill::after {
     animation: none;
     opacity: 0.55;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Contact form (app/(pages)/contact/_components/ContactForm.tsx)
+
+   Three pieces, one material story.
+
+   1. The shell is the services panel's glass on a standing surface: blur +
+      wash + rim, upright, no skew and no curve. It deliberately skips the
+      `url(#liquid-glass-filter)` displacement `.nav-panel-body` adds - that
+      filter is tuned for a control-sized element (scale 26 over a ~44px
+      button), and across a form this tall it smears the copy behind it into
+      noise. Blur and wash alone carry the same read at this size.
+
+   2. Floating labels. The label IS the placeholder: it rests on the input's
+      first text line and rises into the reserved band at the top on focus, or
+      whenever the field holds a value. That is `:placeholder-shown` doing the
+      work, which is why every field carries `placeholder=" "` - a field with no
+      placeholder attribute never matches the pseudo-class, and the label would
+      be stuck down. `<select>` always has a value, so its label is pinned up.
+
+      The top padding is reserved space, not decoration: the raised label lands
+      inside it, so nothing reflows when the label moves. Only `transform` and
+      `color` animate - one composited property and one paint, never layout.
+
+   3. Interest pills. A visually hidden checkbox plus its `<label>` - a real
+      for/id pair, so the pill is a checkbox to a screen reader and to a click.
+      Checked pills wear the CTA's resting breath, extended onto this selector
+      above rather than restated, so "selected" here and "act here" are the
+      same light.
+   --------------------------------------------------------------------------- */
+.contact-glass {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--surface-radius);
+  background: var(--form-glass-wash);
+  box-shadow: var(--form-glass-rim), 0 24px 70px var(--shadow-elevated);
+  backdrop-filter: blur(18px) saturate(150%);
+}
+
+.float-field {
+  position: relative;
+  display: block;
+}
+
+.float-field-input {
+  width: 100%;
+  border-radius: var(--surface-radius-inner);
+  border: 1px solid var(--border-soft);
+  background-color: var(--form-field-bg);
+  /* The top third is the raised label's parking space. */
+  padding: 1.5rem 0.9rem 0.55rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--text-primary);
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+textarea.float-field-input {
+  display: block;
+  resize: vertical;
+  min-height: 8.5rem;
+}
+
+/* The native chevron keeps its corner - `appearance: none` would take the only
+   affordance the control has - so the value clears it instead. */
+select.float-field-input {
+  padding-right: 2.25rem;
+}
+
+.float-field-input:focus {
+  outline: none;
+  border-color: var(--cta-line);
+  background-color: var(--form-field-bg-focus);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cta-line) 45%, transparent);
+}
+
+/* Chrome paints its own slab over an autofilled field, which would punch a
+   solid rectangle through the glass. The colour cannot be overridden, only
+   outrun - a transition long enough that it never arrives. */
+.float-field-input:-webkit-autofill,
+.float-field-input:-webkit-autofill:hover,
+.float-field-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-primary);
+  caret-color: var(--text-primary);
+  transition: background-color 600000s 0s;
+}
+
+.float-field-label {
+  position: absolute;
+  top: 0;
+  left: calc(0.9rem + 1px);
+  transform-origin: left top;
+  /* Resting: sitting exactly on the input's first line, reading as the
+     placeholder it replaces. */
+  transform: translateY(1.5rem);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--text-secondary);
+  pointer-events: none;
+  transition:
+    transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1),
+    color 0.28s ease;
+}
+
+.float-field-input:focus ~ .float-field-label,
+.float-field-input:not(:placeholder-shown) ~ .float-field-label,
+.float-field-label--pinned {
+  transform: translateY(0.5rem) scale(0.78);
+}
+
+.float-field-input:focus ~ .float-field-label {
+  color: var(--primary);
+}
+
+.interest-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.interest-legend {
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+/* Hidden from the eye, not from the accessibility tree or the keyboard: it
+   still takes focus, and `:focus-visible` is drawn on the pill next to it. */
+.interest-pill-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.interest-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background-color: var(--form-field-bg);
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8125rem;
+  line-height: 1.1;
+  color: var(--text-secondary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.interest-pill:hover {
+  border-color: color-mix(in srgb, var(--cta-line) 60%, transparent);
+  color: var(--text-primary);
+}
+
+.interest-pill-input:focus-visible + .interest-pill {
+  outline: 2px solid var(--cta-line);
+  outline-offset: 2px;
+}
+
+.interest-pill-input:checked + .interest-pill {
+  border-color: var(--cta-line);
+  background-color: color-mix(in srgb, var(--cta-line) 12%, transparent);
+  color: var(--text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The label still moves - it has to, it is the field's name - it just
+     arrives instead of travelling. */
+  .float-field-label,
+  .float-field-input,
+  .interest-pill {
+    transition: none;
   }
 }
 

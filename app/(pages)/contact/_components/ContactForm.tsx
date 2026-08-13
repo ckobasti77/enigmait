@@ -1,8 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { Fragment, useActionState, useEffect, useRef } from "react";
 import { Send } from "lucide-react";
 
+import {
+  CONTACT_INTERESTS,
+  CONTACT_INTERESTS_FIELD,
+} from "@/constants/contactInterests";
 import { submitContact } from "../actions";
 
 type ContactFormState = {
@@ -15,13 +19,23 @@ const initialState: ContactFormState = {
   message: "",
 };
 
-const FIELD =
-  "w-full rounded-xl border border-theme theme-card px-4 py-3 text-sm text-theme-primary placeholder:text-theme-muted focus:border-cyan-400 focus:outline-none";
+/**
+ * Every text field carries `placeholder=" "` rather than a hint.
+ *
+ * The label IS the placeholder here - it rests on the input's first line and
+ * rises when the field is focused or holds a value - and the "holds a value"
+ * half is `:placeholder-shown` in `globals.css`. A field with no placeholder
+ * attribute never matches that pseudo-class, so its label would never come
+ * back down. The space is what keeps the pseudo-class live while staying
+ * invisible; the accessible name is the real `<label>`, which is why this is a
+ * floating label and not a fake placeholder.
+ */
+const FLOAT_PLACEHOLDER = " ";
 
 /**
  * The one client island on the contact page. The action contract
- * (name/email/company/message/responseStyle, {status,message} state) is the
- * server's - nothing here may drift from `../actions.ts`.
+ * (name/email/company/message/responseStyle/interests, {status,message} state)
+ * is the server's - nothing here may drift from `../actions.ts`.
  */
 export default function ContactForm() {
   const [state, formAction, isPending] = useActionState<
@@ -37,14 +51,21 @@ export default function ContactForm() {
   }, [state.status]);
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-theme theme-card p-6 sm:p-7">
+    <div className="contact-glass overflow-hidden p-6 sm:p-7">
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent opacity-80"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent opacity-80"
       />
       <div className="space-y-5">
         <div className="space-y-2 text-left">
-          <h2 className="text-xl font-semibold text-theme-primary">
+          {/* Chrome, not a headline - a form's own title at 20px in the
+              extended display face reads as a mistake, and Microgramma renders
+              this word's mid-word `č` as a full-height `Č` at this size (the
+              same glyph fault `ServiceFaqCta` documents). */}
+          <h2
+            data-display-font="off"
+            className="font-aeonik text-xl font-semibold text-theme-primary"
+          >
             Započnite skicu projekta
           </h2>
           <p className="text-sm leading-relaxed text-theme-muted">
@@ -55,58 +76,110 @@ export default function ContactForm() {
         </div>
         <form ref={formRef} className="space-y-4" action={formAction}>
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="space-y-2 text-sm">
-              <span className="text-theme-primary">Ime</span>
+            <div className="float-field">
               <input
+                id="contact-name"
                 type="text"
                 name="name"
                 required
-                placeholder="Ada Lovelace"
-                className={FIELD}
+                placeholder={FLOAT_PLACEHOLDER}
+                className="float-field-input"
               />
-            </label>
-            <label className="space-y-2 text-sm">
-              <span className="text-theme-primary">Poslovna e-pošta</span>
+              <label htmlFor="contact-name" className="float-field-label">
+                Ime
+              </label>
+            </div>
+            <div className="float-field">
               <input
+                id="contact-email"
                 type="email"
                 name="email"
                 required
-                placeholder="you@company.com"
-                className={FIELD}
+                placeholder={FLOAT_PLACEHOLDER}
+                className="float-field-input"
               />
-            </label>
+              <label htmlFor="contact-email" className="float-field-label">
+                Poslovna e-pošta
+              </label>
+            </div>
           </div>
-          <label className="space-y-2 text-sm">
-            <span className="text-theme-primary">Kompanija</span>
+          <div className="float-field">
             <input
+              id="contact-company"
               type="text"
               name="company"
-              placeholder="Kompanija ili kolektiv"
-              className={FIELD}
+              placeholder={FLOAT_PLACEHOLDER}
+              className="float-field-input"
             />
-          </label>
-          <label className="space-y-2 text-sm">
-            <span className="text-theme-primary">
-              Čime treba zajedno da se pozabavimo?
-            </span>
+            <label htmlFor="contact-company" className="float-field-label">
+              Kompanija
+            </label>
+          </div>
+          <div className="float-field">
             <textarea
+              id="contact-message"
               rows={4}
               name="message"
               required
-              placeholder="Podelite proizvodne ciljeve, tehnološki okvir, rokove ili bilo šta što nam pomaže da se pripremimo."
-              className={FIELD}
+              placeholder={FLOAT_PLACEHOLDER}
+              className="float-field-input"
             />
-          </label>
+            <label htmlFor="contact-message" className="float-field-label">
+              Čime treba zajedno da se pozabavimo?
+            </label>
+          </div>
+
+          <fieldset className="interest-fieldset space-y-3">
+            <legend className="interest-legend">Šta vas zanima?</legend>
+            <div className="flex flex-wrap gap-2">
+              {CONTACT_INTERESTS.map(({ value, label, noTranslate }) => {
+                const id = `contact-interest-${value}`;
+
+                return (
+                  /* No wrapper: the hidden input is the label's previous
+                     sibling, which is what `+ .interest-pill` reads. */
+                  <Fragment key={value}>
+                    <input
+                      id={id}
+                      type="checkbox"
+                      name={CONTACT_INTERESTS_FIELD}
+                      value={value}
+                      className="interest-pill-input"
+                    />
+                    <label
+                      htmlFor={id}
+                      className="interest-pill"
+                      data-no-translate={noTranslate ? "true" : undefined}
+                    >
+                      {label}
+                    </label>
+                  </Fragment>
+                );
+              })}
+            </div>
+          </fieldset>
+
           <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
-            <label className="space-y-2 text-sm">
-              <span className="text-theme-primary">Željeni format odgovora</span>
-              <select name="responseStyle" className={FIELD}>
+            <div className="float-field">
+              <select
+                id="contact-response-style"
+                name="responseStyle"
+                className="float-field-input"
+              >
                 <option>Sažetak e-poštom</option>
                 <option>Deck sa opcijama</option>
                 <option>Asinhroni Loom</option>
                 <option>Radna sesija uživo</option>
               </select>
-            </label>
+              {/* A select always holds a value, so its label has nowhere to
+                  rest - it is pinned to the raised position. */}
+              <label
+                htmlFor="contact-response-style"
+                className="float-field-label float-field-label--pinned"
+              >
+                Željeni format odgovora
+              </label>
+            </div>
             <button
               type="submit"
               disabled={isPending}

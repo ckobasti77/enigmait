@@ -468,6 +468,13 @@ export const englishToSerbianEntries = [
   ["Company or collective", "Kompanija ili kolektiv"],
   ["What should we tackle together?", "Čime treba zajedno da se pozabavimo?"],
   ["Share product goals, tech stack, deadlines, or anything that helps us prep.", "Podelite product ciljeve, tech stack, rokove ili bilo šta što nam pomaže da se pripremimo."],
+  // Contact form interest pills. "Dizajn", "SEO i GEO" and "Društvene mreže"
+  // already have their pair above; "Website" and "Branding" carry
+  // `data-no-translate` instead, because both are already English keys pointing
+  // elsewhere in this table - see `constants/contactInterests.ts`.
+  ["What are you interested in?", "Šta vas zanima?"],
+  ["General", "Opšte"],
+  ["Mobile app", "Mobilna aplikacija"],
   ["Preferred response style", "Željeni format odgovora"],
   ["Email recap", "Sažetak e-poštom"],
   ["Deck with options", "Deck sa opcijama"],

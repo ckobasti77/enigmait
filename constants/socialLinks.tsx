@@ -73,10 +73,10 @@ export const socialLinks: SocialLink[] = [
   },
   {
     label: "Email",
-    href: "mailto:hello@enigma.digital",
+    href: "mailto:office@enigmait.rs",
     icon: Mail,
-    tooltip: "hello@enigma.digital",
-    ariaLabel: "Pošalji e-poštu na hello@enigma.digital",
+    tooltip: "office@enigmait.rs",
+    ariaLabel: "Pošalji e-poštu na office@enigmait.rs",
   },
   {
     label: "Telefon",

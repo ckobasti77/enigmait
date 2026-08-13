@@ -46,8 +46,8 @@ export default function TermsOfService() {
           <footer className="site-gutter rounded-3xl border border-theme theme-card py-5 text-sm text-theme-muted transition-theme">
             <p>
               Imate pitanja o ovim Uslovima? Pišite nam na{' '}
-              <a href="mailto:hello@enigma.digital" className="font-medium text-theme-primary transition-theme hover:text-cyan-300">
-                hello@enigma.digital
+              <a href="mailto:office@enigmait.rs" className="font-medium text-theme-primary transition-theme hover:text-cyan-300">
+                office@enigmait.rs
               </a>{' '}
               ili pozovite{' '}
               <a href="tel:+442045771943" className="font-medium text-theme-primary transition-theme hover:text-cyan-300">

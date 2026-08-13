@@ -2,6 +2,11 @@
 
 import nodemailer from 'nodemailer';
 
+import {
+  CONTACT_INTEREST_LABELS,
+  CONTACT_INTERESTS_FIELD,
+} from '@/constants/contactInterests';
+
 type ContactFormState = {
   status: 'idle' | 'success' | 'error';
   message: string;
@@ -58,6 +63,15 @@ export async function submitContact(
     const company = String(formData.get('company') ?? '').trim();
     const message = String(formData.get('message') ?? '').trim();
     const responseStyle = String(formData.get('responseStyle') ?? '').trim();
+    /* The pills are optional and anyone can post anything, so what arrives is
+       filtered against the known values and mailed as the label the sender
+       actually saw - never as the raw value. */
+    const interests = formData
+      .getAll(CONTACT_INTERESTS_FIELD)
+      .map((value) => String(value))
+      .filter((value) => value in CONTACT_INTEREST_LABELS)
+      .map((value) => CONTACT_INTEREST_LABELS[value]);
+    const interestsLine = interests.join(', ');
 
     if (!name || !email || !message) {
       return {
@@ -113,6 +127,7 @@ export async function submitContact(
         `Name: ${name}`,
         `Email: ${email}`,
         company ? `Company: ${company}` : 'Company: (not provided)',
+        interestsLine ? `Interests: ${interestsLine}` : 'Interests: (not selected)',
         responseStyle ? `Response style: ${responseStyle}` : 'Response style: (not provided)',
         '',
         'Message:',
@@ -122,6 +137,7 @@ export async function submitContact(
         `<p><strong>Name:</strong> ${name}</p>`,
         `<p><strong>Email:</strong> ${email}</p>`,
         `<p><strong>Company:</strong> ${company || 'Not provided'}</p>`,
+        `<p><strong>Interests:</strong> ${interestsLine || 'Not selected'}</p>`,
         `<p><strong>Response style:</strong> ${responseStyle || 'Not provided'}</p>`,
         '<p><strong>Message:</strong></p>',
         `<p>${message.replace(/\n/g, '<br />')}</p>`,

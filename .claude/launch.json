@@ -25,6 +25,24 @@
         "3405"
       ],
       "port": 3405
+    },
+    {
+      "name": "enigma-logo-worktree",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "cd",
+        "/d",
+        "C:\\Users\\admin\\Desktop\\Web Dev Projects\\enigma-logo",
+        "&&",
+        "npm",
+        "run",
+        "dev",
+        "--",
+        "-p",
+        "3010"
+      ],
+      "port": 3010
     }
   ]
 }

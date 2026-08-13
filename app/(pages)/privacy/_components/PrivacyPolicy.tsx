@@ -46,10 +46,10 @@ export default function PrivacyPolicy() {
             <p>
               Treba vam više detalja ili želite da ostvarite svoja prava nad podacima? Pišite na{" "}
               <a
-                href="mailto:hello@enigma.digital"
+                href="mailto:office@enigmait.rs"
                 className="font-medium text-theme-primary transition-theme hover:text-cyan-300"
               >
-                hello@enigma.digital
+                office@enigmait.rs
               </a>{" "}
               ili pozovite{" "}
               <a

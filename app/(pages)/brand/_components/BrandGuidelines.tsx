@@ -46,10 +46,10 @@ export default function BrandGuidelines() {
             <p>
               Trebaju vam asset-i, template-i ili brand review? Pišite na{" "}
               <a
-                href="mailto:hello@enigma.digital"
+                href="mailto:office@enigmait.rs"
                 className="font-medium text-theme-primary transition-theme hover:text-cyan-300"
               >
-                hello@enigma.digital
+                office@enigmait.rs
               </a>{" "}
               i podelićemo najnoviji toolkit ili pomoći u proveri konzistentnosti sadržaja.
             </p>
