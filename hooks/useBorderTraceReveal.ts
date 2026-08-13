@@ -37,8 +37,11 @@ gsap.registerPlugin(ScrollTrigger);
 /** Streak length, in the normalised units the paths are rendered at. */
 export const TRACE_DASH = TRACE_LENGTH * 0.17;
 
-/** Corner radius the trace follows. Matches `--ui-card-radius` in `globals.css`. */
-export const CARD_RADIUS = 16;
+/**
+ * Corner radius the trace follows. Matches `--ui-card-radius` in `globals.css`,
+ * which now reads the site-wide `--surface-radius` (14px, the CTA's corner).
+ */
+export const CARD_RADIUS = 14;
 
 /**
  * Class hooks. The hook animates them, `components/ui/card.tsx` renders them -

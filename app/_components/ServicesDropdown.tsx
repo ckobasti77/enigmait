@@ -28,8 +28,11 @@ import type { DropdownLink } from "./NavLinks";
  * land, a rotating conic ring takes over as the resting state.
  */
 
-/** Matches `--nav-panel-radius`; the trace has to follow the same corner. */
-const PANEL_RADIUS = 16;
+/**
+ * Matches `--nav-panel-radius`; the trace has to follow the same corner. That
+ * variable now reads the site-wide `--surface-radius` (14px, the CTA's corner).
+ */
+const PANEL_RADIUS = 14;
 
 /** Streak length, in the same normalised units the paths are rendered at. */
 const TRACE_DASH = TRACE_LENGTH * 0.17;

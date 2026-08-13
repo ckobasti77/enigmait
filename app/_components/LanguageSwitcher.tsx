@@ -29,8 +29,12 @@ export default function LanguageSwitcher() {
   const { locale, setLocale } = useLanguage();
 
   return (
+    // `cta-rim` (globals.css) gives the chip the CTA's blue rim and its slow
+    // breath, in both nav phases - the switcher sits next to the CTA, so a
+    // neutral border there read as a different system. The corner is the
+    // site-wide `--surface-radius`; the segments take one step in from it.
     <div
-      className="inline-flex h-10 items-center gap-0.5 rounded-full border border-theme bg-card/70 px-0.5 text-theme-primary transition-theme sm:h-11 sm:px-1"
+      className="cta-rim relative inline-flex h-10 items-center gap-0.5 rounded-[var(--surface-radius)] border border-theme bg-card/70 px-0.5 text-theme-primary transition-theme sm:h-11 sm:px-1"
       aria-label={switcherLabels[locale]}
       data-no-translate="true"
     >
@@ -45,7 +49,7 @@ export default function LanguageSwitcher() {
             aria-pressed={active}
             onClick={() => setLocale(option.locale)}
             className={clsx(
-              "min-w-7 rounded-full px-1.5 py-1.5 text-[10px] font-semibold tracking-[0.08em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/40 sm:min-w-9 sm:px-2.5 sm:text-[11px]",
+              "min-w-7 rounded-[var(--surface-radius-inner)] px-1.5 py-1.5 text-[10px] font-semibold tracking-[0.08em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/40 sm:min-w-9 sm:px-2.5 sm:text-[11px]",
               active
                 ? "bg-muted text-theme-primary"
                 : "text-theme-muted hover:bg-muted hover:text-theme-primary"

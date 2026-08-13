@@ -14,6 +14,16 @@ import { cn } from "@/lib/utils";
  * borderTrace and the services dropdown, so a CTA sits inside the same system
  * as the surfaces around it rather than beside it.
  *
+ * At rest the primary breathes: rim and halo swell and settle every
+ * `--cta-pulse-duration`, so the CTA is never a dead rectangle waiting to be
+ * hovered. Hover is then a step up from that, not the only state with life in
+ * it. Under `prefers-reduced-motion` the breath is parked at a steady value.
+ *
+ * The corner is not a `rounded-*` utility. This button is the shape the cards,
+ * the nav island, the language switcher and the services panel are all measured
+ * against, so it reads `--surface-radius` from `globals.css` like they do -
+ * one token, one angle, no drift.
+ *
  * Everything visible is CSS (see `.trace-cta` in `globals.css`) and the streak
  * lives on `::before`, so this component adds no layers of its own. That is
  * deliberate: `asChild` hands the children straight to a `Link`, and a real
@@ -27,11 +37,13 @@ import { cn } from "@/lib/utils";
  * `<CtaButton look="glass">`.
  */
 const traceButtonVariants = cva(
-  "trace-cta group relative isolate inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl font-medium outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ring)] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "trace-cta group relative isolate inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap font-medium outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ring)] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         primary: "trace-cta--primary text-theme-primary",
+        // The ghost's ink is set in `.trace-cta--secondary` (unlayered, so it
+        // wins): it sits one step above muted, which no utility expresses.
         secondary: "trace-cta--secondary text-theme-muted",
       },
       // Heights match the liquid glass button exactly so swapping the default

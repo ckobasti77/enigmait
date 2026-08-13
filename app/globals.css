@@ -92,10 +92,31 @@
    gutter so it can never overrun the screen edge on the narrowest viewport. */
 :root {
   --nav-island-bleed: min(1.25rem, calc(var(--site-edge-gutter) * 0.7));
+  /* One corner for the whole site, taken from the CTA: `rounded-xl` is
+     `--radius + 4px` = 14px, and the CTA is the element every other surface is
+     measured against. Cards, the nav island, the language switcher, the
+     services panel and the process cards all read this, so the site has one
+     angle instead of four that drift.
+
+     Geometry, not colour - it does not change with the theme, so it lives in
+     this shared block (which every palette inherits) rather than being
+     restated three times where it could go out of step.
+
+     Anything with a JS twin that traces this corner moves with it:
+     `CARD_RADIUS` in hooks/useBorderTraceReveal.ts and ProcessCard.tsx, and
+     `PANEL_RADIUS` in ServicesDropdown.tsx. */
+  --surface-radius: 14px;
+  /* One step in, for a control nested inside a surface: the language
+     switcher's segments and the nav pill's indicator. Concentric corners need
+     the inner one smaller or the gap between them reads as a wobble. */
+  --surface-radius-inner: 10px;
+  /* How long one CTA breath takes. Slow on purpose - at rest the CTA should
+     read as alive, never as animating. */
+  --cta-pulse-duration: 3.2s;
   /* Kept in sync with `PANEL_RADIUS` in ServicesDropdown.tsx. The border trace
      is drawn from that number, so if the two drift the streak cuts across the
      corner instead of following it - same contract as the process cards. */
-  --nav-panel-radius: 1rem;
+  --nav-panel-radius: var(--surface-radius);
 }
 
 /* Section shell: owns the distance to the viewport edge. */
@@ -201,6 +222,9 @@
      same blue as `--process-accent-1` rather than a re-alpha'd #58c4ff. */
   --cta-line: rgba(2, 132, 199, 0.45);
   --cta-sweep: linear-gradient(115deg, transparent 20%, #0284c7, #6d28d9, transparent 80%);
+  /* The halo the resting breath swells into. Over paper a wide soft glow turns
+     into grey haze, so this one is tighter in alpha than the dark palette's. */
+  --cta-pulse-glow: rgba(2, 132, 199, 0.26);
   /* Card primitive — the hairline and the unlock streak. Same blue as the CTA
      rim, at full opacity: a 1px stroke over paper has nothing to spare. */
   --card-trace: #0284c7;
@@ -385,6 +409,9 @@
      same pair the process cards and the services dropdown trace with. */
   --cta-line: rgba(88, 196, 255, 0.55);
   --cta-sweep: linear-gradient(115deg, transparent 20%, #38bdf8, #c084fc, transparent 80%);
+  /* The halo the resting breath swells into - the same blue as the rim, so the
+     breath reads as the rim getting brighter rather than as a second light. */
+  --cta-pulse-glow: rgba(56, 189, 248, 0.34);
   /* Card primitive — brand blue for the hairline and the unlock streak, the
      same read as the process cards' first phase. */
   --card-trace: #58c4ff;
@@ -525,11 +552,14 @@ html.lenis body {
   position: absolute;
   /* Bleeds OUTWARD from the site grid line, never inward: the logo, the pill and
      the controls stay on the same vertical as the hero headline and every
-     section below. The float reads from the vertical gap, the round ends and the
+     section below. The float reads from the vertical gap, the corner and the
      shadow - not from an indent that would break the one measure. */
   inset-block: 0.375rem;
   inset-inline: calc(-1 * var(--nav-island-bleed));
-  border-radius: 999px;
+  /* The site's one corner, same as the CTA and the cards. It used to be a
+     999px capsule; a capsule is a shape nothing else on the page has, so the
+     island read as a component from another system. */
+  border-radius: var(--surface-radius);
   border: 1px solid var(--nav-surface-border);
   background-color: var(--nav-surface-bg);
   box-shadow: var(--nav-surface-shadow);
@@ -554,7 +584,7 @@ html.lenis body {
 
 .nav-pill {
   position: relative;
-  border-radius: 999px;
+  border-radius: var(--surface-radius);
   border: 1px solid var(--nav-pill-border);
   background-color: var(--nav-pill-bg);
   /* One backdrop-filter on screen at a time. At the top the pill is the only
@@ -569,6 +599,16 @@ html.lenis body {
   background-color: transparent;
   border-color: transparent;
   backdrop-filter: none;
+}
+
+/* The CTA rim is handed from the pill to the island as the bar peels, so
+   exactly one blue outline is breathing in either phase. Without this the
+   pill's rim would float over the page with no surface under it once the pill
+   itself has dissolved. The island's own rim needs no counterpart rule - it
+   rides `.nav-surface`'s opacity, which is already 0 at the top. */
+[data-nav-state="peeled"] .nav-pill.cta-rim::after {
+  animation: none;
+  opacity: 0;
 }
 
 /* Same rule, third layer: once the island is blurred, the CTA's own refraction
@@ -735,7 +775,9 @@ html.lenis body {
   position: absolute;
   inset-block: 0.3125rem;
   left: 0;
-  border-radius: 999px;
+  /* One step in from the pill it sits inside - concentric corners, not a
+     capsule inside a rounded rectangle. */
+  border-radius: var(--surface-radius-inner);
   background-color: var(--nav-indicator-bg);
   pointer-events: none;
   opacity: 0;
@@ -1068,6 +1110,9 @@ html[data-mood="alt"] {
      the rim by brightness, not by a second colour. */
   --cta-line: rgba(0, 255, 65, 0.45);
   --cta-sweep: linear-gradient(115deg, transparent 20%, #00ff41, #86ffb8, transparent 80%);
+  /* The halo the resting breath swells into. Phosphor bleeds, so it can carry
+     a touch more than the light palette without smearing. */
+  --cta-pulse-glow: rgba(0, 255, 65, 0.3);
   /* Card primitive — one hue here too; the streak reads by brightness. */
   --card-trace: #00ff41;
   --card-trace-glow: rgba(0, 255, 65, 0.45);
@@ -1173,9 +1218,10 @@ html[data-mood="alt"] {
    --------------------------------------------------------------------------- */
 .process-timeline {
   --process-card-w: 440px;
-  /* Kept in step with CARD_RADIUS in ProcessCard - the trace follows this
-     corner, and a mismatch shows as a streak cutting across it. */
-  --process-card-radius: 16px;
+  /* The site's one corner. Kept in step with CARD_RADIUS in ProcessCard - the
+     trace follows this corner, and a mismatch shows as a streak cutting across
+     it. */
+  --process-card-radius: var(--surface-radius);
   /* Media pane height. TRACE_ENTRY_Y in ProcessCard is this plus the shell's
      1px border - the side connector lands on that seam, so the two move
      together or the streaks split away from the line they appear to ride. */
@@ -1929,6 +1975,10 @@ html[data-mood="alt"] {
      `--primary` instead put a navy wash inside a sky-blue rim in light mode. */
   --trace-cta-hairline: var(--foreground);
   -webkit-tap-highlight-color: transparent;
+  /* The site's one corner, owned here rather than by a `rounded-xl` utility on
+     the component: this button is the shape every other surface copies, so the
+     token has to be the source and the button a reader like the rest. */
+  border-radius: var(--surface-radius);
   border: 1px solid var(--cta-line);
   transition:
     transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
@@ -2011,11 +2061,21 @@ html[data-mood="alt"] {
     0 10px 30px var(--glow-accent-1);
 }
 
-/* Ghost. No fill and no streak - the hierarchy against the primary is the
-   point, so this one only warms its rim and its label. */
+/* Ghost. No fill, no streak and no breath - those are the primary's alone, and
+   the hierarchy against it is the point.
+
+   What it does get is a rim in the CTA's own blue instead of `--border-soft`,
+   pulled back to 70% so it still sits under the primary, and ink one step up
+   from muted. A soft-bordered ghost over the background video was reading as an
+   empty slot rather than as the second option.
+
+   The colour is set here rather than in the component's variant because this
+   block is unlayered and therefore beats the `text-theme-muted` utility the
+   button carries - the same trick `--on-dark` below documents. */
 .trace-cta--secondary {
   background-color: transparent;
-  border-color: var(--border-soft);
+  border-color: color-mix(in srgb, var(--cta-line) 70%, transparent);
+  color: color-mix(in srgb, var(--text-primary) 70%, var(--text-secondary));
 }
 
 .trace-cta--secondary:hover {
@@ -2032,9 +2092,71 @@ html[data-mood="alt"] {
 .trace-cta--on-dark {
   --cta-line: rgba(88, 196, 255, 0.55);
   --cta-sweep: linear-gradient(115deg, transparent 20%, #38bdf8, #c084fc, transparent 80%);
+  --cta-pulse-glow: rgba(56, 189, 248, 0.34);
   --glow-accent-1: rgba(56, 189, 248, 0.28);
   --trace-cta-hairline: #ffffff;
   color: #f3f7ff;
+}
+
+/* ---------------------------------------------------------------------------
+   The resting breath
+
+   The CTA is not still when nobody is on it: the rim and its halo swell and
+   settle once every `--cta-pulse-duration`. It has to stay slow. At a second or
+   two it reads as a control demanding attention; at ~3.2s it reads as the page
+   being alive, which is the whole point of putting it under the primary action.
+
+   Only `opacity` moves - one composited property on a layer that paints
+   nothing but a shadow - so the breath costs no layout and no repaint of the
+   button underneath it.
+
+   It is a `::after` rather than an animation on the button itself because the
+   button's own `box-shadow` is the HOVER state. A running animation beats a
+   normal declaration, so animating `box-shadow` on the element would swallow
+   the hover glow entirely. Split in two, hover stays what it always was - a
+   brighter ring, a longer shadow and the 2px lift - layered over a breath that
+   never stops.
+
+   `.cta-rim` is the same thing offered to a surface that is not a button: the
+   nav island and the language switcher wear it, so the chrome around the CTA
+   speaks the CTA's language instead of a neutral glass one.
+   --------------------------------------------------------------------------- */
+/* The host owns its own positioning - this class deliberately does NOT set
+   `position`. `.nav-surface` is absolutely positioned and is a GRID CHILD:
+   forcing `relative` here put it back in flow, where it took the first cell and
+   pushed the whole navbar onto two rows. Wear this on something that already
+   establishes a containing block (`.nav-pill` is relative, the island is
+   absolute) or add `relative` alongside it. */
+.cta-rim {
+  border-color: var(--cta-line);
+}
+
+.trace-cta--primary::after,
+.cta-rim::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  /* Spread outward from the border box, so the ring sits just outside the
+     element's own border and never lands on its content. */
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--cta-line) 60%, transparent),
+    0 0 18px var(--cta-pulse-glow);
+  /* The trough, and the whole of it under reduced motion. */
+  opacity: 0.3;
+  animation: cta-breathe var(--cta-pulse-duration) ease-in-out infinite;
+}
+
+@keyframes cta-breathe {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2059,6 +2181,14 @@ html[data-mood="alt"] {
   .trace-cta--primary:hover {
     border-color: color-mix(in srgb, var(--primary) 70%, transparent);
   }
+
+  /* No breath. The rim and its halo stay, parked at a steady value between the
+     trough and the peak - the CTA still reads as lit, it just does not move. */
+  .trace-cta--primary::after,
+  .cta-rim::after {
+    animation: none;
+    opacity: 0.55;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -2074,9 +2204,10 @@ html[data-mood="alt"] {
    shadow live on the root, outside that clip.
    --------------------------------------------------------------------------- */
 .ui-card {
-  /* Kept in step with CARD_RADIUS in hooks/useBorderTraceReveal.ts - the trace
-     follows this corner, and a mismatch shows as a streak cutting across it. */
-  --ui-card-radius: 16px;
+  /* The site's one corner. Kept in step with CARD_RADIUS in
+     hooks/useBorderTraceReveal.ts - the trace follows this corner, and a
+     mismatch shows as a streak cutting across it. */
+  --ui-card-radius: var(--surface-radius);
   position: relative;
   height: 100%;
   border-radius: var(--ui-card-radius);

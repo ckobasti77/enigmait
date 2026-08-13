@@ -49,6 +49,7 @@ showcase/captures/
 showcase/logs/
 showcase/review/
 showcase/redesign/review/
+showcase/redesign-round2/review/
 
 # playwright mcp session logs
 .playwright-mcp/

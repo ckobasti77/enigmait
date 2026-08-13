@@ -193,7 +193,9 @@ const NavLinks = ({ currentDropdown, setCurrentDropdown }: NavLinksProps) => {
         if (canUseHover()) closeDropdown();
       }}
     >
-      <div ref={pillRef} className="nav-pill flex items-center gap-1 p-1.5">
+      {/* `cta-rim` puts the CTA's blue rim and its breath on the island while
+          the bar is at the top; the peeled island takes both over from it. */}
+      <div ref={pillRef} className="nav-pill cta-rim flex items-center gap-1 p-1.5">
         <span ref={indicatorRef} className="nav-indicator" aria-hidden />
 
         {pillLinks.map((link, index) => {
@@ -218,7 +220,9 @@ const NavLinks = ({ currentDropdown, setCurrentDropdown }: NavLinksProps) => {
                 aria-current={isCurrent ? "page" : undefined}
                 style={{ fontFamily: "var(--font-aeonik)" }}
                 className={clsx(
-                  "rounded-full py-2 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70",
+                  // Same corner as the indicator that slides under it, so the
+                  // focus ring and the marker are the same shape.
+                  "rounded-[var(--surface-radius-inner)] py-2 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70",
                   link.dropdownLinks ? "pl-4 pr-1.5" : "px-4",
                   isCurrent || isOpen
                     ? "text-theme-primary"
@@ -243,7 +247,7 @@ const NavLinks = ({ currentDropdown, setCurrentDropdown }: NavLinksProps) => {
                   aria-expanded={isOpen}
                   aria-controls={SERVICES_PANEL_ID}
                   onClick={() => setCurrentDropdown(isOpen ? 0 : link.id)}
-                  className="rounded-full py-2 pl-0.5 pr-3.5 text-theme-muted transition-colors duration-300 hover:text-theme-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70"
+                  className="rounded-[var(--surface-radius-inner)] py-2 pl-0.5 pr-3.5 text-theme-muted transition-colors duration-300 hover:text-theme-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70"
                 >
                   <ChevronDown
                     className={clsx(

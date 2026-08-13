@@ -18,8 +18,12 @@ import { useLanguage } from "./LanguageProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/** Matches `--process-card-radius`; the trace has to follow the same corner. */
-const CARD_RADIUS = 16;
+/**
+ * Matches `--process-card-radius`; the trace has to follow the same corner.
+ * That variable now reads the site-wide `--surface-radius` (14px, the CTA's
+ * corner).
+ */
+const CARD_RADIUS = 14;
 
 /**
  * Where the connector lands on a side edge, in border-box pixels from the top:
