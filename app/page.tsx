@@ -7,9 +7,9 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <TechSection />
       <Timeline />
       <Disciplines />
+      <TechSection />
     </>
   );
 }
