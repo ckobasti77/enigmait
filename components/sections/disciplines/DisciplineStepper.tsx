@@ -49,15 +49,16 @@ function Chevron({ className }: { className?: string }) {
 }
 
 /**
- * The stepper: an arrow above the column, an arrow below it, the dots between.
- * Below `lg` the whole rail turns horizontal and sits under the canvas, and the
- * chevrons turn with it - "previous and next" is the meaning, the axis is only
- * where there is room for it.
+ * The stepper: an arrow, the dots, an arrow, in a horizontal rail under the row.
+ * Horizontal at every width now, because the slide is horizontal at every width
+ * - a vertical rail with up/down chevrons next to a panel that travels sideways
+ * describes a motion the section no longer has.
  *
- * Real `<button>`s, never divs. One click is exactly one step, the ends are
- * `disabled` and there is no wrap: index 5 does not roll round to 0, because a
- * list that wraps has no ends, and the ends are what tell the visitor the
- * section is finished and the page carries on.
+ * Real `<button>`s, never divs. One click is exactly one step, and NOTHING here
+ * is `disabled`: the list wraps, so index 5 rolls round to 0 and 0 rolls back to
+ * 5. The ends used to be what told the visitor the section was finished and the
+ * page carried on; that job now belongs to the wheel's capture budget in
+ * `useDisciplineIndex`, which hands the page's scroll back after one lap.
  */
 export default function DisciplineStepper({
   index,
@@ -87,14 +88,13 @@ export default function DisciplineStepper({
   }, [index]);
 
   /**
-   * Both axes, because the rail has both: vertical between the canvas and the copy from
-   * `lg` up, horizontal under the canvas below it. A key that names a direction the rail is
-   * not currently drawn in still means "previous" or "next" - which is what the arrows
-   * already mean - so binding all four is one rule, not a special case.
+   * All four arrow keys, because the rail is horizontal but the wheel that drives it is
+   * vertical - a key naming either axis still means "previous" or "next", which is what the
+   * arrow buttons already mean.
    *
-   * The ends are respected here as they are everywhere else in this section: no wrap, and a
-   * key that cannot move the index is not consumed, so the page keeps its own arrow-key
-   * scrolling once the list is finished.
+   * The arrows WRAP, exactly as the buttons do, so they always move and are always consumed.
+   * Home and End name a destination rather than a direction, so a key that cannot move the
+   * index is left alone and the page keeps its own scrolling.
    */
   const onKeyDown = (event: KeyboardEvent<HTMLOListElement>) => {
     let next = index;
@@ -102,11 +102,11 @@ export default function DisciplineStepper({
     switch (event.key) {
       case "ArrowDown":
       case "ArrowRight":
-        next = index + 1;
+        next = index === last ? 0 : index + 1;
         break;
       case "ArrowUp":
       case "ArrowLeft":
-        next = index - 1;
+        next = index === 0 ? last : index - 1;
         break;
       case "Home":
         next = 0;
@@ -118,7 +118,6 @@ export default function DisciplineStepper({
         return;
     }
 
-    next = Math.max(0, Math.min(last, next));
     if (next === index) return;
 
     event.preventDefault();
@@ -133,10 +132,9 @@ export default function DisciplineStepper({
         className="discipline-arrow"
         data-dir="prev"
         aria-label="Previous discipline"
-        disabled={index === 0}
         onClick={() => onStep(-1)}
       >
-        <Chevron className="-rotate-90 lg:rotate-0" />
+        <Chevron className="-rotate-90" />
       </button>
 
       <ol
@@ -171,10 +169,9 @@ export default function DisciplineStepper({
         className="discipline-arrow"
         data-dir="next"
         aria-label="Next discipline"
-        disabled={index === last}
         onClick={() => onStep(1)}
       >
-        <Chevron className="rotate-90 lg:rotate-180" />
+        <Chevron className="rotate-90" />
       </button>
     </div>
   );

@@ -215,6 +215,10 @@ export const englishToSerbianEntries = [
   ["Discipline list", "Lista disciplina"],
   ["Previous discipline", "Prethodna disciplina"],
   ["Next discipline", "Sledeća disciplina"],
+  // The tutorial hint over the model. Both labels are always in the DOM and CSS
+  // picks one by pointer type, so both sides need a pair - see DisciplineHint.
+  ["Scroll here", "Skrolujte ovde"],
+  ["Swipe", "Prevucite"],
   // The service carousel's arrows. Separate pairs from the discipline reel's:
   // the table is read backwards for sr -> en, so no two pairs may share a side.
   ["Previous service", "Prethodna usluga"],

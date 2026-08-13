@@ -179,20 +179,30 @@ function onIdle(run: () => void, timeout = 2000): IdleHandle {
 /**
  * Keep `index - 1`, `index` and `index + 1` warm and let everything else go, on idle time.
  *
- * Eviction starts at distance 2 rather than 3 because a wheel step moves exactly one panel
- * and a dot click can jump anywhere: there is no distance at which "it might be next" is
- * worth holding memory for, and the jump case is precisely what the per-model `<Suspense>`
+ * Eviction starts at distance 2 rather than 3 because a step moves exactly one panel and a
+ * dot click can jump anywhere: there is no distance at which "it might be next" is worth
+ * holding memory for, and the jump case is precisely what the per-model `<Suspense>`
  * boundary is there to absorb.
+ *
+ * BOTH DISTANCES ARE CIRCULAR, because the slider wraps. The neighbours of the first
+ * discipline are the second and the LAST one, and the last one is exactly what a step back
+ * from index 0 now lands on - measured linearly it would be five slots away, evicted, and
+ * fetched again from cold on the one step most likely to be taken.
  *
  * Returns a canceller, so a fast run of steps schedules once per settled index instead of
  * once per step.
  */
 export function prefetchNeighbours(index: number): IdleHandle {
   return onIdle(() => {
-    preloadDiscipline(index - 1);
-    preloadDiscipline(index + 1);
+    const length = DISCIPLINE_ORDER.length;
+    const wrap = (value: number) => ((value % length) + length) % length;
+
+    preloadDiscipline(wrap(index - 1));
+    preloadDiscipline(wrap(index + 1));
+
     DISCIPLINE_ORDER.forEach((_, position) => {
-      if (Math.abs(position - index) > 1) releaseDiscipline(position);
+      const gap = Math.abs(position - index);
+      if (Math.min(gap, length - gap) > 1) releaseDiscipline(position);
     });
   });
 }

@@ -2542,14 +2542,19 @@ html[data-mood="alt"] {
    number that decides where those controls sit lives here, scoped to the
    section, the way `.process-timeline` does it.
 
+   The swap is a HORIZONTAL PUSH, the services carousel's: the model leaves one
+   way while the next arrives from the other, and the copy panel travels with it.
+   So the controls are the services carousel's too - a horizontal rail under the
+   row, and an active dot that stretches rather than one that swells.
+
    `--discipline-control` is the resting size of an arrow. It is the one knob
    worth turning: the arrows are the affordance for a wheel capture nobody can
    see, so they have to read as controls at a glance without becoming furniture.
    --------------------------------------------------------------------------- */
 .disciplines {
   --discipline-control: 2.25rem;
-  --discipline-dot: 0.4rem;
-  --discipline-dot-active: 0.55rem;
+  --discipline-dot: 0.5rem;
+  --discipline-dot-active: 1.6rem;
 }
 
 /* The capture region. `touch-action` is load-bearing, not a tidy-up: `pan-y`
@@ -2609,40 +2614,25 @@ html[data-mood="alt"] {
   }
 }
 
-/* Horizontal under the canvas on a phone, vertical between the canvas and the
-   copy from `lg` up. One instance, two axes - a second copy of the stepper
-   would be a second set of controls in the accessibility tree. */
+/* One rail under the whole row, horizontal at every width - the axis of the rail
+   is the axis of the push, and the push is horizontal everywhere now. It used to
+   turn vertical from `lg` up, next to a swap that travelled up and down. */
 .discipline-stepper {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  margin-top: 2.25rem;
 }
 
 .discipline-dots {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
-@media (min-width: 1024px) {
-  .discipline-stepper {
-    flex-direction: column;
-    align-self: stretch;
-    justify-content: space-between;
-    padding-block: 0.5rem;
-  }
-
-  .discipline-dots {
-    flex-direction: column;
-  }
-}
-
-/* GSAP writes `scale` and `y` on the arrows for the one-time hint pulse, so the
-   hover treatment is colour and border only. Two owners on one transform is the
-   kind of fight that shows up as a twitch and never as a stack trace. */
 .discipline-arrow {
   display: inline-flex;
   align-items: center;
@@ -2656,15 +2646,12 @@ html[data-mood="alt"] {
   transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
 }
 
-.discipline-arrow:hover:not(:disabled) {
+.discipline-arrow:hover {
   color: var(--primary);
   border-color: var(--border-strong);
 }
 
-.discipline-arrow:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
+/* No `:disabled` rule: the list wraps, so neither arrow ever reaches an end. */
 
 .discipline-dot {
   display: block;
@@ -2699,9 +2686,11 @@ html[data-mood="alt"] {
   opacity: 1;
 }
 
+/* The services carousel's active dot: it STRETCHES rather than swelling, so the
+   rail reads as a position on a strip rather than as six equal lamps with one
+   lit. Height is untouched, which is what makes it a bar and not a bigger dot. */
 .discipline-dot[aria-current="true"] {
   width: var(--discipline-dot-active);
-  height: var(--discipline-dot-active);
   background: var(--primary);
   opacity: 1;
 }
@@ -2710,13 +2699,101 @@ html[data-mood="alt"] {
    and a change of discipline cannot make the block jump. Stacking them is also
    what lets the inactive five stay in the DOM at `opacity: 0` instead of being
    unmounted - `display:none` here would take the copy out of the document, and
-   that copy is the section's whole SEO argument. */
+   that copy is the section's whole SEO argument.
+
+   THE CLIP IS WHAT MAKES THE PUSH A PUSH. The outgoing panel travels a full
+   panel width sideways, which without this would slide it straight over the
+   model column for the 200ms it takes to fade. `overflow: clip` and not
+   `hidden`: `hidden` would make this a scroll container, and a focused CTA
+   inside a scroll container gets scrolled into view by the browser - a
+   horizontal jog on every step. The clip margin gives the panel's own glow and
+   focus rings their bleed back. */
 .discipline-copy-stack {
   display: grid;
+  overflow: clip;
+  overflow-clip-margin: 0.75rem;
 }
 
-.discipline-copy-stack > .discipline-panel {
+.discipline-copy-stack > .discipline-slide {
   grid-area: 1 / 1;
+}
+
+/* The push is written on this wrapper and never on the panel: `DisciplineCopy`
+   owns its own `transform` for the word-by-word arrival, and two owners on one
+   transform is a fight that shows up as a twitch and never as a stack trace. */
+.discipline-slide {
+  min-width: 0;
+}
+
+/* ─── The tutorial hint ────────────────────────────────────────────────────
+   A pill over the bottom of the model that says what the wheel does, because
+   the capture has no scrollbar, no handle and no cursor change to give it away.
+   It appears on a clock and retires on the first input - the schedule is in
+   `disciplinesTiming.ts`, this is only the fade.
+
+   `pointer-events: none` is load-bearing rather than tidy: the hint sits inside
+   the capture region, and a pill that swallowed the wheel event would be an
+   affordance that blocks the thing it is advertising. */
+.discipline-hint {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--card-trace) 30%, var(--border-strong));
+  background: var(--surface-overlay);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  pointer-events: none;
+  /* The site's glow, at the strength the service arrows use on hover. */
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--card-trace) 22%, transparent),
+    0 0 24px var(--card-trace-glow);
+  opacity: 0;
+  translate: -50% 0.5rem;
+  transition: opacity var(--discipline-hint-fade, 0.45s) ease,
+    translate var(--discipline-hint-fade, 0.45s) ease;
+}
+
+.discipline-hint[data-visible="true"] {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+.discipline-hint-glyph {
+  color: var(--card-trace);
+}
+
+/* WHICH LABEL SHOWS IS A MEDIA QUERY, NOT A `matchMedia` READ IN JS. Both are
+   rendered, so the server and the client agree and `LanguageProvider` has both
+   text nodes to translate on its first walk. The query is `CAPTURE_QUERY` from
+   `disciplinesTiming.ts` - the hint has to name the gesture that actually works
+   here, and below this line the wheel is deliberately left to the page. */
+.discipline-hint-label--wheel {
+  display: none;
+}
+
+@media (pointer: fine) and (min-width: 768px) {
+  .discipline-hint-label--wheel {
+    display: inline;
+  }
+
+  .discipline-hint-label--swipe {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discipline-hint {
+    transition: opacity var(--discipline-hint-fade, 0.45s) ease;
+    translate: -50% 0;
+  }
 }
 
 /* REDUCED MOTION / SAVE-DATA / LOW BATTERY: the same six panels, read top to bottom.

@@ -23,10 +23,13 @@ function normaliseDelta(event: WheelEvent) {
   return event.deltaY;
 }
 
+/** Which way the strip travels. Forward means the current slide leaves to the left. */
+export type SlideDirection = 1 | -1;
+
+type Slide = { index: number; direction: SlideDirection };
+
 type DisciplineIndexOptions = {
   count: number;
-  /** Fires once, on the first pointer that enters the column. The arrow hint. */
-  onFirstPointerEnter?: () => void;
 };
 
 /**
@@ -40,39 +43,57 @@ type DisciplineIndexOptions = {
  * The wheel listener is on the 3D column, not on the section and not on the
  * window, so it only ever sees events the cursor is already over. Everywhere
  * else on the section the page scrolls, because nothing is listening there.
+ *
+ * DIRECTION IS STATE, NOT A DERIVATION. It used to be recovered downstream by
+ * comparing the new index with the old one, which is only correct for a list
+ * with ends: now that the list wraps, 5 -> 0 is a step FORWARD and 0 -> 5 is a
+ * step back, and no comparison of two numbers can tell those from a jump the
+ * other way. So whoever moved the index says which way it went, and a dot -
+ * which names a destination rather than a direction - gets the short way round.
  */
-export function useDisciplineIndex({
-  count,
-  onFirstPointerEnter,
-}: DisciplineIndexOptions) {
-  const [index, setIndex] = useState(0);
+export function useDisciplineIndex({ count }: DisciplineIndexOptions) {
+  const [slide, setSlide] = useState<Slide>({ index: 0, direction: 1 });
   const indexRef = useRef(0);
   const columnRef = useRef<HTMLDivElement | null>(null);
 
+  /** The stage is on screen. The hint's clock, and what re-arms the wheel budget. */
+  const [stageVisible, setStageVisible] = useState(false);
+
+  /**
+   * The visitor has driven the slider at least once. Only ever goes false ->
+   * true, and the mirror in a ref is what lets the listeners check it without
+   * being re-attached every time it changes.
+   */
+  const [interacted, setInteracted] = useState(false);
+  const interactedRef = useRef(false);
+
+  const markInteracted = useCallback(() => {
+    if (interactedRef.current) return;
+    interactedRef.current = true;
+    setInteracted(true);
+  }, []);
+
   const goTo = useCallback(
-    (next: number) => {
-      const clamped = Math.max(0, Math.min(count - 1, next));
-      if (clamped === indexRef.current) return;
-      indexRef.current = clamped;
-      setIndex(clamped);
+    (target: number, direction?: SlideDirection) => {
+      markInteracted();
+
+      const next = ((target % count) + count) % count;
+      if (next === indexRef.current) return;
+
+      // Distance travelled forwards to get there. Under half the list means
+      // forward is the short way round; anything more and it is quicker back.
+      const forward = ((next - indexRef.current) % count + count) % count;
+
+      indexRef.current = next;
+      setSlide({ index: next, direction: direction ?? (forward * 2 <= count ? 1 : -1) });
     },
-    [count]
+    [count, markInteracted]
   );
 
   const step = useCallback(
-    (direction: 1 | -1) => goTo(indexRef.current + direction),
+    (direction: SlideDirection) => goTo(indexRef.current + direction, direction),
     [goTo]
   );
-
-  /**
-   * Kept in a ref rather than in the dependency array: the callback is only
-   * ever read from inside a listener, and re-attaching a `{ passive: false }`
-   * wheel listener because a parent re-rendered is a wobble nobody needs.
-   */
-  const firstEnterRef = useRef(onFirstPointerEnter);
-  useEffect(() => {
-    firstEnterRef.current = onFirstPointerEnter;
-  }, [onFirstPointerEnter]);
 
   useEffect(() => {
     const column = columnRef.current;
@@ -88,7 +109,28 @@ export function useDisciplineIndex({
     let buffer = 0;
     let lastEventAt = 0;
     let lastStepAt = 0;
-    let hinted = false;
+
+    /**
+     * WHEEL_CAPTURE_BUDGET - what replaced the edge release.
+     *
+     * The old rule was: at index 0 going up and at the last index going down,
+     * do not touch the event, so it reaches Lenis and the page scrolls on. That
+     * rule needs ends, and a wrapping list has none - without a replacement a
+     * cursor parked over the model eats every delta forever and the visitor can
+     * never reach the footer. That is not an ugly bug, it is a blocked site.
+     *
+     * So the wheel gets a budget instead: one list's worth of steps per visit to
+     * the section, after which the deltas are left alone and the page scrolls
+     * on. `count - 1` is the same journey the old ends allowed - first model to
+     * last - and the budget is refilled when the stage leaves the viewport, so
+     * coming back to the section gives it back.
+     *
+     * The budget is the WHEEL's alone. Dots, arrows, the keyboard and the swipe
+     * wrap without limit, because none of them is competing with the page's own
+     * scroll for the same gesture.
+     */
+    const WHEEL_CAPTURE_BUDGET = count - 1;
+    let capturedSteps = 0;
 
     const onWheel = (event: WheelEvent) => {
       // Touch and narrow viewports never capture: there the vertical gesture is
@@ -99,21 +141,12 @@ export function useDisciplineIndex({
       // A horizontal wheel (shift-scroll, a tilt wheel) is not ours.
       if (delta === 0) return;
 
-      const direction = delta > 0 ? 1 : -1;
-      const current = indexRef.current;
+      // Any wheel over the stage retires the hint, including one this listener
+      // is about to hand straight back to the page: the visitor has clearly
+      // found the section, which is all the hint was there to help with.
+      markInteracted();
 
-      /**
-       * EDGE RELEASE. This runs BEFORE the cooldown and before the buffer, and
-       * that order is the whole rule: at index 0 going up and at the last index
-       * going down the event is not touched at all, so it reaches Lenis and the
-       * page scrolls on immediately. Without this a cursor parked over the
-       * model eats every delta and the visitor can never reach the footer -
-       * which is not an ugly bug, it is a blocked site.
-       */
-      if (
-        (direction < 0 && current === 0) ||
-        (direction > 0 && current === count - 1)
-      ) {
+      if (capturedSteps >= WHEEL_CAPTURE_BUDGET) {
         buffer = 0;
         return;
       }
@@ -140,46 +173,45 @@ export function useDisciplineIndex({
       buffer += delta;
       if (Math.abs(buffer) <= WHEEL_STEP_THRESHOLD) return;
 
-      const stepDirection = buffer > 0 ? 1 : -1;
+      const stepDirection: SlideDirection = buffer > 0 ? 1 : -1;
       buffer = 0;
       lastStepAt = now;
-      goTo(indexRef.current + stepDirection);
+      capturedSteps += 1;
+      goTo(indexRef.current + stepDirection, stepDirection);
     };
 
+    /**
+     * Both axes, because the rail is horizontal but the wheel that drives it is
+     * vertical - a key that names either direction still means "previous" or
+     * "next". The arrows always move now that the list wraps, so they are always
+     * consumed; Home and End name a destination and are left alone when the
+     * index is already on it, which is the one case where the page should keep
+     * its own scrolling.
+     */
     const onKeyDown = (event: KeyboardEvent) => {
-      const current = indexRef.current;
-      let next = current;
-
       switch (event.key) {
         case "ArrowDown":
-          next = current + 1;
-          break;
-        case "ArrowUp":
-          next = current - 1;
-          break;
-        case "Home":
-          next = 0;
-          break;
-        case "End":
-          next = count - 1;
-          break;
-        default:
+        case "ArrowRight":
+          event.preventDefault();
+          step(1);
           return;
+        case "ArrowUp":
+        case "ArrowLeft":
+          event.preventDefault();
+          step(-1);
+          return;
+        case "Home":
+          if (indexRef.current === 0) return;
+          event.preventDefault();
+          goTo(0);
+          return;
+        case "End":
+          if (indexRef.current === count - 1) return;
+          event.preventDefault();
+          goTo(count - 1);
+          return;
+        default:
       }
-
-      next = Math.max(0, Math.min(count - 1, next));
-      // Same contract as the wheel: a key that cannot move the index is not
-      // consumed, so at the ends the page keeps its own arrow-key scrolling.
-      if (next === current) return;
-
-      event.preventDefault();
-      goTo(next);
-    };
-
-    const onPointerEnter = () => {
-      if (hinted || !capture.matches) return;
-      hinted = true;
-      firstEnterRef.current?.();
     };
 
     /**
@@ -197,6 +229,7 @@ export function useDisciplineIndex({
       swiping = true;
       swipeX = event.clientX;
       swipeY = event.clientY;
+      markInteracted();
     };
 
     const onPointerUp = (event: PointerEvent) => {
@@ -218,20 +251,43 @@ export function useDisciplineIndex({
 
     column.addEventListener("wheel", onWheel, { passive: false });
     column.addEventListener("keydown", onKeyDown);
-    column.addEventListener("pointerenter", onPointerEnter);
     column.addEventListener("pointerdown", onPointerDown);
     column.addEventListener("pointerup", onPointerUp);
     column.addEventListener("pointercancel", onPointerCancel);
 
+    /**
+     * One observer, two jobs, and they are the same fact: the stage is on
+     * screen. It starts the hint's clock and it refills the wheel's budget, so
+     * a visitor who scrolls away and comes back gets a fresh section rather
+     * than a spent one. A third of the box, so "visible" means visible and not
+     * a sliver clipping the fold.
+     */
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setStageVisible(entry.isIntersecting);
+        if (!entry.isIntersecting) capturedSteps = 0;
+      },
+      { threshold: 0.35 }
+    );
+    observer.observe(column);
+
     return () => {
       column.removeEventListener("wheel", onWheel);
       column.removeEventListener("keydown", onKeyDown);
-      column.removeEventListener("pointerenter", onPointerEnter);
       column.removeEventListener("pointerdown", onPointerDown);
       column.removeEventListener("pointerup", onPointerUp);
       column.removeEventListener("pointercancel", onPointerCancel);
+      observer.disconnect();
     };
-  }, [count, goTo, step]);
+  }, [count, goTo, markInteracted, step]);
 
-  return { index, columnRef, goTo, step };
+  return {
+    index: slide.index,
+    direction: slide.direction,
+    columnRef,
+    goTo,
+    step,
+    stageVisible,
+    interacted,
+  };
 }

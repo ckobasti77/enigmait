@@ -4,16 +4,17 @@
  *
  * WHO DRIVES WHAT, and this is the division SECTION_SPEC asks to see written down:
  *
- *   GSAP timeline  ->  scale, opacity, emissiveIntensity, and the reel strip's position.y
+ *   GSAP timeline  ->  scale, opacity, emissiveIntensity, and the reel strip's position
  *   useFrame       ->  the model group's rotation.x / rotation.y and its own position.y
  *
  * The two lists do not intersect. Two schedulers over one value is jitter that does not
  * debug, and the failure mode is a model that stutters only while a swap is in flight -
  * which is the hardest kind of stutter to catch, because it never reproduces at rest.
  *
- * Note that the reel and the model both write a `position.y`, and that is not a collision:
+ * Note that the strip and the model both write a `position`, and that is not a collision:
  * the reel writes the STRIP's, the model writes its own, and the strip is the parent. The
- * float rides on top of the slide because the transforms compose, which is the point.
+ * float rides on top of the slide because the transforms compose, which is the point - and
+ * they are on different axes anyway now that the strip travels sideways.
  */
 
 const TAU = Math.PI * 2;
@@ -88,6 +89,11 @@ export const MAX_FRAME_DELTA = 0.05; // s
    on an arrow or a dot, and the arrow keys while that column has focus - plus a
    horizontal swipe on touch. Everywhere else on the section the page just
    scrolls, because nothing is listening there.
+
+   The list WRAPS: after the last discipline comes the first, in both directions.
+   Which removes the ends - and the ends used to be what handed the page's scroll
+   back. See `WHEEL_CAPTURE_BUDGET` in `useDisciplineIndex.ts` for what replaced
+   them.
    --------------------------------------------------------------------------- */
 
 /**
@@ -127,40 +133,72 @@ export const SWIPE_THRESHOLD_PX = 40;
 export const SWIPE_DOMINANCE = 1.5;
 
 /* ---------------------------------------------------------------------------
-   The swap: a vertical reel.
+   The push: one horizontal slide, two media.
 
-   The six models hang on one vertical strip with air between them, and a step
-   moves the strip. Scroll down and the model on screen slides UP and out while
-   the next one comes up from below into its place; scroll up and the same thing
-   runs the other way. One motion carrying two models, not two animations that
-   happen to overlap - which is also why there is one tween and one easing here
-   rather than an exit curve and an entrance curve.
+   The six models hang on one HORIZONTAL strip with air between them, and a step
+   moves the strip: forward, the model on screen leaves to the left while the
+   next one arrives from the right. The copy panel does exactly the same thing in
+   the DOM at exactly the same moment, so the row reads as one slide rather than
+   as a model swap that a paragraph happens to follow.
+
+   ONE DURATION AND ONE CURVE FOR BOTH, and that is what the three constants
+   below are for. The DOM half is driven by the Web Animations API and wants a
+   CSS string; the reel is inside `<Canvas>` and wants a GSAP ease. Both are
+   derived from `SLIDE_BEZIER` here rather than typed twice, because two curves
+   that are "about the same" is precisely how a push starts reading as two
+   separate animations.
+
+   The numbers are `ServiceCarousel`'s - the services carousel is the pattern
+   this section was asked to match, and matching it means matching its clock.
    --------------------------------------------------------------------------- */
+
+/** Control points of `cubic-bezier(0.65, 0, 0.24, 1)` - the services push curve. */
+export const SLIDE_BEZIER = [0.65, 0, 0.24, 1] as const;
+export const SLIDE_DURATION = 0.62; // s
+
+/** For the Web Animations API (the copy panels). */
+export const SLIDE_EASE_CSS = `cubic-bezier(${SLIDE_BEZIER.join(", ")})`;
+
+/**
+ * For GSAP (the reel). `CustomEase` reads an SVG path, and a cubic-bezier maps
+ * onto one exactly: the two control points ARE the curve's two handles between
+ * (0,0) and (1,1).
+ */
+export const SLIDE_EASE_PATH = `M0,0 C${SLIDE_BEZIER[0]},${SLIDE_BEZIER[1]} ${SLIDE_BEZIER[2]},${SLIDE_BEZIER[3]} 1,1`;
+export const SLIDE_EASE_ID = "disciplineSlide";
 
 /**
  * Empty space between two models on the strip, in world units. The export
  * normalises every bbox to 2.0 on its longest axis, so this is the gap on top
- * of that - enough that the outgoing model is clear of the frame before the
- * incoming one is halfway in.
+ * of that.
+ *
+ * BIGGER THAN THE OLD VERTICAL GAP (0.9), and it has to be: the viewport is
+ * 4/3, so the frame is a third wider than it is tall. At this camera the visible
+ * width at the model's depth is ~3.14 world units, so a model whose longest axis
+ * is 2.0 needs the strip to travel more than 2.57 before it is clear of the
+ * edge - which the old vertical span did not cover.
  */
-export const MODEL_SLOT_GAP = 0.9;
+export const MODEL_SLOT_GAP = 1.4;
 export const MODEL_SLOT_SPAN = 2 + MODEL_SLOT_GAP;
-
-/**
- * SECTION_SPEC's transition table, "ulaz model": 0.80 s, `power3.out`. The reel
- * IS the entrance, so it takes the entrance's numbers - the arriving model is
- * what the eye follows, and a decelerating curve is what lets it land instead
- * of stop.
- */
-export const MODEL_SWAP_DURATION = 0.8; // s
-export const MODEL_SWAP_EASE = "power3.out";
 
 /* ---------------------------------------------------------------------------
    The copy panel, straight off SECTION_SPEC's transition table.
 
    Offsets are measured from the moment the index changes, which is the moment
-   the reel starts moving - so the copy lands into a model that has already
-   arrived rather than racing it. Kicker, title and lede all carry the site's
+   the push starts - so the copy lands into a model that has already arrived
+   rather than racing it.
+
+   THEY WERE ALL PULLED ~0,30 s EARLIER WHEN THE SWAP BECAME A PUSH, and the
+   exit was lengthened to meet them. Under the old vertical swap the panel
+   cross-faded in place: the outgoing copy could go in 0,20 s and the incoming
+   start at 0,60 s, because an empty box that is not moving reads as a pause.
+   A panel that TRAVELS while it is empty reads as a bug - the eye follows the
+   motion and finds nothing in it. So the outgoing copy now stays legible for
+   most of its travel and the incoming words start arriving while it is still
+   coming in, which means the column always has something in it. The order and
+   the spread are untouched; only the offsets moved.
+
+   Kicker, title and lede all carry the site's
    word-by-word arrival - every line of copy on the site reveals that way, and a
    panel where only the headline did read as two different sites. Only the CTA
    moves as a block: it is a control, and a control that assembles itself out of
@@ -191,13 +229,18 @@ export const MODEL_SWAP_EASE = "power3.out";
 export const STEPPER_DOT_DURATION = 0.28; // s
 export const STEPPER_DOT_EASE_CSS = "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 
-/** izlaz | tekst panela | 0,00 | 0,20 | power2.in | opacity 1->0, y 0->-12 */
-export const COPY_EXIT_DURATION = 0.2;
+/**
+ * izlaz | tekst panela | 0,00 | 0,42 | power2.in | opacity 1->0, y 0->-12
+ *
+ * Two thirds of the push, so the copy that is leaving is still readable for most
+ * of the distance it travels. The `.discipline-copy-stack` clip takes the rest.
+ */
+export const COPY_EXIT_DURATION = 0.42;
 export const COPY_EXIT_EASE = "power2.in";
 export const COPY_EXIT_Y = -12;
 
-/** ulaz | naslov, po reci | 0,60 | 0,46 | power3.out | blur 8->0, yPercent 22->0 */
-export const COPY_TITLE_START = 0.6;
+/** ulaz | naslov, po reci | 0,30 | 0,46 | power3.out | blur 8->0, yPercent 22->0 */
+export const COPY_TITLE_START = 0.3;
 export const COPY_TITLE_DURATION = 0.46;
 export const COPY_TITLE_BLUR = 8;
 export const COPY_TITLE_Y_PERCENT = 22;
@@ -210,8 +253,8 @@ export const COPY_TITLE_STAGGER_EACH = 0.05;
  */
 export const COPY_TITLE_STAGGER_MAX = 0.25;
 
-/** ulaz | kicker, po reci | 0,78 | 0,32 | power3.out | blur 5->0, yPercent 16->0 */
-export const COPY_KICKER_START = 0.78;
+/** ulaz | kicker, po reci | 0,46 | 0,32 | power3.out | blur 5->0, yPercent 16->0 */
+export const COPY_KICKER_START = 0.46;
 export const COPY_KICKER_DURATION = 0.32;
 export const COPY_KICKER_BLUR = 5;
 export const COPY_KICKER_Y_PERCENT = 16;
@@ -220,15 +263,15 @@ export const COPY_KICKER_STAGGER_MAX = 0.14;
 /** Only used when the kicker is past the splitter's word cap and moves as one piece. */
 export const COPY_KICKER_Y = 14;
 
-/** ulaz | lede, po reci | 0,88 | 0,30 | power3.out | blur 6->0, yPercent 14->0 */
-export const COPY_LEDE_START = 0.88;
+/** ulaz | lede, po reci | 0,54 | 0,30 | power3.out | blur 6->0, yPercent 14->0 */
+export const COPY_LEDE_START = 0.54;
 export const COPY_LEDE_DURATION = 0.3;
 export const COPY_LEDE_BLUR = 6;
 export const COPY_LEDE_Y_PERCENT = 14;
 export const COPY_LEDE_STAGGER_EACH = 0.028;
 /**
  * The lede is the longest line in the panel and the last thing to land, so its
- * ceiling is what sets the length of the whole swap: 0,88 + 0,22 + 0,30 = 1,40 s,
+ * ceiling is what sets the length of the whole swap: 0,54 + 0,22 + 0,30 = 1,06 s,
  * inside the 1,44 s plafon. Raise it and the panel outlives its own model.
  */
 export const COPY_LEDE_STAGGER_MAX = 0.22;
@@ -236,19 +279,28 @@ export const COPY_LEDE_STAGGER_MAX = 0.22;
 export const COPY_LEDE_Y = 12;
 
 /** The CTA follows the lede's start by this much - the one piece that stays a block. */
-export const COPY_CTA_START = 0.94;
+export const COPY_CTA_START = 0.6;
 
 export const COPY_ENTER_EASE = "power2.out";
 /** Every word-by-word arrival in the panel uses the site's reveal curve. */
 export const COPY_WORD_EASE = "power3.out";
 
 /**
- * The affordance. On the first `pointerenter` over the column the arrows pulse
- * once, so the wheel capture is discoverable without a line of copy explaining
- * it. Emphasis, not entrance: scale for the beat, a short settle after it, no
- * overshoot - the section's personality is Premium.
+ * THE AFFORDANCE, and it is a sentence now rather than a pulse.
+ *
+ * The wheel capture is invisible until you try it. The arrows used to twitch
+ * once on the first `pointerenter`, which says "something here is clickable" and
+ * nothing about the wheel - and says it only to a cursor that has already found
+ * the column. This says what to do, in words, to anyone who has stopped.
+ *
+ * It is on a clock rather than on hover for the same reason: the visitor who
+ * needs it is the one who is NOT moving. First appearance is late enough that
+ * someone who is already scrolling past never sees it; the repeat is long enough
+ * that it reads as a reminder rather than as a blinking sign. Any input at all -
+ * a wheel notch, a swipe, a dot, an arrow key - retires it for the page's life.
  */
-export const HINT_PULSE_SCALE = 1.15;
-export const HINT_PULSE_SHIFT = 4; // px, each arrow leans the way it points
-export const HINT_PULSE_IN = 0.18; // s
-export const HINT_PULSE_OUT = 0.32; // s
+export const HINT_FIRST_DELAY_MS = 6000;
+export const HINT_REPEAT_MS = 20000;
+export const HINT_VISIBLE_MS = 3600;
+/** Fade in and out, in seconds - handed to the stylesheet as a custom property. */
+export const HINT_FADE = 0.45;

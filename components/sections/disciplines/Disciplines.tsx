@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import gsap from "gsap";
+import { useEffect, useMemo, useRef } from "react";
 
 import { DISCIPLINE_ORDER, disciplines } from "@/constants/disciplines";
 import { useTheme } from "@/app/_components/ThemeProvider";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useWebGLSupport } from "@/hooks/useWebGLSupport";
 import DisciplineCopy from "./DisciplineCopy";
+import DisciplineHint from "./DisciplineHint";
 import DisciplineStage from "./DisciplineStage";
 import DisciplineStepper from "./DisciplineStepper";
 import DisciplineStill from "./DisciplineStill";
@@ -15,12 +15,7 @@ import { observeFirstModel, prefetchNeighbours } from "./disciplinePrefetch";
 import { readEnvironmentColors, type EnvironmentColors } from "./environment";
 import { SECTION_KICKER, SECTION_LEDE, SECTION_TITLE } from "./sectionCopy";
 import { useDisciplineIndex } from "./useDisciplineIndex";
-import {
-  HINT_PULSE_IN,
-  HINT_PULSE_OUT,
-  HINT_PULSE_SCALE,
-  HINT_PULSE_SHIFT,
-} from "./disciplinesTiming";
+import { SLIDE_DURATION, SLIDE_EASE_CSS } from "./disciplinesTiming";
 
 /**
  * The section shell.
@@ -41,7 +36,6 @@ export default function DisciplinesShell({
   const webglSupported = useWebGLSupport();
 
   const sectionRef = useRef<HTMLElement>(null);
-  const hintRef = useRef<gsap.core.Timeline | null>(null);
 
   /**
    * THE TWO GATES, AND THE ONE THAT HOLDS THEM BOTH SHUT UNTIL HYDRATION IS OVER.
@@ -72,63 +66,71 @@ export default function DisciplinesShell({
   const renders3D = settled && !prefersReducedMotion && webglSupported;
   const showsStill = settled && !prefersReducedMotion && !webglSupported;
 
-  /**
-   * The affordance, and the reason there is any GSAP in this phase at all: the
-   * wheel capture is invisible until you try it, so the first pointer over the
-   * column makes the arrows pulse once. Built paused inside the context, so it
-   * is recorded and reverted with everything else and the `pointerenter` handler
-   * only ever restarts an object that already exists - it never creates a tween
-   * outside the context that cleanup would then miss.
-   */
-  const playHint = useCallback(() => hintRef.current?.restart(), []);
-
-  const { index, columnRef, goTo, step } = useDisciplineIndex({
-    count: DISCIPLINE_ORDER.length,
-    onFirstPointerEnter: playHint,
-  });
+  const { index, direction, columnRef, goTo, step, stageVisible, interacted } =
+    useDisciplineIndex({ count: DISCIPLINE_ORDER.length });
 
   const active = disciplines[DISCIPLINE_ORDER[index]];
 
+  /**
+   * THE COPY'S HALF OF THE PUSH.
+   *
+   * `ServiceCarousel` does this with a two-slot track that is twice the stage
+   * wide, and it can: it mounts one panel at a time. Here all six are in the DOM
+   * at once and stay there - that is the section's whole SEO argument - so the
+   * geometry is copied and the mechanism is not. Six panels share one grid cell,
+   * so the outgoing one is already sitting exactly on top of the incoming one;
+   * sending it a slide to one side while the incoming arrives from the other,
+   * over the same duration and curve, IS the push, with nothing mounted or
+   * unmounted to do it.
+   *
+   * The transform goes on a WRAPPER and never on the panel. `DisciplineCopy`
+   * writes `y` and `opacity` on its own root for its arrival, and two owners on
+   * one transform is a fight that shows up as a twitch and never as a stack
+   * trace.
+   *
+   * No `fill`, deliberately. When the animation ends both elements drop back to
+   * their resting `transform: none` - the outgoing one at `opacity: 0` by then,
+   * so the snap is invisible - which means there is no held state for the next
+   * step to clear and no way for a panel to be stranded off-stage.
+   */
+  const slideRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const previousIndexRef = useRef(index);
+  const pushRef = useRef<Animation[]>([]);
+
   useEffect(() => {
-    if (reduced) return;
+    const from = previousIndexRef.current;
+    previousIndexRef.current = index;
+    if (from === index) return;
 
-    const context = gsap.context(() => {
-      hintRef.current = gsap
-        .timeline({ paused: true })
-        .to(
-          ".discipline-arrow",
-          {
-            scale: HINT_PULSE_SCALE,
-            duration: HINT_PULSE_IN,
-            ease: "power2.out",
-          },
-          0
-        )
-        // Each arrow leans the way it points, so the pulse says "this moves the
-        // model up and down" rather than just "something here is clickable".
-        .to(
-          '.discipline-arrow[data-dir="prev"]',
-          { y: -HINT_PULSE_SHIFT, duration: HINT_PULSE_IN, ease: "power2.out" },
-          0
-        )
-        .to(
-          '.discipline-arrow[data-dir="next"]',
-          { y: HINT_PULSE_SHIFT, duration: HINT_PULSE_IN, ease: "power2.out" },
-          0
-        )
-        .to(".discipline-arrow", {
-          scale: 1,
-          y: 0,
-          duration: HINT_PULSE_OUT,
-          ease: "power2.inOut",
-        });
-    }, sectionRef);
+    const outgoing = slideRefs.current[from];
+    const incoming = slideRefs.current[index];
+    if (!outgoing || !incoming) return;
 
-    return () => {
-      hintRef.current = null;
-      context.revert();
+    // A step that lands mid-push takes over from it rather than stacking on it.
+    pushRef.current.forEach((animation) => animation.cancel());
+
+    const options: KeyframeAnimationOptions = {
+      duration: SLIDE_DURATION * 1000,
+      easing: SLIDE_EASE_CSS,
     };
-  }, [reduced]);
+
+    pushRef.current = [
+      outgoing.animate(
+        [
+          { transform: "translateX(0%)" },
+          { transform: `translateX(${-direction * 100}%)` },
+        ],
+        options
+      ),
+      incoming.animate(
+        [
+          { transform: `translateX(${direction * 100}%)` },
+          { transform: "translateX(0%)" },
+        ],
+        options
+      ),
+    ];
+  }, [direction, index]);
 
   /**
    * The first model, fetched a viewport and a half before the section arrives - see
@@ -202,56 +204,86 @@ export default function DisciplinesShell({
             ))}
           </ol>
         ) : (
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-10">
-            {/*
-              The capture region, and deliberately only this. The wheel listener, the
-              arrow keys and the touch swipe all hang off this element, so a cursor
-              over the headline, the lede or the CTA never meets a listener at all
-              and the page scrolls on towards the footer.
-            */}
-            <div
-              ref={columnRef}
-              tabIndex={0}
-              role="group"
-              aria-label="Discipline model. Use the arrow keys or the mouse wheel to change discipline."
-              className="discipline-column"
-            >
+          <div
+            className="discipline-slider"
+            aria-roledescription="carousel"
+            aria-label={SECTION_TITLE}
+          >
+            <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
               {/*
-                The box, reserved by `aspect-ratio` before a single byte of model or image
-                is requested - so nothing below it moves when either lands, in any of the
-                three branches inside it. `role="img"` with a label that changes with the
-                model is the HeroCube pattern: what is inside is a picture to a screen
-                reader, whichever way it was drawn.
+                The capture region, and deliberately only this. The wheel listener, the
+                arrow keys and the touch swipe all hang off this element, so a cursor
+                over the headline, the lede or the CTA never meets a listener at all
+                and the page scrolls on towards the footer.
               */}
               <div
-                role="img"
-                aria-label={`${active.title} shown as a 3D device`}
-                className="discipline-viewport"
+                ref={columnRef}
+                tabIndex={0}
+                role="group"
+                aria-label="Discipline model. Use the arrow keys or the mouse wheel to change discipline."
+                className="discipline-column"
               >
-                {renders3D ? (
-                  <DisciplineStage index={index} colors={colors} theme={theme} />
-                ) : null}
-                {showsStill ? <DisciplineStill index={index} /> : null}
+                {/*
+                  The box, reserved by `aspect-ratio` before a single byte of model or image
+                  is requested - so nothing below it moves when either lands, in any of the
+                  three branches inside it. `role="img"` with a label that changes with the
+                  model is the HeroCube pattern: what is inside is a picture to a screen
+                  reader, whichever way it was drawn.
+                */}
+                <div
+                  role="img"
+                  aria-label={`${active.title} shown as a 3D device`}
+                  className="discipline-viewport"
+                >
+                  {renders3D ? (
+                    <DisciplineStage
+                      index={index}
+                      direction={direction}
+                      colors={colors}
+                      theme={theme}
+                    />
+                  ) : null}
+                  {showsStill ? <DisciplineStill index={index} /> : null}
+                </div>
+
+                {/*
+                  Mounted with the stage, armed until the visitor touches
+                  anything. The two are separate on purpose: unmounting is what
+                  resets the hint's clock, and it may only happen while the
+                  section is off screen - disarming while it is on screen has to
+                  leave the pill in place long enough to fade out.
+                */}
+                {stageVisible ? <DisciplineHint armed={!interacted} /> : null}
+              </div>
+
+              {/*
+                All six panels, always. They share one grid cell, so the tallest holds
+                the height and nothing jumps on a change, and the inactive five are
+                hidden with plain `opacity` plus `inert` - never `display:none`, never
+                conditionally mounted, which is the whole SEO argument for the section.
+
+                The wrapper per panel is what the push is written on - see the effect
+                above. It carries no styling of its own beyond the shared grid cell.
+              */}
+              <div className="discipline-copy-stack">
+                {DISCIPLINE_ORDER.map((key, position) => (
+                  <div
+                    key={key}
+                    className="discipline-slide"
+                    ref={(node) => {
+                      slideRefs.current[position] = node;
+                    }}
+                  >
+                    <DisciplineCopy
+                      discipline={disciplines[key]}
+                      active={position === index}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
 
             <DisciplineStepper index={index} onStep={step} onSelect={goTo} />
-
-            {/*
-              All six panels, always. They share one grid cell, so the tallest holds
-              the height and nothing jumps on a change, and the inactive five are
-              hidden with plain `opacity` plus `inert` - never `display:none`, never
-              conditionally mounted, which is the whole SEO argument for the section.
-            */}
-            <div className="discipline-copy-stack">
-              {DISCIPLINE_ORDER.map((key, position) => (
-                <DisciplineCopy
-                  key={key}
-                  discipline={disciplines[key]}
-                  active={position === index}
-                />
-              ))}
-            </div>
           </div>
         )}
       </div>

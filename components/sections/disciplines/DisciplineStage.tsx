@@ -2,9 +2,10 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { AgXToneMapping, SRGBColorSpace } from "three";
+import { AgXToneMapping, SRGBColorSpace, Vector3 } from "three";
 import type { Group } from "three";
 import gsap from "gsap";
+import { CustomEase } from "gsap/CustomEase";
 import clsx from "clsx";
 
 import { DISCIPLINE_ORDER, disciplines } from "@/constants/disciplines";
@@ -15,11 +16,22 @@ import {
   type EnvironmentColors,
 } from "./environment";
 import { type DisciplineTheme } from "./materials";
+import type { SlideDirection } from "./useDisciplineIndex";
 import {
   MODEL_SLOT_SPAN,
-  MODEL_SWAP_DURATION,
-  MODEL_SWAP_EASE,
+  SLIDE_DURATION,
+  SLIDE_EASE_ID,
+  SLIDE_EASE_PATH,
 } from "./disciplinesTiming";
+
+gsap.registerPlugin(CustomEase);
+
+/**
+ * The services carousel's curve, in GSAP's terms. Created once at module scope
+ * because `CustomEase.create` registers the ease by name globally - doing it per
+ * mount would re-register the same curve on every step.
+ */
+const SLIDE_EASE = CustomEase.create(SLIDE_EASE_ID, SLIDE_EASE_PATH);
 
 /**
  * One camera for all six. SECTION_SPEC fixes the direction; the radius here is the spec's
@@ -29,6 +41,32 @@ import {
  */
 export const CAMERA_POSITION: [number, number, number] = [-1.86, 1.4, 3.72];
 export const CAMERA_FOV = 30;
+
+/**
+ * THE PUSH TRAVELS ALONG THIS, NOT ALONG WORLD X.
+ *
+ * The camera sits off-axis (it is what makes the 3/4 read), so world +x is not
+ * screen right - it is about 89% screen-right and 45% away from the camera. A
+ * strip pushed along world x therefore slides AND recedes, which next to a copy
+ * panel travelling in a dead-straight line reads as two different motions.
+ *
+ * `cross(viewDirection, up)` is the camera's own right vector, and the models
+ * stay at a constant depth all the way across. Derived from `CAMERA_POSITION`
+ * rather than written down, so moving the camera cannot leave this behind.
+ */
+const SLOT_AXIS = new Vector3()
+  .crossVectors(
+    new Vector3(...CAMERA_POSITION).negate().normalize(),
+    new Vector3(0, 1, 0)
+  )
+  .normalize();
+
+/** A point `distance` world units along the strip, as an R3F position tuple. */
+const slotPosition = (distance: number): [number, number, number] => [
+  SLOT_AXIS.x * distance,
+  SLOT_AXIS.y * distance,
+  SLOT_AXIS.z * distance,
+];
 
 /**
  * The pixel budget, and it is TWO budgets.
@@ -91,6 +129,12 @@ function StageEnvironment({ colors }: { colors: EnvironmentColors | null }) {
 type DisciplineStageProps = {
   /** Position in `DISCIPLINE_ORDER`. The reel derives everything else from it. */
   index: number;
+  /**
+   * Which way the strip travels. A prop rather than a comparison of the old and
+   * new index, because the list wraps: 5 -> 0 is forward and 0 -> 5 is back, and
+   * the two numbers alone cannot tell either from a jump the other way.
+   */
+  direction: SlideDirection;
   colors: EnvironmentColors | null;
   theme: DisciplineTheme;
   className?: string;
@@ -108,6 +152,7 @@ type DisciplineStageProps = {
  */
 export default function DisciplineStage({
   index,
+  direction,
   colors,
   theme,
   className,
@@ -165,18 +210,28 @@ export default function DisciplineStage({
         }}
       >
         <StageEnvironment colors={colors} />
-        <DisciplineReel index={index} theme={theme} animated={animated} />
+        <DisciplineReel
+          index={index}
+          direction={direction}
+          theme={theme}
+          animated={animated}
+        />
       </Canvas>
     </div>
   );
 }
 
 /**
- * The reel. All six models hang on one vertical strip with air between them, and
- * a step moves the strip: scroll down and the model on screen slides UP and out
- * while the next one rises from below into its place. Scrolling up runs the same
- * motion the other way, which is why the transition back never looks like a
- * rewind of the transition forward - it is the same strip, travelling.
+ * The reel. All six models hang on one HORIZONTAL strip with air between them,
+ * and a step moves the strip: forward, the model on screen leaves to the LEFT
+ * while the next one arrives from the RIGHT. Back runs the same motion the other
+ * way, which is why the transition back never looks like a rewind of the
+ * transition forward - it is the same strip, travelling.
+ *
+ * The direction is the copy panel's direction, the duration and the curve are
+ * the copy panel's duration and curve, and the strip is a slot wide the way the
+ * copy's track is a slide wide. That is the whole of "the same push": the model
+ * and the paragraph are one slide, drawn in two different media.
  *
  * Two models are in the scene and only two, and only while the strip is moving.
  * The outgoing one sits at the strip's origin, the incoming one a slot away in
@@ -186,10 +241,12 @@ export default function DisciplineStage({
  */
 function DisciplineReel({
   index,
+  direction,
   theme,
   animated,
 }: {
   index: number;
+  direction: SlideDirection;
   theme: DisciplineTheme;
   animated: boolean;
 }) {
@@ -206,13 +263,13 @@ function DisciplineReel({
   const [pair, setPair] = useState<{
     from: number | null;
     to: number;
-    direction: 1 | -1;
+    direction: SlideDirection;
   }>({ from: null, to: index, direction: 1 });
 
   if (pair.to !== index) {
     // A step that arrives mid-slide takes whatever was arriving as its outgoing
     // model, so the strip never has to hold three.
-    setPair({ from: pair.to, to: index, direction: index > pair.to ? 1 : -1 });
+    setPair({ from: pair.to, to: index, direction });
   } else if (pair.from !== null && !animated) {
     // Reduced motion, or the section is parked: land on the new model without
     // the travel. There are no frames to travel in, so there is nothing to see
@@ -228,19 +285,26 @@ function DisciplineReel({
       // At rest the strip sits at its origin. Setting it here rather than in the
       // tween's `onComplete` keeps it in the same commit as the children's new
       // positions, so the world position never changes across the handover.
-      reel.position.y = 0;
+      reel.position.set(0, 0, 0);
       invalidate();
       return;
     }
 
     tweenRef.current?.kill();
-    reel.position.y = 0;
+    reel.position.set(0, 0, 0);
+
+    // Forward, the strip travels one slot to screen-LEFT - so the model that was
+    // at the origin ends up off the left edge and the one waiting a slot to the
+    // right lands on it.
+    const travel = slotPosition(-pair.direction * MODEL_SLOT_SPAN);
 
     tweenRef.current = gsap.to(reel.position, {
-      y: pair.direction * MODEL_SLOT_SPAN,
-      duration: MODEL_SWAP_DURATION,
-      ease: MODEL_SWAP_EASE,
-      // `frameloop` is "demand" whenever the section is parked, so the tween has
+      x: travel[0],
+      y: travel[1],
+      z: travel[2],
+      duration: SLIDE_DURATION,
+      ease: SLIDE_EASE,
+      // `frameloop` is "never" whenever the section is parked, so the tween has
       // to ask for the frames it needs rather than assume them.
       onUpdate: invalidate,
       onComplete: () => setPair((current) => ({ ...current, from: null })),
@@ -262,11 +326,18 @@ function DisciplineReel({
   return (
     <group ref={reelRef}>
       {pair.from !== null ? (
-        <ReelSlot index={pair.from} y={0} theme={theme} animated={animated} />
+        <ReelSlot
+          index={pair.from}
+          position={slotPosition(0)}
+          theme={theme}
+          animated={animated}
+        />
       ) : null}
       <ReelSlot
         index={pair.to}
-        y={pair.from === null ? 0 : -pair.direction * MODEL_SLOT_SPAN}
+        position={slotPosition(
+          pair.from === null ? 0 : pair.direction * MODEL_SLOT_SPAN
+        )}
         theme={theme}
         animated={animated}
       />
@@ -285,19 +356,19 @@ function DisciplineReel({
  */
 function ReelSlot({
   index,
-  y,
+  position,
   theme,
   animated,
 }: {
   index: number;
-  y: number;
+  position: [number, number, number];
   theme: DisciplineTheme;
   animated: boolean;
 }) {
   const discipline = disciplines[DISCIPLINE_ORDER[index]];
 
   return (
-    <group position={[0, y, 0]}>
+    <group position={position}>
       <Suspense fallback={<StagePlaceholder />}>
         <DisciplineModel
           discipline={discipline}
