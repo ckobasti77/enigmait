@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   createContext,
@@ -9,7 +9,6 @@ import {
   useRef,
   useState,
 } from "react";
-import type { CSSProperties } from "react";
 import { useCookieConsent } from "./CookieConsentProvider";
 
 type ThemeMode = "light" | "dark";
@@ -26,20 +25,13 @@ type ThemeContextValue = {
   isTransitioning: boolean;
 };
 
-type ThemeTransitionState = {
-  target: ThemeMode;
-  origin: {
-    xPercent: number;
-    yPercent: number;
-  };
-  committed: boolean;
-};
-
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-const TRANSITION_DURATION_MS = 820;
 const THEME_COOKIE_NAME = "enigma-theme";
 const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 180; // 180 days
+// While this class is on <html>, globals.css kills the 0.6s colour fades so the
+// area the circle reveals is the full new theme at once, not a mid-fade.
+const VT_ACTIVE_CLASS = "theme-vt-active";
 
 const isThemeMode = (value: string | null): value is ThemeMode =>
   value === "light" || value === "dark";
@@ -51,8 +43,51 @@ const applyDocumentTheme = (value: ThemeMode) => {
   root.dataset.theme = value;
 };
 
-const clamp = (value: number, min: number, max: number) =>
-  Math.min(Math.max(value, min), max);
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  typeof window.matchMedia === "function" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Origin (circle centre) + radius to the farthest viewport corner, handed to
+// the `theme-circle-reveal` keyframes as custom properties on :root — they
+// inherit down into the ::view-transition pseudo tree.
+const setTransitionOrigin = (origin?: ThemeToggleOrigin) => {
+  const root = document.documentElement;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const x = origin?.x ?? vw / 2;
+  const y = origin?.y ?? vh / 2;
+  const radius = Math.hypot(Math.max(x, vw - x), Math.max(y, vh - y));
+
+  root.style.setProperty("--spot-x", `${x}px`);
+  root.style.setProperty("--spot-y", `${y}px`);
+  root.style.setProperty("--spot-r", `${radius}px`);
+};
+
+type ViewTransitionHandle = {
+  finished: Promise<unknown>;
+  ready?: Promise<unknown>;
+};
+
+// Feature-detected, version-proof wrapper: returns null (without running the
+// callback) when the browser has no View Transitions API, so callers fall back
+// to an instant swap. Cast through `unknown` to avoid clashing with whichever
+// lib.dom typings the toolchain ships.
+const startViewTransition = (
+  callback: () => void
+): ViewTransitionHandle | null => {
+  if (typeof document === "undefined") return null;
+
+  const start = (
+    document as unknown as {
+      startViewTransition?: (cb: () => void) => ViewTransitionHandle;
+    }
+  ).startViewTransition;
+
+  if (typeof start !== "function") return null;
+
+  return start.call(document, callback);
+};
 
 const getCookieValue = (name: string) => {
   if (typeof document === "undefined") return null;
@@ -82,8 +117,10 @@ const writeThemeCookie = (value: ThemeMode | null) => {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<ThemeMode>("dark");
-  const [transition, setTransition] = useState<ThemeTransitionState | null>(null);
-  const commitTimeoutRef = useRef<number | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  // Synchronous re-entrancy guard: `isTransitioning` only blocks the button
+  // after React re-renders, this blocks a second call in the same frame.
+  const transitionInFlightRef = useRef(false);
   const { consent, hasResponded } = useCookieConsent();
   const canUseFunctionalCookies = hasResponded && consent.functional;
   const themeRef = useRef(theme);
@@ -92,21 +129,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     themeRef.current = theme;
   }, [theme]);
 
-  const clearCommitTimeout = useCallback(() => {
-    if (commitTimeoutRef.current !== null) {
-      window.clearTimeout(commitTimeoutRef.current);
-      commitTimeoutRef.current = null;
-    }
-  }, []);
-
   const commitTheme = useCallback((value: ThemeMode) => {
     setThemeState(value);
 
     if (typeof document !== "undefined") {
       applyDocumentTheme(value);
-    }
 
-    if (typeof document !== "undefined") {
       if (canUseFunctionalCookies) {
         writeThemeCookie(value);
       } else {
@@ -115,74 +143,66 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [canUseFunctionalCookies]);
 
-  const startAnimatedTransition = useCallback(
-    (target: ThemeMode, origin?: ThemeToggleOrigin) => {
-      if (transition) return;
+  const changeTheme = useCallback(
+    (target: ThemeMode, options?: ThemeToggleOptions) => {
+      const animated = options?.animated ?? true;
 
-      if (typeof window === "undefined") {
+      // Fallbacks → instant swap (no circle): opted out, SSR, reduced motion,
+      // or a reveal already running.
+      if (
+        !animated ||
+        typeof document === "undefined" ||
+        prefersReducedMotion() ||
+        transitionInFlightRef.current
+      ) {
         commitTheme(target);
         return;
       }
 
-      const { innerWidth, innerHeight } = window;
-      const originX = origin?.x ?? innerWidth / 2;
-      const originY = origin?.y ?? innerHeight / 2;
-      const xPercent = clamp((originX / innerWidth) * 100, 0, 100);
-      const yPercent = clamp((originY / innerHeight) * 100, 0, 100);
+      setTransitionOrigin(options?.origin);
 
-      setTransition({
-        target,
-        origin: { xPercent, yPercent },
-        committed: false,
-      });
+      const root = document.documentElement;
+      root.classList.add(VT_ACTIVE_CLASS);
+
+      const cleanup = () => {
+        root.classList.remove(VT_ACTIVE_CLASS);
+        transitionInFlightRef.current = false;
+        setIsTransitioning(false);
+      };
+
+      const handle = startViewTransition(() => commitTheme(target));
+
+      // No View Transitions API → instant swap, drop the fade suppression.
+      if (!handle) {
+        commitTheme(target);
+        cleanup();
+        return;
+      }
+
+      transitionInFlightRef.current = true;
+      setIsTransitioning(true);
+      // `ready` rejects if the browser aborts the transition (hidden tab,
+      // superseded, non-rendered document). We drive nothing off it — swallow
+      // so it isn't an unhandled rejection; `finished` still runs cleanup.
+      handle.ready?.catch(() => {});
+      handle.finished.then(cleanup, cleanup);
     },
-    [transition, commitTheme]
+    [commitTheme]
   );
 
   const setTheme = useCallback(
     (value: ThemeMode, options?: ThemeToggleOptions) => {
-      const animated = options?.animated ?? true;
-
-      if (!animated) {
-        commitTheme(value);
-        return;
-      }
-
-      startAnimatedTransition(value, options?.origin);
+      changeTheme(value, options);
     },
-    [commitTheme, startAnimatedTransition]
+    [changeTheme]
   );
 
   const toggleTheme = useCallback(
     (options?: ThemeToggleOptions) => {
-      const nextTheme: ThemeMode = theme === "dark" ? "light" : "dark";
-      const animated = options?.animated ?? true;
-
-      if (!animated) {
-        commitTheme(nextTheme);
-        return;
-      }
-
-      startAnimatedTransition(nextTheme, options?.origin);
+      changeTheme(themeRef.current === "dark" ? "light" : "dark", options);
     },
-    [theme, commitTheme, startAnimatedTransition]
+    [changeTheme]
   );
-
-  useEffect(() => {
-    if (!transition || typeof window === "undefined") return;
-
-    clearCommitTimeout();
-
-    commitTimeoutRef.current = window.setTimeout(() => {
-      commitTheme(transition.target);
-      setTransition((prev) => (prev ? { ...prev, committed: true } : prev));
-      commitTimeoutRef.current = null;
-    }, Math.round(TRANSITION_DURATION_MS * 0.55));
-
-    return () => {
-      clearCommitTimeout();
-    };
-  }, [transition, commitTheme, clearCommitTimeout]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -231,44 +251,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     writeThemeCookie(theme);
   }, [canUseFunctionalCookies, theme]);
 
-  const handleTransitionEnd = useCallback(() => {
-    if (!transition) return;
-
-    clearCommitTimeout();
-
-    if (!transition.committed) {
-      commitTheme(transition.target);
-    }
-
-    setTransition(null);
-  }, [transition, clearCommitTimeout, commitTheme]);
-
   const value = useMemo(
     () => ({
       theme,
       setTheme,
       toggleTheme,
-      isTransitioning: Boolean(transition),
+      isTransitioning,
     }),
-    [theme, setTheme, toggleTheme, transition]
+    [theme, setTheme, toggleTheme, isTransitioning]
   );
 
   return (
-    <ThemeContext.Provider value={value}>
-      {children}
-      {transition && (
-        <div className="theme-transition">
-          <span
-            className={`theme-transition__circle theme-transition__circle--${transition.target}`}
-            style={{
-              "--transition-x": `${transition.origin.xPercent}%`,
-              "--transition-y": `${transition.origin.yPercent}%`,
-            } as CSSProperties}
-            onAnimationEnd={handleTransitionEnd}
-          />
-        </div>
-      )}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
 

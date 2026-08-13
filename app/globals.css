@@ -800,56 +800,47 @@ html.lenis body {
   background-color: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(4px);
 }
-.theme-transition {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  overflow: hidden;
+/* ── Theme change: hard-edged clip-path circle (View Transitions API) ─────────
+   The new theme is revealed by a circle growing at a constant speed from the
+   theme button; the old theme sits static underneath. No gradient, shadow or
+   blur — the clip edge itself is the whole effect. Origin + radius arrive as
+   custom properties on :root from ThemeProvider (--spot-x / --spot-y /
+   --spot-r), computed so the circle reaches the farthest viewport corner. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  /* Drop the UA cross-fade and its `plus-lighter` blend, so the opaque new
+     theme simply occludes the old one inside the circle instead of adding to
+     it (which would brighten the overlap). */
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-.theme-transition__circle {
-  position: absolute;
-  width: 200vmax;
-  height: 200vmax;
-  top: var(--transition-y);
-  left: var(--transition-x);
-  transform: translate(-50%, -50%) scale(0.05);
-  border-radius: 50%;
-  animation: theme-circle-expand 0.82s ease-in-out forwards;
-  will-change: transform, opacity;
-  box-shadow: 0 20px 80px rgba(15, 23, 42, 0.36);
+::view-transition-new(root) {
+  animation: theme-circle-reveal 0.6s linear forwards;
 }
 
-.theme-transition__circle--light {
-  background: radial-gradient(
-    circle at var(--spot-x, 50%) var(--spot-y, 50%),
-    var(--timeline-spotlight-highlight) 0%,
-    var(--timeline-spotlight-mid) 45%,
-    var(--timeline-spotlight-shadow) 100%
-  );
-}
-
-.theme-transition__circle--dark {
-  background: radial-gradient(
-    circle at var(--spot-x, 50%) var(--spot-y, 50%),
-    var(--timeline-spotlight-highlight) 0%,
-    var(--timeline-spotlight-mid) 45%,
-    var(--timeline-spotlight-shadow) 100%
-  );
-}
-
-@keyframes theme-circle-expand {
-  0% {
-    transform: translate(-50%, -50%) scale(0.05);
-    opacity: 0.85;
+@keyframes theme-circle-reveal {
+  from {
+    clip-path: circle(0 at var(--spot-x, 50%) var(--spot-y, 50%));
   }
-  60% {
-    opacity: 1;
+  to {
+    clip-path: circle(var(--spot-r, 150vmax) at var(--spot-x, 50%) var(--spot-y, 50%));
   }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0;
+}
+
+/* While the reveal runs, suppress the site-wide 0.6s colour fades so the area
+   inside the circle is the full new theme at once — never a half-faded state.
+   ThemeProvider adds/removes the class around the View Transition. */
+html.theme-vt-active *,
+html.theme-vt-active *::before,
+html.theme-vt-active *::after {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
   }
 }
 
@@ -2859,8 +2850,8 @@ select.float-field-input {
    shows is the reveal trace running its edge on each slide and then vanishing.
    The 1px border stays in the box as `transparent` - the trace is measured on
    the border box, and dropping the border outright would move the edge the
-   streak lands on. The two ambient glows still burn inside the clip; they are
-   light, not a box. Unlayered on purpose - `.theme-card` lives in
+   streak lands on. The ambient glows are gone too: the slide has no surface of
+   any kind, only the trace. Unlayered on purpose - `.theme-card` lives in
    `@layer components`, and a layered rule cannot be beaten on specificity; the
    hover pair is spelled out so the rim cannot come back on the way past. */
 .service-carousel .ui-card-shell,
@@ -2932,33 +2923,6 @@ select.float-field-input {
   .service-panel-lead {
     margin-block: auto;
   }
-}
-
-/* The homepage's ambient glow, kept. The shell clips, so these read as light
-   inside the panel rather than as a halo around it. */
-.service-panel-glow {
-  position: absolute;
-  z-index: 0;
-  display: block;
-  pointer-events: none;
-  border-radius: 999px;
-  filter: blur(120px);
-}
-
-.service-panel-glow--lead {
-  top: -8rem;
-  left: -6rem;
-  width: 26rem;
-  height: 26rem;
-  opacity: 0.75;
-}
-
-.service-panel-glow--trail {
-  right: -7rem;
-  bottom: -9rem;
-  width: 22rem;
-  height: 22rem;
-  opacity: 0.4;
 }
 
 .service-panel-bullet {
