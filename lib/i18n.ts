@@ -1520,6 +1520,10 @@ export const englishToSerbianEntries = [
   ["Enigma Digital logotype", "Enigma Digital logotip"],
   ["Client logos", "Logotipi klijenata"],
   ["Share product goals, tech stack, timelines, or anything that helps us prepare.", "Podelite proizvodne ciljeve, tehnološki okvir, rokove ili bilo šta što nam pomaže da se pripremimo."],
+
+  // Service FAQ CTA
+  ["Have a specific question?", "Imate specifično pitanje?"],
+  ["Ask us", "Pitajte nas"],
 ] as const satisfies readonly (readonly [string, string])[];
 
 export const englishToSerbian = Object.fromEntries(

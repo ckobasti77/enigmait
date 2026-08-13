@@ -15,6 +15,7 @@ import { servicePages } from "@/constants/services";
 import { useIntersectionActive } from "@/hooks/useIntersectionActive";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import ServiceFaq from "./ServiceFaq";
+import ServiceFaqCta from "./ServiceFaqCta";
 import ServicePanel from "./ServicePanel";
 
 /**
@@ -476,6 +477,7 @@ export default function ServiceCarousel({
           the panel instead of sliding with it - the key resets which question is
           open when the service changes. */}
       <ServiceFaq key={current} intro={content.faqIntro} items={content.faq} />
+      <ServiceFaqCta />
     </>
   );
 }
