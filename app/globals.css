@@ -2319,7 +2319,18 @@ html[data-mood="alt"] {
    gap, a margin or a third slot in here and the push stops landing on the seam.
    --------------------------------------------------------------------------- */
 .service-carousel {
+  /* THE ARROW IS TWO NUMBERS NOW, and the split is the whole point: the box is
+     the hit target and the caret is the only thing anyone sees. They used to be
+     the same number because the box was a drawn circle. */
   --service-arrow: 3.25rem;
+  --service-caret: 2.25rem;
+  /* The caret's blue. `--cta-line` is that hue at partial alpha, which is right
+     for a rim on a filled surface and too faint for a stroke floating on the
+     page; `--card-trace` is the same hue at full strength in all three palettes
+     (light #0284c7, dark #58c4ff, alt green), so the caret stays the CTA's blue
+     without going grey in light mode - which is what `--primary` would do, it
+     being ink navy there rather than blue. */
+  --service-caret-line: var(--card-trace);
   /* How far the clip is held off the panel's edge - see `.service-stage`. */
   --service-stage-bleed: 0.625rem;
 }
@@ -2520,7 +2531,14 @@ html[data-mood="alt"] {
    whole affordance and they have to be findable without hunting for the edge of
    a card. The price is that they would float over the FAQ and the footer too,
    which is what `data-visible` is for - the component turns them off the moment
-   the stage leaves the viewport. */
+   the stage leaves the viewport.
+
+   THE BUTTON IS A HIT AREA, NOT A SHAPE. Round 2 took the pill off: a bordered,
+   blurred disc is a second card floating over the panel, and at this scale two
+   of them frame the page rather than serve it. What is left is the caret, and
+   the box survives only because a bare 3px stroke is not something a thumb can
+   aim at - it stays at `--service-arrow`, never below 44px, and paints nothing.
+   Do not give it back a background: the caret carries its own contrast halo. */
 .service-arrow {
   position: fixed;
   top: 50%;
@@ -2531,13 +2549,12 @@ html[data-mood="alt"] {
   justify-content: center;
   width: var(--service-arrow);
   height: var(--service-arrow);
+  border: 0;
+  /* Only the focus ring reads this now - there is no surface to round. */
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--card-trace) 30%, var(--border-strong));
-  background: var(--surface-overlay);
-  backdrop-filter: blur(10px);
-  color: var(--text-primary);
-  transition: opacity 0.3s ease, visibility 0.3s ease, border-color 0.25s ease,
-    box-shadow 0.25s ease, background-color 0.25s ease;
+  background: none;
+  color: var(--service-caret-line);
+  transition: opacity 0.3s ease, visibility 0.3s ease, color 0.25s ease;
 }
 
 .service-arrow--prev {
@@ -2554,20 +2571,72 @@ html[data-mood="alt"] {
   pointer-events: none;
 }
 
-.service-arrow:hover {
-  border-color: var(--card-trace);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--card-trace) 35%, transparent),
-    0 0 24px var(--card-trace-glow);
-}
-
 .service-arrow:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 3px;
 }
 
+.service-arrow-caret {
+  width: var(--service-caret);
+  height: var(--service-caret);
+  /* The glow bleeds past the 24-unit box; clipping it would square the light
+     off at the tips, which is exactly where the draw ends. */
+  overflow: visible;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The caret at rest. The drop-shadow is a contrast halo in the page's own
+   background colour, not decoration: with the disc gone the stroke sits
+   directly on the video and has to hold its edge over both a bright wave and a
+   dark gap. Theme-aware by construction - dark halo in dark, light in light. */
+.service-arrow-arm path {
+  stroke: currentColor;
+  stroke-width: 2.25;
+}
+
+.service-arrow-arm {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--background) 85%, transparent));
+}
+
+/* THE HOVER DRAW. Both arms carry `M` on the joint (see `ArrowCaret`), so one
+   transition on `stroke-dashoffset` runs the light out of the corner and along
+   both arms at once, ending at the two tips together. `stroke-dasharray` equals
+   the normalised `pathLength`, so offset 100 is a clean empty path and offset 0
+   is a full one - no measuring, and no dependence on the arms' real length. */
+.service-arrow-spark path {
+  stroke: color-mix(in srgb, var(--card-trace) 55%, var(--text-primary));
+  stroke-width: 2.6;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 0.42s cubic-bezier(0.33, 0, 0.15, 1);
+}
+
+.service-arrow-spark {
+  filter: drop-shadow(0 0 5px var(--card-trace-glow))
+    drop-shadow(0 0 14px var(--card-trace-glow));
+}
+
+.service-arrow:hover .service-arrow-spark path,
+.service-arrow:focus-visible .service-arrow-spark path {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The light stays - it is state, and a control with no hover answer is worse
+     than a still one. Only the travel goes: it arrives whole. */
+  .service-arrow-spark path {
+    transition: none;
+  }
+}
+
 @media (max-width: 639px) {
   .service-carousel {
-    --service-arrow: 2.5rem;
+    /* 44px exactly. This is the floor the tap target may not go under, and it
+       is why the box did not shrink with the caret. */
+    --service-arrow: 2.75rem;
+    --service-caret: 1.75rem;
   }
 }
 
@@ -2581,11 +2650,18 @@ html[data-mood="alt"] {
   }
 }
 
+/* THE ROW IS ALSO A WHEEL TARGET (see `ServiceCarousel`), which is what the
+   padding is for: eight-pixel dots are nothing to aim a cursor at, and the
+   block padding turns the row into a ~2rem strip that catches the notch. It is
+   taken back out of the margin, so nothing moves. */
 .service-dots {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: 1.75rem;
+  margin-top: 1rem;
+  padding-block: 0.75rem;
+  /* The vertical gesture on touch stays the page's; only the wheel is taken. */
+  touch-action: pan-y;
 }
 
 .service-dot {

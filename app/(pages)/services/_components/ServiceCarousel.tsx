@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { TouchEvent as ReactTouchEvent } from "react";
 import { flushSync } from "react-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { preloadDiscipline } from "@/components/sections/disciplines/disciplinePrefetch";
 import {
@@ -60,6 +59,81 @@ const wrap = (index: number) => ((index % LENGTH) + LENGTH) % LENGTH;
 
 type Move = { target: number; direction: 1 | -1 };
 
+/* ---------------------------------------------------------------------------
+   The caret
+
+   Two arms, both starting at the JOINT. That is the whole trick: `stroke-
+   dashoffset` draws a path from its own start, so with the `M` on the vertex a
+   single CSS transition on both paths runs the light outward in two directions
+   at once. Drawn from the tips inward instead, the same transition would read
+   as the caret collapsing.
+
+   `pathLength` normalises both arms to the same scale, so the dash numbers in
+   the stylesheet are percentages of an arm rather than user units - the arms
+   can be re-shaped here without the CSS following.
+   --------------------------------------------------------------------------- */
+const CARET_LENGTH = 100;
+
+function ArrowCaret({ direction }: { direction: 1 | -1 }) {
+  // The joint sits on the side the caret points at; the tips on the other.
+  const joint = direction < 0 ? 8 : 16;
+  const tip = direction < 0 ? 16 : 8;
+  const arms = [`M${joint} 12 L${tip} 4`, `M${joint} 12 L${tip} 20`];
+
+  return (
+    <svg
+      className="service-arrow-caret"
+      viewBox="0 0 24 24"
+      aria-hidden
+      focusable="false"
+    >
+      <g className="service-arrow-arm">
+        {arms.map((d) => (
+          <path key={d} d={d} pathLength={CARET_LENGTH} />
+        ))}
+      </g>
+      <g className="service-arrow-spark">
+        {arms.map((d) => (
+          <path key={d} d={d} pathLength={CARET_LENGTH} />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   The wheel over the dots
+
+   ONE NOTCH IS ONE SLIDE, which is a different contract from the disciplines
+   section's wheel (`useDisciplineIndex`): there a step costs a firm push,
+   because the cursor sits over half the section and a twitch of the wrist must
+   not move it. Here the target is a 2rem strip that has to be aimed at, so the
+   threshold is low enough that a single mouse notch lands, and the cooldown -
+   not the threshold - is what stops a trackpad flick from spending four.
+   --------------------------------------------------------------------------- */
+
+/** Normalised travel that buys one step. One Chrome notch is ~100px. */
+const DOTS_WHEEL_THRESHOLD = 24;
+
+/**
+ * Dead time after a step. Longer than the push (620ms) on purpose: a step that
+ * arrives mid-push is dropped by `busyRef` anyway, and a swallowed notch reads
+ * as the row ignoring you.
+ */
+const DOTS_WHEEL_COOLDOWN_MS = 660;
+
+/** A gap this long means a new gesture, so the buffer starts from zero again. */
+const DOTS_WHEEL_RESET_MS = 200;
+
+/** `DOM_DELTA_LINE` in pixels - Firefox sends lines where Chrome sends pixels. */
+const WHEEL_LINE_HEIGHT = 16;
+
+function normaliseWheelDelta(event: WheelEvent) {
+  if (event.deltaMode === 1) return event.deltaY * WHEEL_LINE_HEIGHT;
+  if (event.deltaMode === 2) return event.deltaY * window.innerHeight;
+  return event.deltaY;
+}
+
 export default function ServiceCarousel({
   initialSlug,
 }: {
@@ -71,9 +145,23 @@ export default function ServiceCarousel({
   const [move, setMove] = useState<Move | null>(null);
 
   const trackRef = useRef<HTMLDivElement>(null);
+  const dotsRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<Animation | null>(null);
   const busyRef = useRef(false);
   const touchRef = useRef<{ x: number; y: number } | null>(null);
+
+  /**
+   * Everything the wheel knows between two steps. In a ref rather than in the
+   * effect's closure because the listener is re-attached on every index change
+   * (`step` changes with it) - a cooldown that resets when it re-attaches is a
+   * cooldown that never fires, and the tail of one flick becomes a second step.
+   */
+  const wheelRef = useRef({
+    buffer: 0,
+    lastEventAt: 0,
+    lastStepAt: 0,
+    budget: LENGTH - 1,
+  });
 
   // One-shot travel, so the OS preference decides and Save-Data does not.
   const prefersReducedMotion = usePrefersReducedMotion({
@@ -222,6 +310,69 @@ export default function ServiceCarousel({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [step]);
 
+  /**
+   * THE WHEEL IS ON THE DOTS ROW AND NOWHERE ELSE. Over the panel the vertical
+   * gesture stays the page's scroll - the panel is most of a screen tall and
+   * taking its wheel would trap the visitor on the way to the FAQ.
+   *
+   * A wrapping list has no ends to release the wheel at, so the row gets a
+   * budget instead: one list's worth of steps per visit to the carousel, after
+   * which deltas are left alone and the page scrolls on. Without it a cursor
+   * parked on the strip would eat every notch forever. The budget is the
+   * wheel's alone - dots, arrows, keys and swipes wrap without limit.
+   */
+  useEffect(() => {
+    const dots = dotsRef.current;
+    if (!dots) return;
+
+    const onWheel = (event: WheelEvent) => {
+      const delta = normaliseWheelDelta(event);
+      // A horizontal wheel (shift-scroll, a tilt wheel) is not ours.
+      if (delta === 0) return;
+
+      const state = wheelRef.current;
+      if (state.budget <= 0) {
+        state.buffer = 0;
+        return;
+      }
+
+      // From here the delta is ours: spent on a step, or spent on nothing.
+      // Either way it must not also scroll the page - and `stopPropagation`
+      // is what keeps Lenis, which listens on the window, out of it.
+      event.preventDefault();
+      event.stopPropagation();
+
+      const now = performance.now();
+      if (now - state.lastEventAt > DOTS_WHEEL_RESET_MS) state.buffer = 0;
+      state.lastEventAt = now;
+
+      // Inside the cooldown the delta is eaten but NOT banked; banking the
+      // tail of a trackpad flick is exactly how one flick becomes two steps.
+      if (now - state.lastStepAt < DOTS_WHEEL_COOLDOWN_MS) {
+        state.buffer = 0;
+        return;
+      }
+
+      state.buffer += delta;
+      if (Math.abs(state.buffer) <= DOTS_WHEEL_THRESHOLD) return;
+
+      // Down is forward, matching the direction the page itself travels.
+      const direction: 1 | -1 = state.buffer > 0 ? 1 : -1;
+      state.buffer = 0;
+      state.lastStepAt = now;
+      state.budget -= 1;
+      step(direction);
+    };
+
+    dots.addEventListener("wheel", onWheel, { passive: false });
+    return () => dots.removeEventListener("wheel", onWheel);
+  }, [step]);
+
+  /** Leaving the viewport hands the budget back, so returning gives it again. */
+  useEffect(() => {
+    if (!isIntersecting) wheelRef.current.budget = LENGTH - 1;
+  }, [isIntersecting]);
+
   const onTouchStart = (event: ReactTouchEvent<HTMLDivElement>) => {
     const touch = event.touches[0];
     touchRef.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
@@ -256,6 +407,8 @@ export default function ServiceCarousel({
         aria-label="Usluge"
         className="service-carousel site-gutter theme-section relative pb-14 pt-24 transition-theme lg:pb-16 lg:pt-28"
       >
+        {/* Nothing but the caret is drawn. The button keeps its 44px+ box so
+            the target is still there to hit - see `.service-arrow`. */}
         <button
           type="button"
           aria-label="Prethodna usluga"
@@ -264,7 +417,7 @@ export default function ServiceCarousel({
           onClick={() => step(-1)}
           tabIndex={isIntersecting ? 0 : -1}
         >
-          <ChevronLeft className="h-5 w-5" aria-hidden />
+          <ArrowCaret direction={-1} />
         </button>
         <button
           type="button"
@@ -274,7 +427,7 @@ export default function ServiceCarousel({
           onClick={() => step(1)}
           tabIndex={isIntersecting ? 0 : -1}
         >
-          <ChevronRight className="h-5 w-5" aria-hidden />
+          <ArrowCaret direction={1} />
         </button>
 
         <div className="site-container">
@@ -297,7 +450,12 @@ export default function ServiceCarousel({
             </div>
           </div>
 
-          <div className="service-dots" role="group" aria-label="Usluge">
+          <div
+            ref={dotsRef}
+            className="service-dots"
+            role="group"
+            aria-label="Usluge"
+          >
             {DISCIPLINE_ORDER.map((slug, position) => (
               <button
                 type="button"
