@@ -4,6 +4,7 @@ import { useEffect, useRef, type CSSProperties, type KeyboardEvent } from "react
 import clsx from "clsx";
 
 import { DISCIPLINE_ORDER, disciplines } from "@/constants/disciplines";
+import { ArrowCaret } from "@/components/ui/arrow-caret";
 import {
   STEPPER_DOT_DURATION,
   STEPPER_DOT_EASE_CSS,
@@ -26,27 +27,6 @@ type DisciplineStepperProps = {
   onSelect: (index: number) => void;
   className?: string;
 };
-
-/** One chevron, pointing up. Everything else is a rotation in CSS. */
-function Chevron({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-      focusable="false"
-      className={clsx("h-3.5 w-3.5", className)}
-    >
-      <path
-        d="M3 10.5 8 5.5l5 5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 /**
  * The stepper: an arrow, the dots, an arrow, in a horizontal rail under the row.
@@ -134,7 +114,7 @@ export default function DisciplineStepper({
         aria-label="Previous discipline"
         onClick={() => onStep(-1)}
       >
-        <Chevron className="-rotate-90" />
+        <ArrowCaret direction={-1} />
       </button>
 
       <ol
@@ -171,7 +151,7 @@ export default function DisciplineStepper({
         aria-label="Next discipline"
         onClick={() => onStep(1)}
       >
-        <Chevron className="rotate-90" />
+        <ArrowCaret direction={1} />
       </button>
     </div>
   );

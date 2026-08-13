@@ -15,7 +15,6 @@ import { observeFirstModel, prefetchNeighbours } from "./disciplinePrefetch";
 import { readEnvironmentColors, type EnvironmentColors } from "./environment";
 import { SECTION_KICKER, SECTION_LEDE, SECTION_TITLE } from "./sectionCopy";
 import { useDisciplineIndex } from "./useDisciplineIndex";
-import { SLIDE_DURATION, SLIDE_EASE_CSS } from "./disciplinesTiming";
 
 /**
  * The section shell.
@@ -72,65 +71,18 @@ export default function DisciplinesShell({
   const active = disciplines[DISCIPLINE_ORDER[index]];
 
   /**
-   * THE COPY'S HALF OF THE PUSH.
+   * THE COPY DOES NOT TRAVEL - ONLY THE MODEL DOES.
    *
-   * `ServiceCarousel` does this with a two-slot track that is twice the stage
-   * wide, and it can: it mounts one panel at a time. Here all six are in the DOM
-   * at once and stay there - that is the section's whole SEO argument - so the
-   * geometry is copied and the mechanism is not. Six panels share one grid cell,
-   * so the outgoing one is already sitting exactly on top of the incoming one;
-   * sending it a slide to one side while the incoming arrives from the other,
-   * over the same duration and curve, IS the push, with nothing mounted or
-   * unmounted to do it.
+   * `DisciplineStage` slides the 3D model left/right on a step (see `SLOT_AXIS`
+   * there). The text panel opposite it stays anchored: on a change the outgoing
+   * `DisciplineCopy` leaves in place and the incoming one arrives in place, each
+   * running its own site-wide reveal (fade + blur + Y) keyed on its `active`
+   * prop. Six panels share one grid cell and never move, which is also the
+   * section's SEO argument - all six are always in the DOM.
    *
-   * The transform goes on a WRAPPER and never on the panel. `DisciplineCopy`
-   * writes `y` and `opacity` on its own root for its arrival, and two owners on
-   * one transform is a fight that shows up as a twitch and never as a stack
-   * trace.
-   *
-   * No `fill`, deliberately. When the animation ends both elements drop back to
-   * their resting `transform: none` - the outgoing one at `opacity: 0` by then,
-   * so the snap is invisible - which means there is no held state for the next
-   * step to clear and no way for a panel to be stranded off-stage.
+   * So there is no horizontal push on the copy to write here. Removing it is the
+   * whole point: the model glides, the words resolve in place.
    */
-  const slideRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const previousIndexRef = useRef(index);
-  const pushRef = useRef<Animation[]>([]);
-
-  useEffect(() => {
-    const from = previousIndexRef.current;
-    previousIndexRef.current = index;
-    if (from === index) return;
-
-    const outgoing = slideRefs.current[from];
-    const incoming = slideRefs.current[index];
-    if (!outgoing || !incoming) return;
-
-    // A step that lands mid-push takes over from it rather than stacking on it.
-    pushRef.current.forEach((animation) => animation.cancel());
-
-    const options: KeyframeAnimationOptions = {
-      duration: SLIDE_DURATION * 1000,
-      easing: SLIDE_EASE_CSS,
-    };
-
-    pushRef.current = [
-      outgoing.animate(
-        [
-          { transform: "translateX(0%)" },
-          { transform: `translateX(${-direction * 100}%)` },
-        ],
-        options
-      ),
-      incoming.animate(
-        [
-          { transform: `translateX(${direction * 100}%)` },
-          { transform: "translateX(0%)" },
-        ],
-        options
-      ),
-    ];
-  }, [direction, index]);
 
   /**
    * The first model, fetched a viewport and a half before the section arrives - see
@@ -262,18 +214,13 @@ export default function DisciplinesShell({
                 hidden with plain `opacity` plus `inert` - never `display:none`, never
                 conditionally mounted, which is the whole SEO argument for the section.
 
-                The wrapper per panel is what the push is written on - see the effect
-                above. It carries no styling of its own beyond the shared grid cell.
+                The panels never travel: on a change the outgoing one leaves and the
+                incoming one arrives IN PLACE, each on its own reveal inside
+                `DisciplineCopy` (keyed on `active`). Only the 3D model slides.
               */}
               <div className="discipline-copy-stack">
                 {DISCIPLINE_ORDER.map((key, position) => (
-                  <div
-                    key={key}
-                    className="discipline-slide"
-                    ref={(node) => {
-                      slideRefs.current[position] = node;
-                    }}
-                  >
+                  <div key={key} className="discipline-slide">
                     <DisciplineCopy
                       discipline={disciplines[key]}
                       active={position === index}

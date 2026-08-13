@@ -133,31 +133,23 @@ export const SWIPE_THRESHOLD_PX = 40;
 export const SWIPE_DOMINANCE = 1.5;
 
 /* ---------------------------------------------------------------------------
-   The push: one horizontal slide, two media.
+   The model slide.
 
    The six models hang on one HORIZONTAL strip with air between them, and a step
    moves the strip: forward, the model on screen leaves to the left while the
-   next one arrives from the right. The copy panel does exactly the same thing in
-   the DOM at exactly the same moment, so the row reads as one slide rather than
-   as a model swap that a paragraph happens to follow.
-
-   ONE DURATION AND ONE CURVE FOR BOTH, and that is what the three constants
-   below are for. The DOM half is driven by the Web Animations API and wants a
-   CSS string; the reel is inside `<Canvas>` and wants a GSAP ease. Both are
-   derived from `SLIDE_BEZIER` here rather than typed twice, because two curves
-   that are "about the same" is precisely how a push starts reading as two
-   separate animations.
+   next one arrives from the right. The COPY does not travel with it - on a step
+   the outgoing panel leaves and the incoming one arrives IN PLACE, each on its
+   own word-by-word reveal (`DisciplineCopy`). Only the model slides.
 
    The numbers are `ServiceCarousel`'s - the services carousel is the pattern
    this section was asked to match, and matching it means matching its clock.
+   The reel is inside `<Canvas>` and wants a GSAP ease, derived from
+   `SLIDE_BEZIER` here rather than typed by hand.
    --------------------------------------------------------------------------- */
 
 /** Control points of `cubic-bezier(0.65, 0, 0.24, 1)` - the services push curve. */
 export const SLIDE_BEZIER = [0.65, 0, 0.24, 1] as const;
 export const SLIDE_DURATION = 0.62; // s
-
-/** For the Web Animations API (the copy panels). */
-export const SLIDE_EASE_CSS = `cubic-bezier(${SLIDE_BEZIER.join(", ")})`;
 
 /**
  * For GSAP (the reel). `CustomEase` reads an SVG path, and a cubic-bezier maps
@@ -185,18 +177,14 @@ export const MODEL_SLOT_SPAN = 2 + MODEL_SLOT_GAP;
    The copy panel, straight off SECTION_SPEC's transition table.
 
    Offsets are measured from the moment the index changes, which is the moment
-   the push starts - so the copy lands into a model that has already arrived
-   rather than racing it.
+   the model slide starts - so the copy lands into a model that has already
+   arrived rather than racing it.
 
-   THEY WERE ALL PULLED ~0,30 s EARLIER WHEN THE SWAP BECAME A PUSH, and the
-   exit was lengthened to meet them. Under the old vertical swap the panel
-   cross-faded in place: the outgoing copy could go in 0,20 s and the incoming
-   start at 0,60 s, because an empty box that is not moving reads as a pause.
-   A panel that TRAVELS while it is empty reads as a bug - the eye follows the
-   motion and finds nothing in it. So the outgoing copy now stays legible for
-   most of its travel and the incoming words start arriving while it is still
-   coming in, which means the column always has something in it. The order and
-   the spread are untouched; only the offsets moved.
+   The copy stays anchored; only the model travels. The offsets still OVERLAP
+   the outgoing and incoming panels so the column is never empty for a beat: the
+   outgoing copy stays legible for most of the model's slide and the incoming
+   words start arriving while it is still leaving. Both resolve in place - the
+   fade + lift is the reveal's own exit, not a horizontal push.
 
    Kicker, title and lede all carry the site's
    word-by-word arrival - every line of copy on the site reveals that way, and a
@@ -232,8 +220,9 @@ export const STEPPER_DOT_EASE_CSS = "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 /**
  * izlaz | tekst panela | 0,00 | 0,42 | power2.in | opacity 1->0, y 0->-12
  *
- * Two thirds of the push, so the copy that is leaving is still readable for most
- * of the distance it travels. The `.discipline-copy-stack` clip takes the rest.
+ * Two thirds of the model's slide, so the copy that is leaving stays readable
+ * for most of the swap rather than blinking out the instant the step lands. The
+ * fade and the small lift happen in place - the panel does not travel.
  */
 export const COPY_EXIT_DURATION = 0.42;
 export const COPY_EXIT_EASE = "power2.in";

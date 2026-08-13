@@ -218,9 +218,8 @@ const Navbar = () => {
       >
         {/* Same measure as the hero, so the logo sits on the headline's left edge. */}
         <div className="site-container nav-inner grid grid-cols-[minmax(0,1fr)_auto] items-center lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-          {/* `cta-rim`: once the bar peels, the island is the surface that
-              carries the CTA's blue rim and its breath - see globals.css. */}
-          <span className="nav-surface cta-rim" aria-hidden />
+          {/* The peeled bar's glass island: bg wash + blur + lift, no rim. */}
+          <span className="nav-surface" aria-hidden />
 
           <Link
             href="/"

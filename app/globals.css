@@ -585,9 +585,9 @@ html.lenis body {
   inset-block: 0.375rem;
   inset-inline: calc(-1 * var(--nav-island-bleed));
   /* Pill, not the shared card corner - the navbar island is chrome, not a
-     card, so it wears its own fully-rounded shape. */
+     card, so it wears its own fully-rounded shape. No rim: the glass reads from
+     the wash, the blur and the lift alone. */
   border-radius: 9999px;
-  border: 1px solid var(--nav-surface-border);
   background-color: var(--nav-surface-bg);
   box-shadow: var(--nav-surface-shadow);
   /* Unprefixed only. Lightning CSS adds the `-webkit-` alias itself, and if you
@@ -612,30 +612,17 @@ html.lenis body {
 .nav-pill {
   position: relative;
   border-radius: 9999px;
-  border: 1px solid var(--nav-pill-border);
   background-color: var(--nav-pill-bg);
   /* One backdrop-filter on screen at a time. At the top the pill is the only
      glass; once peeled the island surface carries it and the pill dissolves.
      Two nested blurred layers cost twice and read muddy. */
   backdrop-filter: var(--nav-blur);
-  transition: background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-              border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 [data-nav-state="peeled"] .nav-pill {
   background-color: transparent;
-  border-color: transparent;
   backdrop-filter: none;
-}
-
-/* The CTA rim is handed from the pill to the island as the bar peels, so
-   exactly one blue outline is breathing in either phase. Without this the
-   pill's rim would float over the page with no surface under it once the pill
-   itself has dissolved. The island's own rim needs no counterpart rule - it
-   rides `.nav-surface`'s opacity, which is already 0 at the top. */
-[data-nav-state="peeled"] .nav-pill.cta-rim::after {
-  animation: none;
-  opacity: 0;
 }
 
 /* Same rule, third layer: once the island is blurred, the CTA's own refraction
@@ -2434,23 +2421,8 @@ html[data-mood="alt"] {
    the hover glow entirely. Split in two, hover stays what it always was - a
    brighter ring, a longer shadow and the 2px lift - layered over a breath that
    never stops.
-
-   `.cta-rim` is the same thing offered to a surface that is not a button: the
-   nav island and the language switcher wear it, so the chrome around the CTA
-   speaks the CTA's language instead of a neutral glass one.
    --------------------------------------------------------------------------- */
-/* The host owns its own positioning - this class deliberately does NOT set
-   `position`. `.nav-surface` is absolutely positioned and is a GRID CHILD:
-   forcing `relative` here put it back in flow, where it took the first cell and
-   pushed the whole navbar onto two rows. Wear this on something that already
-   establishes a containing block (`.nav-pill` is relative, the island is
-   absolute) or add `relative` alongside it. */
-.cta-rim {
-  border-color: var(--cta-line);
-}
-
 .trace-cta--primary::after,
-.cta-rim::after,
 .interest-pill-input:checked + .interest-pill::after {
   content: "";
   position: absolute;
@@ -2506,7 +2478,6 @@ html[data-mood="alt"] {
      The checked pill rides the same rule: "selected" is state, and state has to
      survive reduced motion. */
   .trace-cta--primary::after,
-  .cta-rim::after,
   .interest-pill-input:checked + .interest-pill::after {
     animation: none;
     opacity: 0.55;
@@ -3126,7 +3097,9 @@ select.float-field-input {
 }
 
 .service-arrow:hover .service-arrow-spark path,
-.service-arrow:focus-visible .service-arrow-spark path {
+.service-arrow:focus-visible .service-arrow-spark path,
+.discipline-arrow:hover .service-arrow-spark path,
+.discipline-arrow:focus-visible .service-arrow-spark path {
   stroke-dashoffset: 0;
 }
 
@@ -3218,6 +3191,10 @@ select.float-field-input {
   --discipline-control: 2.25rem;
   --discipline-dot: 0.5rem;
   --discipline-dot-active: 1.6rem;
+  /* The services carousel's caret, reused (see `.service-arrow-caret`): a blue
+     chevron with no disc behind it that draws from its joint on hover.
+     `--service-caret` sizes the SVG inside the `--discipline-control` hit box. */
+  --service-caret: 1.5rem;
 }
 
 /* The capture region. `touch-action` is load-bearing, not a tidy-up: `pan-y`
@@ -3296,22 +3273,25 @@ select.float-field-input {
   gap: 0.6rem;
 }
 
+/* The services carousel's arrow, reused: the button is a hit area only - no
+   border, no disc - and all anyone sees is the blue caret, which draws from its
+   joint out to both tips on hover (`.service-arrow-spark`, extended below). Do
+   not give it a background; the caret carries its own contrast halo. */
 .discipline-arrow {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: var(--discipline-control);
   height: var(--discipline-control);
-  border: 1px solid var(--border-soft);
+  border: 0;
   border-radius: 999px;
-  color: var(--text-secondary);
-  background: var(--surface-card-muted);
-  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
+  background: none;
+  color: var(--card-trace);
 }
 
-.discipline-arrow:hover {
-  color: var(--primary);
-  border-color: var(--border-strong);
+.discipline-arrow:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
 }
 
 /* No `:disabled` rule: the list wraps, so neither arrow ever reaches an end. */
@@ -3364,12 +3344,10 @@ select.float-field-input {
    unmounted - `display:none` here would take the copy out of the document, and
    that copy is the section's whole SEO argument.
 
-   THE CLIP IS WHAT MAKES THE PUSH A PUSH. The outgoing panel travels a full
-   panel width sideways, which without this would slide it straight over the
-   model column for the 200ms it takes to fade. `overflow: clip` and not
-   `hidden`: `hidden` would make this a scroll container, and a focused CTA
-   inside a scroll container gets scrolled into view by the browser - a
-   horizontal jog on every step. The clip margin gives the panel's own glow and
+   `overflow: clip` keeps the outgoing panel's fade-and-lift contained to this
+   cell, and it is `clip` and not `hidden`: `hidden` would make this a scroll
+   container, and a focused CTA inside one gets scrolled into view by the
+   browser - a jog on every step. The clip margin gives the panel's own glow and
    focus rings their bleed back. */
 .discipline-copy-stack {
   display: grid;
@@ -3381,9 +3359,9 @@ select.float-field-input {
   grid-area: 1 / 1;
 }
 
-/* The push is written on this wrapper and never on the panel: `DisciplineCopy`
-   owns its own `transform` for the word-by-word arrival, and two owners on one
-   transform is a fight that shows up as a twitch and never as a stack trace. */
+/* One panel's grid-cell wrapper. `DisciplineCopy` owns its own transform and
+   opacity for the reveal; this only holds the shared cell and lets the copy
+   shrink (`min-width: 0`) instead of forcing the grid wider. */
 .discipline-slide {
   min-width: 0;
 }

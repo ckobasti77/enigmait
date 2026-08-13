@@ -29,12 +29,11 @@ export default function LanguageSwitcher() {
   const { locale, setLocale } = useLanguage();
 
   return (
-    // `cta-rim` (globals.css) gives the chip the CTA's blue rim and its slow
-    // breath, in both nav phases - the switcher sits next to the CTA, so a
-    // neutral border there read as a different system. Pill corner, matching
-    // the nav island and the CTA next to it.
+    // Borderless glass chip: bg wash + pill corner and nothing else, so it
+    // reads as one surface with the navbar island and the CTA beside it rather
+    // than a bordered control of its own.
     <div
-      className="cta-rim relative inline-flex h-10 items-center gap-0.5 rounded-full border border-theme bg-card/70 px-0.5 text-theme-primary transition-theme sm:h-11 sm:px-1"
+      className="relative inline-flex h-10 items-center gap-0.5 rounded-full bg-card/70 px-0.5 text-theme-primary transition-theme sm:h-11 sm:px-1"
       aria-label={switcherLabels[locale]}
       data-no-translate="true"
     >

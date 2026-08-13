@@ -193,9 +193,8 @@ const NavLinks = ({ currentDropdown, setCurrentDropdown }: NavLinksProps) => {
         if (canUseHover()) closeDropdown();
       }}
     >
-      {/* `cta-rim` puts the CTA's blue rim and its breath on the island while
-          the bar is at the top; the peeled island takes both over from it. */}
-      <div ref={pillRef} className="nav-pill cta-rim flex items-center gap-1 p-1.5">
+      {/* Borderless glass pill - bg wash + blur, no rim (see `.nav-pill`). */}
+      <div ref={pillRef} className="nav-pill flex items-center gap-1 p-1.5">
         <span ref={indicatorRef} className="nav-indicator" aria-hidden />
 
         {pillLinks.map((link, index) => {
