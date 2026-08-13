@@ -584,10 +584,9 @@ html.lenis body {
      shadow - not from an indent that would break the one measure. */
   inset-block: 0.375rem;
   inset-inline: calc(-1 * var(--nav-island-bleed));
-  /* The site's one corner, same as the CTA and the cards. It used to be a
-     999px capsule; a capsule is a shape nothing else on the page has, so the
-     island read as a component from another system. */
-  border-radius: var(--surface-radius);
+  /* Pill, not the shared card corner - the navbar island is chrome, not a
+     card, so it wears its own fully-rounded shape. */
+  border-radius: 9999px;
   border: 1px solid var(--nav-surface-border);
   background-color: var(--nav-surface-bg);
   box-shadow: var(--nav-surface-shadow);
@@ -612,7 +611,7 @@ html.lenis body {
 
 .nav-pill {
   position: relative;
-  border-radius: var(--surface-radius);
+  border-radius: 9999px;
   border: 1px solid var(--nav-pill-border);
   background-color: var(--nav-pill-bg);
   /* One backdrop-filter on screen at a time. At the top the pill is the only
@@ -803,9 +802,8 @@ html.lenis body {
   position: absolute;
   inset-block: 0.3125rem;
   left: 0;
-  /* One step in from the pill it sits inside - concentric corners, not a
-     capsule inside a rounded rectangle. */
-  border-radius: var(--surface-radius-inner);
+  /* Pill, same as the links it sits behind. */
+  border-radius: 9999px;
   background-color: var(--nav-indicator-bg);
   pointer-events: none;
   opacity: 0;
@@ -2297,10 +2295,8 @@ html[data-mood="alt"] {
      `--primary` instead put a navy wash inside a sky-blue rim in light mode. */
   --trace-cta-hairline: var(--foreground);
   -webkit-tap-highlight-color: transparent;
-  /* The site's one corner, owned here rather than by a `rounded-xl` utility on
-     the component: this button is the shape every other surface copies, so the
-     token has to be the source and the button a reader like the rest. */
-  border-radius: var(--surface-radius);
+  /* Pill: fully rounded, independent of `--surface-radius`. */
+  border-radius: 9999px;
   border: 1px solid var(--cta-line);
   transition:
     transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),

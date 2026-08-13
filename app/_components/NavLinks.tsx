@@ -222,7 +222,7 @@ const NavLinks = ({ currentDropdown, setCurrentDropdown }: NavLinksProps) => {
                 className={clsx(
                   // Same corner as the indicator that slides under it, so the
                   // focus ring and the marker are the same shape.
-                  "rounded-[var(--surface-radius-inner)] py-2 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70",
+                  "rounded-full py-2 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70",
                   link.dropdownLinks ? "pl-4 pr-1.5" : "px-4",
                   isCurrent || isOpen
                     ? "text-theme-primary"
@@ -247,7 +247,7 @@ const NavLinks = ({ currentDropdown, setCurrentDropdown }: NavLinksProps) => {
                   aria-expanded={isOpen}
                   aria-controls={SERVICES_PANEL_ID}
                   onClick={() => setCurrentDropdown(isOpen ? 0 : link.id)}
-                  className="rounded-[var(--surface-radius-inner)] py-2 pl-0.5 pr-3.5 text-theme-muted transition-colors duration-300 hover:text-theme-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70"
+                  className="rounded-full py-2 pl-0.5 pr-3.5 text-theme-muted transition-colors duration-300 hover:text-theme-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70"
                 >
                   <ChevronDown
                     className={clsx(

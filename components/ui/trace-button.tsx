@@ -19,10 +19,9 @@ import { cn } from "@/lib/utils";
  * hovered. Hover is then a step up from that, not the only state with life in
  * it. Under `prefers-reduced-motion` the breath is parked at a steady value.
  *
- * The corner is not a `rounded-*` utility. This button is the shape the cards,
- * the nav island, the language switcher and the services panel are all measured
- * against, so it reads `--surface-radius` from `globals.css` like they do -
- * one token, one angle, no drift.
+ * The corner is not a `rounded-*` utility - it is a pill (`border-radius: 9999px`
+ * on `.trace-cta` in `globals.css`), independent of `--surface-radius`, which
+ * cards and other surfaces still use.
  *
  * Everything visible is CSS (see `.trace-cta` in `globals.css`) and the streak
  * lives on `::before`, so this component adds no layers of its own. That is
