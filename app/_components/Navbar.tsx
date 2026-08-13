@@ -12,6 +12,7 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 import CtaButton from "@/components/ui/cta-button";
+import EnigmaCubeMark from "@/components/EnigmaCubeMark";
 import { navLinks } from "@/constants/navLinks";
 import { useNavVisibility } from "@/hooks/useNavVisibility";
 import { ArrowUpRight } from "lucide-react";
@@ -226,16 +227,7 @@ const Navbar = () => {
             className="relative z-10 inline-flex w-[112px] min-w-0 items-center justify-self-start gap-1.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 max-[359px]:w-auto sm:w-[160px] sm:gap-2.5 lg:w-[224px] xl:w-[244px]"
             aria-label="Enigma Digital — početna"
           >
-            <Image
-              src="/logos/logo-emblem.png"
-              alt=""
-              className="relative z-10 h-auto w-[40px] shrink-0 drop-shadow-[0_0_16px_rgba(0,183,255,0.26)] sm:w-[46px] lg:w-[52px]"
-              width={1024}
-              height={1024}
-              priority
-              sizes="(min-width: 1024px) 52px, (min-width: 640px) 46px, 40px"
-              style={{ height: "auto" }}
-            />
+            <EnigmaCubeMark className="relative z-10 h-[40px] w-[40px] shrink-0 drop-shadow-[0_0_16px_rgba(0,183,255,0.26)] sm:h-[46px] sm:w-[46px] lg:h-[52px] lg:w-[52px]" />
             <span
               ref={wordmarkMaskRef}
               // Below 360px the control row plus wordmark outgrows the
