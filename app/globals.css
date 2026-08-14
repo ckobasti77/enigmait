@@ -807,9 +807,15 @@ html.lenis body {
 /* ── Theme change: hard-edged clip-path circle (View Transitions API) ─────────
    The new theme is revealed by a circle growing at a constant speed from the
    theme button; the old theme sits static underneath. No gradient, shadow or
-   blur — the clip edge itself is the whole effect. Origin + radius arrive as
-   custom properties on :root from ThemeProvider (--spot-x / --spot-y /
-   --spot-r), computed so the circle reaches the farthest viewport corner. */
+   blur — the clip edge itself is the whole effect.
+
+   **The circle that actually runs is written from JS.** ThemeProvider injects a
+   <style> at click time whose keyframes carry the origin as literal px and
+   override `animation` here with `!important`. That is not belt-and-braces: a
+   pseudo tree that does not inherit `--spot-*` resolves the var() fallback
+   below to the middle of the screen, and the reveal quietly stops coming out of
+   the button. Literals cannot fall back. The var() version stays as the path
+   for a client whose JS never runs — keep its 0.6s in step with `REVEAL_MS`. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   /* Drop the UA cross-fade and its `plus-lighter` blend, so the opaque new
@@ -817,6 +823,15 @@ html.lenis body {
      it (which would brighten the overlap). */
   animation: none;
   mix-blend-mode: normal;
+}
+
+/* The UA also animates the *group*, which is the box the clipped snapshot sits
+   in — any difference between the old and new root geometry (a scrollbar
+   appearing, a viewport resize mid-transition) becomes a transform on it, and a
+   transform above the clip drags the circle off the button while it grows. The
+   root snapshot never needs to travel, so this animation has nothing to add. */
+::view-transition-group(root) {
+  animation: none;
 }
 
 ::view-transition-new(root) {
@@ -841,9 +856,14 @@ html.theme-vt-active *::after {
   transition: none !important;
 }
 
+/* Qualified with :root purely for specificity: ThemeProvider's injected rule is
+   `!important` and lands later in <head>, so a bare selector here would lose to
+   it. ThemeProvider also refuses to inject under reduced motion — this is the
+   backstop, and it has to actually win. */
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
+  :root::view-transition-old(root),
+  :root::view-transition-new(root),
+  :root::view-transition-group(root) {
     animation: none !important;
   }
 }

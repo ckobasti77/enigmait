@@ -48,11 +48,37 @@ const prefersReducedMotion = () =>
   typeof window.matchMedia === "function" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Origin (circle centre) + radius to the farthest viewport corner, handed to
-// the `theme-circle-reveal` keyframes as custom properties on :root — they
-// inherit down into the ::view-transition pseudo tree.
+// The reveal's clock. It lives here because the keyframes that actually run are
+// written from here; the var()-driven twin in globals.css restates it as the
+// no-JS fallback, and the two have to stay in step.
+const REVEAL_MS = 600;
+const ORIGIN_STYLE_ID = "theme-vt-origin";
+// Distinct from the stylesheet's `theme-circle-reveal`, so the injected rule
+// wins by name rather than by racing it in the cascade.
+const LIVE_KEYFRAMES = "theme-circle-reveal-live";
+
+// Origin (circle centre) + radius to the farthest viewport corner, baked into a
+// <style> as LITERAL px.
+//
+// The obvious version hands them to the keyframes as `--spot-*` on :root and
+// lets them inherit into the pseudo tree. That is the part that broke: the
+// ::view-transition tree is not ordinary DOM, and an engine (or a version) that
+// does not carry custom properties into it silently drops
+// `circle(… at var(--spot-x, 50%) var(--spot-y, 50%))` onto its fallback — the
+// middle of the screen. The circle still runs, it just stops coming out of the
+// button, which is exactly the symptom. A literal `circle(0px at 1098px 42px)`
+// has nothing to inherit and cannot fall back.
+//
+// `--spot-*` are still written to :root: globals.css keeps the var() keyframes
+// as the path for a client that never runs this code.
+//
+// Returns the disposer — the rule must not outlive the transition, or the next
+// toggle from a different button starts from the old origin.
 const setTransitionOrigin = (origin?: ThemeToggleOrigin) => {
   const root = document.documentElement;
+  // innerWidth/innerHeight, not clientWidth/clientHeight: the snapshot spans
+  // the visual viewport including the scrollbar gutter, so the radius has to
+  // clear that too or the far corner stays uncovered.
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   const x = origin?.x ?? vw / 2;
@@ -62,6 +88,24 @@ const setTransitionOrigin = (origin?: ThemeToggleOrigin) => {
   root.style.setProperty("--spot-x", `${x}px`);
   root.style.setProperty("--spot-y", `${y}px`);
   root.style.setProperty("--spot-r", `${radius}px`);
+
+  const previous = document.getElementById(ORIGIN_STYLE_ID);
+  previous?.remove();
+
+  const style = document.createElement("style");
+  style.id = ORIGIN_STYLE_ID;
+  // `!important` so this beats the stylesheet's `animation` shorthand no matter
+  // where the framework ends up inserting globals.css relative to <head>'s tail.
+  style.textContent = `@keyframes ${LIVE_KEYFRAMES} {
+  from { clip-path: circle(0px at ${x}px ${y}px); }
+  to { clip-path: circle(${radius}px at ${x}px ${y}px); }
+}
+::view-transition-new(root) {
+  animation: ${LIVE_KEYFRAMES} ${REVEAL_MS}ms linear forwards !important;
+}`;
+  document.head.appendChild(style);
+
+  return () => style.remove();
 };
 
 type ViewTransitionHandle = {
@@ -159,12 +203,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setTransitionOrigin(options?.origin);
+      const clearTransitionOrigin = setTransitionOrigin(options?.origin);
 
       const root = document.documentElement;
       root.classList.add(VT_ACTIVE_CLASS);
 
       const cleanup = () => {
+        clearTransitionOrigin();
         root.classList.remove(VT_ACTIVE_CLASS);
         transitionInFlightRef.current = false;
         setIsTransitioning(false);
