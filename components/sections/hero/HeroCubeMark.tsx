@@ -63,9 +63,9 @@ const FIT_PADDING = 0.04;
 // 1.35s - 2.3x faster. The emblem is small, permanent chrome in a fixed bar: it
 // has to finish being interesting well before the eye gets to it.
 const HOLD_DURATION = 0.42; // s, the finished mark holds
-const ERASE_DURATION = 0.58; // s
+const ERASE_DURATION = 2; // s
 const PAUSE_DURATION = 0.3; // s, empty
-const DRAW_DURATION = 0.58; // s
+const DRAW_DURATION = 1; // s
 const LOOP_DURATION =
   HOLD_DURATION + ERASE_DURATION + PAUSE_DURATION + DRAW_DURATION;
 

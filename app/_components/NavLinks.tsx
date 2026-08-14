@@ -26,6 +26,12 @@ export type NavLink = {
   text: string;
   cta?: boolean;
   dropdownLinks?: DropdownLink[];
+  /**
+   * Where the label itself navigates, when it differs from `to`. `to` still
+   * owns the active-state match and the dropdown's `parentPath` - both need
+   * the section root ("/services"), not the landing sub-page.
+   */
+  labelTo?: string;
 };
 
 type NavLinksProps = {
@@ -215,14 +221,16 @@ const NavLinks = ({ currentDropdown, setCurrentDropdown }: NavLinksProps) => {
               }}
             >
               <Link
-                href={absPath(link.to)}
+                href={absPath(link.labelTo ?? link.to)}
                 aria-current={isCurrent ? "page" : undefined}
                 style={{ fontFamily: "var(--font-aeonik)" }}
                 className={clsx(
                   // Same corner as the indicator that slides under it, so the
-                  // focus ring and the marker are the same shape.
-                  "rounded-full py-2 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70",
-                  link.dropdownLinks ? "pl-4 pr-1.5" : "px-4",
+                  // focus ring and the marker are the same shape. Fixed px-4
+                  // on every link, dropdown or not - the chevron that follows
+                  // a dropdown trigger is a separate control with its own
+                  // padding, not a reason to shrink this one.
+                  "rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70",
                   isCurrent || isOpen
                     ? "text-theme-primary"
                     : "text-theme-muted hover:text-theme-primary"
@@ -246,7 +254,9 @@ const NavLinks = ({ currentDropdown, setCurrentDropdown }: NavLinksProps) => {
                   aria-expanded={isOpen}
                   aria-controls={SERVICES_PANEL_ID}
                   onClick={() => setCurrentDropdown(isOpen ? 0 : link.id)}
-                  className="rounded-full py-2 pl-0.5 pr-3.5 text-theme-muted transition-colors duration-300 hover:text-theme-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70"
+                  // Pulled back over the label's now-fixed px-4 so the visual
+                  // gap to the chevron stays tight instead of growing with it.
+                  className="-ml-2 rounded-full py-2 pl-0.5 pr-3.5 text-theme-muted transition-colors duration-300 hover:text-theme-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70"
                 >
                   <ChevronDown
                     className={clsx(

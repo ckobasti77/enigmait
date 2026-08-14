@@ -16,6 +16,7 @@ export const navLinks = [
   {
     id: 2,
     to: "/services",
+    labelTo: "/services/web-development",
     text: "Usluge",
     dropdownLinks: [
       {

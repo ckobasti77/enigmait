@@ -16,6 +16,10 @@ import type { BufferGeometry, Group, Material, Mesh } from "three";
 import type { Discipline } from "@/constants/disciplines";
 import { registerModelScene, registerScreenTexture } from "./disciplinePrefetch";
 import {
+  acquirePointerRotation,
+  samplePointerRotation,
+} from "./pointerRotation";
+import {
   createLensMaterial,
   createScreenMaterial,
   getAccentMaterial,
@@ -38,7 +42,6 @@ import {
 const CYLINDER_UP = new Vector3(0, 1, 0);
 /** The accent is a disc, not a pin: half as tall as it is wide. */
 const ACCENT_HEIGHT_RATIO = 0.5;
-const FINE_POINTER_QUERY = "(pointer: fine)";
 
 type DisciplineModelProps = {
   discipline: Discipline;
@@ -125,60 +128,18 @@ export default function DisciplineModel({
   }, [accentMesh]);
 
   /**
-   * Pointer tracking. A raw `window` listener, no R3F event and no raycast - nothing in the
-   * scene is picked, and the pointer has to be tracked even where `pointer-events` is off.
+   * Pointer tracking is SHARED by every model on the strip, not owned per model - see
+   * `pointerRotation.ts`. This effect only keeps the section's one cursor listener alive while
+   * a model is mounted (ref-counted, so the two models drawn during a slide still add it
+   * once), handing it the canvas the pitch is measured against. That sharing is what stops the
+   * incoming model snapping back to the rest pose on the frame a step begins: it reads the
+   * cursor rotation the outgoing model already had.
    *
-   * THE TWO AXES ARE MEASURED AGAINST DIFFERENT THINGS, and that is not an oversight.
-   *
-   * `x` runs 0..1 across the WINDOW, because the yaw is described in terms of the window:
-   * cursor at the left edge of the screen means the rest pose, cursor at the right edge means
-   * fully turned, 30 degrees away. Measured against the canvas instead, the model would reach
-   * full yaw somewhere in the middle of the page and then sit there for the whole right-hand
-   * half of it.
-   *
-   * `y` stays -1..1 about the CENTRE OF THE CANVAS, because the tilt is a reaction to where
-   * the cursor is relative to the model, and the model travels up the screen as the page
-   * scrolls. The rect is cached and refreshed on scroll and resize rather than measured
-   * inside the handler, so a pointer move never forces layout.
-   *
-   * `x` starts at 0, so with no cursor yet - first paint, a touch device, a pointer that
-   * never enters the window - the model rests exactly where the far-left cursor would put it.
+   * No `invalidate()` here: the Canvas runs `frameloop="always"` while the section is on
+   * screen and `"never"` while it is parked, so a pointer move has no demand-driven frame to
+   * ask for, and the lerp catches up on the first frame after the section comes back.
    */
-  const pointerTarget = useRef({ x: 0, y: 0 });
-  const pointerCurrent = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (!window.matchMedia(FINE_POINTER_QUERY).matches) return;
-
-    const canvas = gl.domElement;
-    let rect = canvas.getBoundingClientRect();
-    const measure = () => {
-      rect = canvas.getBoundingClientRect();
-    };
-
-    const onPointerMove = (event: PointerEvent) => {
-      const width = window.innerWidth;
-      if (width === 0 || rect.height === 0) return;
-      const x = event.clientX / width;
-      const y =
-        (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-      pointerTarget.current.x = Math.max(0, Math.min(1, x));
-      pointerTarget.current.y = Math.max(-1, Math.min(1, y));
-    };
-
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("scroll", measure, { passive: true });
-    window.addEventListener("resize", measure);
-    return () => {
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("scroll", measure);
-      window.removeEventListener("resize", measure);
-    };
-    // No `invalidate()` in the handler: the Canvas runs `frameloop="always"` while the
-    // section is on screen and `"never"` while it is parked, so there is no demand-driven
-    // state left for a pointer move to ask a frame from. Under "never" nothing is being
-    // looked at, and the lerp catches up on the first frame after it comes back.
-  }, [gl]);
+  useEffect(() => acquirePointerRotation(gl.domElement), [gl]);
 
   const floatPhaseRef = useRef(0);
 
@@ -204,7 +165,7 @@ export default function DisciplineModel({
    * wrapping a sine by a full period is the identity, and it keeps the number small however
    * long the tab has been open instead of letting it grow and lose its low bits.
    */
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const group = groupRef.current;
     if (!group) return;
 
@@ -214,13 +175,12 @@ export default function DisciplineModel({
         (floatPhaseRef.current + step * AMBIENT_FLOAT_SPEED) % TWO_PI;
     }
 
-    const current = pointerCurrent.current;
-    const target = pointerTarget.current;
-    current.x += (target.x - current.x) * POINTER_LERP;
-    current.y += (target.y - current.y) * POINTER_LERP;
-
-    group.rotation.y = MODEL_BASE_YAW + current.x * POINTER_YAW_MAX;
-    group.rotation.x = current.y * POINTER_PITCH_MAX;
+    // The shared pointer, advanced once per frame however many models are on the strip. The
+    // clock time is the same for every `useFrame` this frame, so the guard inside means both
+    // models mid-slide read one identical value.
+    const pointer = samplePointerRotation(state.clock.elapsedTime, POINTER_LERP);
+    group.rotation.y = MODEL_BASE_YAW + pointer.x * POINTER_YAW_MAX;
+    group.rotation.x = pointer.y * POINTER_PITCH_MAX;
     group.position.y = animated
       ? Math.sin(floatPhaseRef.current) * AMBIENT_FLOAT_AMPLITUDE
       : 0;

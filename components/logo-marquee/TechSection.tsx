@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 interface TechItem {
@@ -66,29 +66,57 @@ const marqueeItems = [...technologies, ...technologies];
 
 export function TechSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const hoveredItemRef = useRef<HTMLDivElement | null>(null);
+  const rafRef = useRef<number | null>(null);
   const [hoveredTech, setHoveredTech] = useState<TechItem | null>(null);
-  const [tooltipPos, setTooltipPos] = useState<{ left: number; top: number } | null>(null);
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>, tech: TechItem) => {
-    const itemElement = e.currentTarget;
+  // The marquee never stops, so the hovered logo keeps sliding out from under its tooltip.
+  // Recompute the tooltip's position from the logo's LIVE rect (imperatively, off React's
+  // render path) so the bubble rides along instead of pinning to where the logo entered.
+  const positionTooltip = () => {
+    const itemElement = hoveredItemRef.current;
     const sectionElement = sectionRef.current;
-    if (!sectionElement) return;
+    const tooltipElement = tooltipRef.current;
+    if (!itemElement || !sectionElement || !tooltipElement) return;
 
     const itemRect = itemElement.getBoundingClientRect();
     const sectionRect = sectionElement.getBoundingClientRect();
+    // Horizontally centered above the logo, both measured against the (static) section.
+    tooltipElement.style.left = `${itemRect.left - sectionRect.left + itemRect.width / 2}px`;
+    tooltipElement.style.top = `${itemRect.top - sectionRect.top}px`;
+  };
 
-    // Position tooltip horizontally centered above the logo
-    const left = itemRect.left - sectionRect.left + itemRect.width / 2;
-    const top = itemRect.top - sectionRect.top;
-
-    setTooltipPos({ left, top });
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>, tech: TechItem) => {
+    hoveredItemRef.current = e.currentTarget;
+    positionTooltip(); // place before it fades in, so it never flashes at a stale spot
     setHoveredTech(tech);
+
+    if (rafRef.current === null) {
+      const track = () => {
+        positionTooltip();
+        rafRef.current = requestAnimationFrame(track);
+      };
+      rafRef.current = requestAnimationFrame(track);
+    }
   };
 
   const handleMouseLeave = () => {
     setHoveredTech(null);
-    // Keep tooltipPos to let the speech bubble fade out in-place without snapping
+    hoveredItemRef.current = null;
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    // The tooltip keeps its last left/top and fades out in place - no snap back.
   };
+
+  // Stop the tracking loop if the section unmounts mid-hover.
+  useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   const isTooltipActive = hoveredTech !== null;
   const tooltipTransform = isTooltipActive
@@ -138,15 +166,14 @@ export function TechSection() {
       </div>
 
       {/* Section-level Tooltip Speech Bubble (can overlap boundary/Hero cleanly) */}
+      {/* Only opacity/transform/box-shadow transition - left/top are updated every frame to
+          track the logo and must NOT ease, or the bubble would lag a moving target. */}
       <div
-        className={`absolute z-50 w-52 sm:w-56 p-3.5 rounded-xl border border-theme bg-[var(--popover)] backdrop-blur-md text-center pointer-events-none transition-all duration-300 ease-out ${
-          isTooltipActive && tooltipPos
-            ? "opacity-100 visible"
-            : "opacity-0 invisible"
+        ref={tooltipRef}
+        className={`absolute z-50 w-52 sm:w-56 p-3.5 rounded-xl border border-theme bg-[var(--popover)] backdrop-blur-md text-center pointer-events-none transition-[opacity,transform,box-shadow] duration-300 ease-out ${
+          isTooltipActive ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         style={{
-          left: tooltipPos ? `${tooltipPos.left}px` : "0px",
-          top: tooltipPos ? `${tooltipPos.top}px` : "0px",
           transform: tooltipTransform,
           boxShadow: hoveredTech ? `0 16px 40px var(--shadow-elevated), 0 0 30px ${hoveredTech.glowColor}` : undefined,
         }}

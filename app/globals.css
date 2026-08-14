@@ -159,17 +159,17 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #f2ede3;
+  --background: #eee6d8;
   --foreground: #2d2820;
-  --card: rgba(252, 248, 240, 0.94);
+  --card: rgba(248, 241, 228, 0.94);
   --card-foreground: #2d2820;
-  --popover: rgba(252, 248, 240, 0.98);
+  --popover: rgba(248, 241, 228, 0.98);
   --popover-foreground: #2d2820;
   --primary: #1f2c3d;
-  --primary-foreground: #f2ede3;
-  --secondary: #e8e1d1;
+  --primary-foreground: #eee6d8;
+  --secondary: #e2d7c0;
   --secondary-foreground: #1f2c3d;
-  --muted: rgba(231, 224, 209, 0.65);
+  --muted: rgba(225, 215, 195, 0.65);
   --muted-foreground: rgba(82, 73, 58, 0.75);
   --accent: rgba(88, 196, 255, 0.25);
   --accent-foreground: #2d2820;
@@ -182,18 +182,18 @@
   --chart-3: #a78bfa;
   --chart-4: #f472b6;
   --chart-5: #facc15;
-  --sidebar: rgba(252, 248, 240, 0.88);
+  --sidebar: rgba(248, 241, 228, 0.88);
   --sidebar-foreground: #2d2820;
   --sidebar-primary: #1f2c3d;
-  --sidebar-primary-foreground: #f2ede3;
-  --sidebar-accent: rgba(231, 224, 209, 0.7);
+  --sidebar-primary-foreground: #eee6d8;
+  --sidebar-accent: rgba(225, 215, 195, 0.7);
   --sidebar-accent-foreground: #1f2c3d;
   --sidebar-border: rgba(64, 55, 40, 0.16);
   --sidebar-ring: rgba(31, 44, 61, 0.28);
 
-  --surface-section: #eae3d3;
-  --surface-card-muted: rgba(231, 224, 209, 0.75);
-  --surface-overlay: rgba(242, 237, 227, 0.82);
+  --surface-section: #e4dac2;
+  --surface-card-muted: rgba(225, 215, 195, 0.75);
+  --surface-overlay: rgba(238, 230, 216, 0.82);
   /* Background video — inverted for light, so the clip reads as ink dots on
      paper instead of a black slab. `multiply` then drops the (now white)
      backdrop and keeps only the dots. */
@@ -210,7 +210,7 @@
   --field-rest: 0.62;
   --text-primary: #2c2720;
   --text-secondary: rgba(82, 73, 58, 1);
-  --text-inverse: #f2ede3;
+  --text-inverse: #eee6d8;
   --border-soft: rgba(64, 55, 40, 0.14);
   --border-strong: rgba(64, 55, 40, 0.22);
   --shadow-elevated: rgba(56, 46, 30, 0.16);
@@ -595,11 +595,15 @@ html.lenis body {
      left this rule webkit-only, so the glass vanished in Firefox. */
   backdrop-filter: var(--nav-blur);
   opacity: 0;
-  transform: scale(1.015);
-  transform-origin: top center;
+  /* Rest state is visibly smaller than the peeled one - 1.015 read as a fade
+     with no real size change, so the island seemed to pop into place instead
+     of growing into it. Center origin so the growth reads as an expansion,
+     not a slide down from the top edge. */
+  transform: scale(0.92);
+  transform-origin: center;
   pointer-events: none;
-  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
               background-color 0.6s ease,
               border-color 0.6s ease;
 }

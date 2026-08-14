@@ -63,7 +63,7 @@ const Timeline = () => {
       />
 
       <div className="site-container relative">
-        <header className="mx-auto mb-16 max-w-3xl space-y-6 text-center">
+        <header className="mx-auto mb-16 max-w-3xl space-y-6 text-center overflow-auto">
           <span className="text-xs uppercase tracking-[0.6em] text-cyan-400">
             Kako gradimo zamah
           </span>
