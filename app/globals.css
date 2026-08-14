@@ -838,12 +838,16 @@ html.lenis body {
   animation: theme-circle-reveal 0.6s linear forwards;
 }
 
+/* Percentages, not px, and ThemeProvider writes --spot-* in the same unit: they
+   resolve against the pseudo's own box, so the centre lands on the button
+   whatever size the UA gives that box. px would additionally require the box to
+   share the viewport's scale. 150% of the radius reference clears any corner. */
 @keyframes theme-circle-reveal {
   from {
-    clip-path: circle(0 at var(--spot-x, 50%) var(--spot-y, 50%));
+    clip-path: circle(0% at var(--spot-x, 50%) var(--spot-y, 50%));
   }
   to {
-    clip-path: circle(var(--spot-r, 150vmax) at var(--spot-x, 50%) var(--spot-y, 50%));
+    clip-path: circle(var(--spot-r, 150%) at var(--spot-x, 50%) var(--spot-y, 50%));
   }
 }
 

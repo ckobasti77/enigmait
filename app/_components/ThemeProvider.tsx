@@ -57,20 +57,32 @@ const ORIGIN_STYLE_ID = "theme-vt-origin";
 // wins by name rather than by racing it in the cascade.
 const LIVE_KEYFRAMES = "theme-circle-reveal-live";
 
-// Origin (circle centre) + radius to the farthest viewport corner, baked into a
-// <style> as LITERAL px.
+// Origin (circle centre) + radius to the farthest corner, baked into a <style>
+// at click time as LITERAL PERCENTAGES of the snapshot box.
 //
-// The obvious version hands them to the keyframes as `--spot-*` on :root and
-// lets them inherit into the pseudo tree. That is the part that broke: the
-// ::view-transition tree is not ordinary DOM, and an engine (or a version) that
-// does not carry custom properties into it silently drops
-// `circle(… at var(--spot-x, 50%) var(--spot-y, 50%))` onto its fallback — the
-// middle of the screen. The circle still runs, it just stops coming out of the
-// button, which is exactly the symptom. A literal `circle(0px at 1098px 42px)`
-// has nothing to inherit and cannot fall back.
+// Two things had to go, and they are separate bugs sharing one symptom — the
+// circle runs, it just does not come out of the button:
 //
-// `--spot-*` are still written to :root: globals.css keeps the var() keyframes
-// as the path for a client that never runs this code.
+// 1. Handing the origin to the keyframes as `--spot-*` on :root and trusting it
+//    to inherit. ::view-transition-* is not ordinary DOM; an engine that does
+//    not carry custom properties into that tree drops
+//    `circle(… at var(--spot-x, 50%) …)` onto its fallback — screen centre.
+//    Literals in the keyframes have nothing to inherit and cannot fall back.
+//
+// 2. Writing those literals in **px**. px only lands on the button if the
+//    pseudo's box shares the viewport's origin AND its scale. That is an
+//    assumption about a box the spec lets the UA size, and it is the assumption
+//    left standing after (1) was fixed. Percentages resolve against the pseudo's
+//    own border box, so they only need the box to *cover* the viewport, not to
+//    measure the same — any uniform scale (fractional DPR, page zoom) cancels.
+//
+// The radius is a percentage for the same reason. `circle()` resolves a
+// percentage radius against sqrt(w² + h²) / sqrt(2) of that same box, so it
+// scales with it and still clears the farthest corner.
+//
+// `--spot-*` are still written to :root — in the same percentage units — because
+// globals.css keeps the var() keyframes as the path for a client that never runs
+// this code.
 //
 // Returns the disposer — the rule must not outlive the transition, or the next
 // toggle from a different button starts from the old origin.
@@ -85,9 +97,13 @@ const setTransitionOrigin = (origin?: ThemeToggleOrigin) => {
   const y = origin?.y ?? vh / 2;
   const radius = Math.hypot(Math.max(x, vw - x), Math.max(y, vh - y));
 
-  root.style.setProperty("--spot-x", `${x}px`);
-  root.style.setProperty("--spot-y", `${y}px`);
-  root.style.setProperty("--spot-r", `${radius}px`);
+  const xPercent = (x / vw) * 100;
+  const yPercent = (y / vh) * 100;
+  const radiusPercent = (radius / (Math.hypot(vw, vh) / Math.SQRT2)) * 100;
+
+  root.style.setProperty("--spot-x", `${xPercent}%`);
+  root.style.setProperty("--spot-y", `${yPercent}%`);
+  root.style.setProperty("--spot-r", `${radiusPercent}%`);
 
   const previous = document.getElementById(ORIGIN_STYLE_ID);
   previous?.remove();
@@ -97,8 +113,8 @@ const setTransitionOrigin = (origin?: ThemeToggleOrigin) => {
   // `!important` so this beats the stylesheet's `animation` shorthand no matter
   // where the framework ends up inserting globals.css relative to <head>'s tail.
   style.textContent = `@keyframes ${LIVE_KEYFRAMES} {
-  from { clip-path: circle(0px at ${x}px ${y}px); }
-  to { clip-path: circle(${radius}px at ${x}px ${y}px); }
+  from { clip-path: circle(0% at ${xPercent}% ${yPercent}%); }
+  to { clip-path: circle(${radiusPercent}% at ${xPercent}% ${yPercent}%); }
 }
 ::view-transition-new(root) {
   animation: ${LIVE_KEYFRAMES} ${REVEAL_MS}ms linear forwards !important;
