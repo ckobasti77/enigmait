@@ -3596,3 +3596,205 @@ select.float-field-input {
    app/_components/NavbarCubeMark.tsx. Nothing to style here: the canvas fills
    its box, the loop lives in the shader's uniforms, and the OS reduced-motion
    preference is read by the component itself. */
+
+/* ─── Vitrina projekata (3D slajder na `/projects`) ────────────────────────
+   Sekcija drži svoj CSS, kao `.service-hero-viewport` pored `.discipline-viewport`.
+   Duplirano iz `.discipline-*` namerno: iste vrednosti, ali projekti i discipline
+   ne smeju da se pomeraju jedno drugom kad se jedno od njih podesi. */
+
+/* KUTIJA, I RAZLOG ZAŠTO NEMA CLS-a.
+   Rezervisana ovde, u CSS-u, na omotaču koji se renderuje pre bilo koje od tri
+   stvari koje mogu da uđu u nju - WebGL canvas, CSS klaster sa slikama, ili ništa
+   dok WebGL proba odgovara. Visina sekcije je time rešena na prvom paint-u.
+
+   Odnos stranica se lomi na ISTOJ 768 liniji kao `LAYOUT_NARROW` u
+   `constants/projectShowcase3D.ts`. To nije kozmetika: uski preset je podešen
+   protiv portretnog kadra, a široki protiv 16/10, i frustum bi na pogrešnom paru
+   odsekao monitor.
+
+   `touch-action: pan-y pinch-zoom` predaje vertikalni gest i pinch browseru, pa
+   swipe handler vidi samo bočni deo - skrol strane se nikad ne otima. */
+.project-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  /* PLAFON VISINE, i on je razlog zašto kamera ume da se uklapa.
+     Bez njega 16/10 na punoj širini kontejnera daje 800px, što na laptopu od
+     900px popuni ceo ekran - a strelice i tekst projekta padnu ispod preloma, pa
+     posetilac gleda scenu i ne vidi čime da je pomeri. `dvh` a ne `vh`: na
+     telefonu se traka adrese uvlači i `vh` bi merio ekran koji se ne vidi ceo. */
+  max-height: min(62dvh, 640px);
+  touch-action: pan-y pinch-zoom;
+}
+
+@media (max-width: 767px) {
+  .project-viewport {
+    aspect-ratio: 4 / 5;
+    max-height: 66dvh;
+  }
+}
+
+/* Scena i tekst dele jedan pozicioni kontekst. */
+.project-stage {
+  position: relative;
+}
+
+/* Tekst projekta.
+   Ispod `lg` običan blok pod scenom. Od `lg` naviše stoji PREKO scene, u desnoj
+   trećini kadra koju `LAYOUT_SPLIT` namerno ostavlja praznu - zato je 1024 ovde i
+   `SPLIT_QUERY` u `constants/projectShowcase3D.ts` isti broj na dva mesta: raziđu
+   li se, tekst sedne na monitor.
+
+   `pointer-events` se ne dira: blok pokriva prazan deo kadra, a jedina
+   interakcija ispod njega je swipe, koji na dodirnim uređajima ionako radi u
+   portretnom rasporedu gde ovog preklapanja nema. */
+.project-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 1.75rem;
+  max-width: 42rem;
+}
+
+@media (min-width: 1024px) {
+  .project-copy {
+    position: absolute;
+    /* Uvučeno od obe ivice, a ne prislonjeno uz njih: blok tako sedi U kadru
+       scene, umesto da izgleda kao da je odložen pored njega. Odstojanja su u
+       procentima kutije scene, pa se ćošak drži i kad `max-height` skrati kadar. */
+    top: 4%;
+    right: 3%;
+    width: min(32%, 22rem);
+    margin-top: 0;
+    max-width: none;
+  }
+}
+
+/* Grana bez WebGL-a (i sa `prefers-reduced-motion`). Tri klastera su montirana i
+   jedan je neproziran, pa je korak zamena dve VEĆ DEKODOVANE slike umesto novog
+   fetch-a - jedini način da kontrole u fallback-u budu stvarno instant.
+   Trajanje i kriva su red `stepper tacka` iz `disciplinesTiming.ts`. */
+.project-fallback {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.project-fallback[data-active="true"] {
+  opacity: 1;
+}
+
+/* Domaćin `<video>` elementa za `VideoTexture`.
+   Element MORA da bude u dokumentu - Safari odbija inline dekodiranje za `<video>`
+   van njega - i mora da ostane u renderu: `display: none` i `visibility: hidden`
+   oba u WebKit-u zaustavljaju dekodiranje. Otuda 2px i `opacity: 0`, unutar
+   sekcije koja je na ekranu kad i scena. */
+.project-video-host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.project-video-host video {
+  width: 2px;
+  height: 2px;
+}
+
+/* Rampa kontrola. `--service-caret` mora da stoji OVDE: `ArrowCaret` renderuje
+   `.service-arrow-caret`, koji čita tu promenljivu, a ni `.service-carousel` ni
+   `.disciplines` nisu preci ovog steppera - bez nje bi SVG ostao bez veličine. */
+.project-stepper {
+  --project-control: 2.25rem;
+  --project-dot: 0.5rem;
+  --project-dot-active: 1.6rem;
+  --service-caret: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.project-dots {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.project-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--project-control);
+  height: var(--project-control);
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+  color: var(--card-trace);
+}
+
+.project-arrow:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+/* Iskra u strelici se povlači iz zgloba ka vrhovima. Pravilo koje to radi za
+   `.service-arrow` i `.discipline-arrow` živi gore uz karet; ovde se dodaje treći
+   potrošač umesto da se ta lista menja iz daljine. */
+.project-arrow:hover .service-arrow-spark path,
+.project-arrow:focus-visible .service-arrow-spark path {
+  stroke-dashoffset: 0;
+}
+
+/* Nema `:disabled` pravila: lista se vrti, pa nijedna strelica ne stiže do kraja. */
+
+.project-dot {
+  display: block;
+  width: var(--project-dot);
+  height: var(--project-dot);
+  border-radius: 999px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  background: var(--text-secondary);
+  opacity: 0.35;
+  transition: opacity var(--project-dot-duration, 0.28s)
+      var(--project-dot-ease, ease-out),
+    width var(--project-dot-duration, 0.28s) var(--project-dot-ease, ease-out),
+    background-color var(--project-dot-duration, 0.28s)
+      var(--project-dot-ease, ease-out);
+}
+
+.project-dot:hover {
+  opacity: 0.7;
+}
+
+.project-dot:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  opacity: 1;
+}
+
+/* Aktivna tačka se RASTEŽE, ne naduvava - rampa se čita kao pozicija na traci, a
+   ne kao šest lampi od kojih jedna svetli. Visina se ne dira. */
+.project-dot[aria-current="true"] {
+  width: var(--project-dot-active);
+  background: var(--primary);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-fallback,
+  .project-dot {
+    transition: none;
+  }
+}

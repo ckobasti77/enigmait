@@ -433,6 +433,14 @@ export const englishToSerbianEntries = [
   ["Addresses lead to a live site", "Adresa vodi na živ sajt"],
   ["Featured", "Izdvojeno"],
   ["Open the site", "Otvori sajt"],
+  // 3D vitrina: kontrole i pristupačna imena. Zaseban par od strelica karusela
+  // usluga ("Prethodna/Sledeća usluga") - tabela se čita unazad za sr -> en, pa
+  // nijedan par ne sme da deli nijednu stranu.
+  ["Previous project", "Prethodni projekat"],
+  ["Next project", "Sledeći projekat"],
+  ["Project slider controls", "Kontrole slajdera projekata"],
+  ["Project shown on four devices", "Projekat prikazan na četiri uređaja"],
+  ["All projects", "Svi projekti"],
   // Tri koraka, sažeta u jedan red u hero-u stranice Projekti.
   ["Conversation and plan", "Razgovor i plan"],
   ["Design and build", "Dizajn i izrada"],
@@ -614,6 +622,36 @@ export const englishToSerbianEntries = [
     "An agency running social media and advertising for hotels, restaurants and cafés. The site is in English and on a dark theme, walking through the services, the team and the way they work, up to the contact.",
     "Agencija koja vodi društvene mreže i oglašavanje za hotele, restorane i kafiće. Sajt je na engleskom i u tamnoj temi, a vodi kroz usluge, tim i način rada do kontakta.",
   ],
+
+  // Prva rečenica sažetka - to je ono što stoji u panelu 3D vitrine, pored
+  // scene. Nije nov tekst: obe strane su doslovno prve rečenice parova iznad,
+  // registrovane zasebno jer `LanguageProvider` prevodi CEO tekstualni čvor, pa
+  // skraćena verzija ne pogađa par pune verzije.
+  [
+    "A hair salon in Šabac offering care treatments, colouring and its own line of retail products.",
+    "Frizerski salon iz Šapca sa tretmanima nege, koloracijama i sopstvenom prodajom preparata.",
+  ],
+  [
+    "A travel agency whose offer runs from pilgrimages and summer holidays to bus hire with a driver.",
+    "Turistička agencija čija ponuda ide od hodočašća i letovanja do iznajmljivanja autobusa sa vozačem.",
+  ],
+  [
+    "A company that installs and maintains video surveillance systems and carries out excavation work with its own machinery.",
+    "Firma koja ugrađuje i održava sisteme video nadzora, a uz to izvodi iskopne radove sopstvenom mehanizacijom.",
+  ],
+  [
+    "A shop for European clothing and footwear with a deliberately small range, where every piece has a reason to be there.",
+    "Prodavnica evropske odeće i obuće sa namerno malim asortimanom, gde svaki komad ima razlog da bude tu.",
+  ],
+  [
+    "A construction company that builds and, through its own investments, moves into real estate.",
+    "Građevinska firma koja gradi objekte i kroz sopstvene investicije izlazi na tržište nekretnina.",
+  ],
+  [
+    "An agency running social media and advertising for hotels, restaurants and cafés.",
+    "Agencija koja vodi društvene mreže i oglašavanje za hotele, restorane i kafiće.",
+  ],
+  ["Open the code", "Otvori kod"],
 
   // Project scope labels
   ["Website", "Web sajt"],

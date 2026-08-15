@@ -47,6 +47,16 @@ export type Project = {
   /** What the job covered. Technology belongs here, not in `summary`. */
   scope: string[];
   media: ProjectMedia | null;
+  /**
+   * Public source, if there is one. Drives the "Otvori kod" button in the 3D
+   * showcase (`components/sections/projects/ProjectShowcaseCopy.tsx`).
+   *
+   * Optional on purpose, and the button only renders when it is set: a client
+   * site whose source is private must not grow a control that leads nowhere. To
+   * add one, paste the repository URL here, e.g.
+   * `repo: "https://github.com/<org>/<repo>"`.
+   */
+  repo?: string;
 };
 
 const showcaseMedia = (id: string): ProjectMedia => ({

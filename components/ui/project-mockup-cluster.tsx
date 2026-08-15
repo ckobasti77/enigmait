@@ -43,12 +43,23 @@ export function ProjectMockupCluster({
   media,
   monogram,
   priority = false,
+  stills = false,
   className,
 }: {
   /** Ključ u `PROJECT_MOCKUPS`. Nedostaje li — ekrani ostaju prazni ramovi. */
   projectId: string;
   /** Scroll snimak za laptop. Bez njega laptop pada na statičnu sliku. */
   media: ProjectMedia | null;
+  /**
+   * Laptop uzima `mockup.laptop` umesto `ShowcaseVideo`, i kad `media` postoji.
+   *
+   * Postavlja ga fallback 3D vitrine (`components/sections/projects/`) i niko
+   * drugi. Taj fallback postoji za `prefers-reduced-motion`, Save-Data, nisku
+   * bateriju i mašine bez WebGL-a — četiri uslova koji svi znače „ne dekodiraj
+   * video", pa jedina pokretna površina u klasteru je tačno ono što ne sme da
+   * pređe u njega.
+   */
+  stills?: boolean;
   /** Vodeni žig u ekranu monitora dok slika ne stigne (i ako je nema). */
   monogram: string;
   /**
@@ -108,7 +119,7 @@ export function ProjectMockupCluster({
         <div className="mockup-device mockup-laptop">
           <div className="mockup-laptop-lid">
             <div className="mockup-screen mockup-screen-laptop">
-              {media ? (
+              {media && !stills ? (
                 <ShowcaseVideo media={media} className="absolute inset-0" />
               ) : armed && mockup ? (
                 <Image

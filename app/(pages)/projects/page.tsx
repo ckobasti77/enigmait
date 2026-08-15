@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import clsx from "clsx";
 
 import AutoTypingConsole from "@/components/ui/auto-typing-console";
-import { RevealCard } from "@/components/ui/card";
 import CtaButton from "@/components/ui/cta-button";
-import ProjectMockupCluster from "@/components/ui/project-mockup-cluster";
-import { projects, type Project } from "@/constants/projects";
+import ProjectShowcase from "@/components/sections/projects";
+import { projects } from "@/constants/projects";
 
 export const metadata: Metadata = {
   title: "Projekti — Enigma Digital",
@@ -37,99 +35,33 @@ const proofs = [
   { value: "100%", label: "Adresa vodi na živ sajt" },
 ];
 
-const [featured, ...rest] = projects;
-
-/** The domain, shown as the card's proof: the site is live, go look. */
-const displayHost = (url: string) =>
-  url.replace(/^https?:\/\//, "").replace(/\/$/, "");
-
-/** Najviše tri čipa po kartici - ostatak opsega posla se vidi na samom sajtu. */
-const MAX_CHIPS = 3;
-
 /**
- * Medija pano kartice, homepage process-card gramatika: slika gore, telo ispod.
- * Pano više nema browser chrome traku - ram je sad sam uređaj, četiri njih, i
- * druga lažna traka iznad njih bila bi ram preko rama. Ostaje ono što je i
- * ranije bilo pozadina korice: rešetka i glow, sad kao pod pod klasterom.
- * `className` nosi samo odnos stranica i ivicu, jer se ona razlikuje između
- * featured panela (levo) i kartice u mreži (gore).
+ * `ItemList` svih šest projekata.
+ *
+ * Mora da bude u serviranom HTML-u, pa se gradi ovde na serveru i ide kao običan
+ * `<script>` - `next/script` sa `afterInteractive` ubacuje tag tek posle
+ * hidracije, pa `.next/server/app/*.html` ostaje bez ijednog `application/ld+json`.
+ * Isti razlog i isti oblik kao `DisciplinesSection.tsx`.
  */
-function ProjectCover({
-  project,
-  className,
-  priority = false,
-}: {
-  project: Project;
-  className?: string;
-  /** Samo za izdvojeni projekat: njegova korica je iznad preloma. */
-  priority?: boolean;
-}) {
-  return (
-    <div
-      aria-hidden
-      data-reveal="off"
-      className={clsx(
-        "relative overflow-hidden border-theme theme-card-muted",
-        className
-      )}
-    >
-      <div
-        className="absolute inset-0 opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "linear-gradient(var(--text-primary) 1px, transparent 1px), linear-gradient(90deg, var(--text-primary) 1px, transparent 1px)",
-          backgroundSize: "36px 36px",
-        }}
-      />
-      <div className="absolute -left-14 -top-10 h-44 w-44 rounded-full glow-accent blur-[80px]" />
-
-      <ProjectMockupCluster
-        projectId={project.id}
-        media={project.media}
-        monogram={project.monogram}
-        priority={priority}
-      />
-    </div>
-  );
-}
-
-/** Opseg posla, skraćen na tri stavke. */
-function ScopeChips({ scope }: { scope: string[] }) {
-  return (
-    <ul className="flex flex-wrap gap-2">
-      {scope.slice(0, MAX_CHIPS).map((item) => (
-        <li
-          key={item}
-          className="rounded-full border border-theme px-3 py-1 text-[11px] text-theme-muted"
-        >
-          {item}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/** Adresa sajta kao dokaz: otvori i proveri. */
-function LiveLink({ url }: { url: string }) {
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      className="inline-flex w-fit items-center gap-2 font-accent text-xs text-theme-muted transition-colors hover:text-cyan-300"
-    >
-      {displayHost(url)}
-      <span aria-hidden>↗</span>
-    </a>
-  );
-}
+const ITEM_LIST_JSON_LD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Projekti — Enigma Digital",
+  numberOfItems: projects.length,
+  itemListElement: projects.map((project, position) => ({
+    "@type": "ListItem",
+    position: position + 1,
+    name: project.title,
+    description: project.summary,
+    url: project.url,
+  })),
+});
 
 export default function ProjectsPage() {
   return (
     <>
-      {/* 01 - hero i odmah mreža radova. Jedna sekcija, jer je lista dokaz za
-          tvrdnju iz hero-a i ne treba joj sopstveni uvod sa drugim naslovom. */}
-      <section className="site-gutter theme-section relative overflow-hidden py-20 transition-theme md:py-24">
+      {/* 01 - hero. Tvrdnja i brojevi; dokaz je scena odmah ispod. */}
+      <section className="site-gutter theme-section relative overflow-hidden pb-10 pt-20 transition-theme md:pb-12 md:pt-24">
         <div
           aria-hidden
           className="pointer-events-none absolute left-1/2 top-8 z-0 h-[440px] w-[440px] -translate-x-1/2 rounded-full glow-accent blur-[150px]"
@@ -188,86 +120,55 @@ export default function ProjectsPage() {
               ))}
             </ol>
           </div>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Prvi projekat nosi celu širinu: medija levo, opis desno.
-                `col-span` stoji na omotaču, ne na kartici: `Card` prosleđuje
-                `className` sadržaju, a ćelija mreže je koren kartice. */}
-            <div className="md:col-span-2">
-              <RevealCard
-                as="article"
-                className="group grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]"
-              >
-                {/* Featured nosi isti odnos kao ostale korice, ali u široj
-                    koloni - klaster se skalira sa koricom, pa je izdvojeni
-                    projekat i najveći, bez druge geometrije. */}
-                <ProjectCover
-                  project={featured}
-                  className="aspect-[5/4] border-b lg:border-b-0 lg:border-r"
-                  priority
-                />
-                <div className="flex flex-col gap-5 p-7 sm:p-9">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center rounded-full border border-cyan-400/40 px-3 py-1 text-[10px] uppercase tracking-[0.35em] text-cyan-300">
-                      Izdvojeno
-                    </span>
-                    <span className="inline-flex items-center rounded-full border border-theme px-3 py-1 text-[10px] uppercase tracking-[0.35em] text-theme-muted">
-                      {featured.tag}
-                    </span>
-                  </div>
-                  <h2 className="text-xl leading-snug text-theme-primary md:text-2xl">
-                    {featured.title}
-                  </h2>
-                  <p className="text-sm leading-relaxed text-theme-muted">
-                    {featured.summary}
-                  </p>
-                  <ScopeChips scope={featured.scope} />
-                  <div className="mt-auto flex flex-wrap items-center gap-5 pt-2">
-                    {/* Podrazumevana veličina, ne `sm`: h-11 je 44px dodirne
-                        zone, `sm` bi bilo 36. */}
-                    <CtaButton
-                      href={featured.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Otvori sajt
-                    </CtaButton>
-                    <LiveLink url={featured.url} />
-                  </div>
-                </div>
-              </RevealCard>
-            </div>
-
-            {rest.map((project) => (
-              <RevealCard
-                as="article"
-                key={project.id}
-                className="group flex h-full flex-col"
-              >
-                <ProjectCover project={project} className="aspect-[5/4] border-b" />
-
-                <div className="flex flex-1 flex-col gap-4 p-7">
-                  <span className="inline-flex w-fit items-center rounded-full border border-theme px-3 py-1 text-[10px] uppercase tracking-[0.45em] text-cyan-300">
-                    {project.tag}
-                  </span>
-                  <h3 className="text-lg font-semibold text-theme-primary">
-                    {project.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-theme-muted">
-                    {project.summary}
-                  </p>
-                  <ScopeChips scope={project.scope} />
-                  <div className="mt-auto pt-3">
-                    <LiveLink url={project.url} />
-                  </div>
-                </div>
-              </RevealCard>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* 02 - jedan kompaktan završni CTA. */}
+      {/* 02 - jedna scena, četiri uređaja, šest projekata koji klize kroz njih. */}
+      <ProjectShowcase>
+        {/*
+          CEO SEO ARGUMENT STRANE, renderovan na serveru.
+
+          Vidljivi tekst pripada jednom projektu u datom trenutku, pa bi bez ovoga
+          u HTML-u koji crawler dobije stajao jedan od šest. Ovde su sva šest, sa
+          pravim `href`-om, bez obzira da li se ijedan canvas ikad montira.
+
+          `data-reveal="off"` nije dekoracija: site-wide kontroler kreće od
+          `opacity: 0` i otkriva na presek sa kadrom, a `sr-only` element je
+          isečen na 1px - njegov observer možda nikad ne opali i tekst bi ostao
+          neotkriven zauvek.
+
+          `tabIndex={-1}` na linkovima: blok je vizuelno isečen, pa bi ih tastatura
+          inače obilazila kao nevidljive stanice. Čitač ekrana i crawler ih i dalje
+          vide, a tastatura do svakog od šest sajtova stiže kroz vidljiv CTA koji
+          se menja sa slajderom.
+        */}
+        <section aria-label="Svi projekti" data-reveal="off" className="sr-only">
+          <h2>Svi projekti</h2>
+          <ul>
+            {projects.map((project) => (
+              <li key={project.id}>
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  tabIndex={-1}
+                >
+                  {project.title}
+                </a>
+                <p>{project.summary}</p>
+                <p>{project.scope.join(", ")}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ITEM_LIST_JSON_LD }}
+        />
+      </ProjectShowcase>
+
+      {/* 03 - jedan kompaktan završni CTA. */}
       <section className="site-gutter theme-section border-t border-theme py-16 transition-theme sm:py-20">
         <div className="site-container flex flex-col items-center gap-5 text-center">
           <h2 className="max-w-3xl text-2xl leading-snug text-theme-primary md:text-3xl">
