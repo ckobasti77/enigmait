@@ -179,8 +179,23 @@ export const LAYOUT_WIDE: ShowcaseLayout = {
   camera: {
     direction: [0, 0.05, 1],
     fov: 30,
-    target: [-0.1, 0.09, 0.1],
-    fit: { width: 3.45, height: 1.95 },
+    /**
+     * Uklopni boks je tesno oko klastera - to je ono što uređaje čini punom
+     * širinom kontejnera umesto da lebde u sredini kadra.
+     *
+     * BROJEVI SU PROJEKTOVANI, NE GEOMETRIJSKI. Sirovi bbox klastera je 3.14 x
+     * 1.81, ali uređaji stoje na različitim dubinama (monitor na z -0.35,
+     * telefon na +0.66) i bliži se projektuju veći: telefon je ~1.19x, tablet
+     * ~1.10x, monitor ~0.89x. Boks računat po sirovom bbox-u odseca telefon
+     * desno i tablet dole - provereno. Projektovani raspon je 3.31 x 1.77 sa
+     * centrom na (0.08, 0.00), plus ~7% vazduha.
+     *
+     * Odnos ovog boksa (~15/8) je i razlog zašto `.project-viewport` drži baš taj
+     * odnos stranica: kutija šira od klastera znači uklapanje po visini, praznina
+     * levo i desno, i manji uređaji bez ikakve dobiti.
+     */
+    target: [0.08, 0, 0.1],
+    fit: { width: 3.55, height: 1.9 },
   },
   devices: {
     desktop: { position: [-0.72, 0.42, -0.35], rotation: [-0.02, 0.16, 0], scale: 1 },

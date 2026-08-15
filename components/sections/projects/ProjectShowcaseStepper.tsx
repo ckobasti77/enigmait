@@ -21,11 +21,23 @@ type ProjectShowcaseStepperProps = {
   activeIndex: number;
   onStep: (direction: 1 | -1) => void;
   onSelect: (index: number) => void;
+  /**
+   * Scena je u kadru. Strelice su `position: fixed`, pa bez ovoga bi lebdele uz
+   * ivice ekrana i nad hero-om i nad završnim CTA-om - isti razlog i isti
+   * `data-visible` prekidač kao kod karusela usluga.
+   */
+  visible: boolean;
   className?: string;
 };
 
 /**
- * Strelica, tačke, strelica.
+ * Strelice uz ivice ekrana, tačke pod scenom - gramatika slajdera na
+ * `/services`.
+ *
+ * Strelice su namerno IZVAN toka: kao `position: fixed` na pola visine ekrana
+ * one stoje uz levu i desnu ivicu dok je scena u kadru, pa ruka ne mora da se
+ * vraća pod scenu za svaki korak. Tačke ostaju dole jer su navigacija po listi, a
+ * ne komanda - i one moraju da budu uz sadržaj koji broje.
  *
  * Nijedno dugme nije `disabled` i nema pravila za `:disabled` - lista se vrti, pa
  * nijedna strelica nikad ne stiže do kraja.
@@ -38,26 +50,38 @@ export default function ProjectShowcaseStepper({
   activeIndex,
   onStep,
   onSelect,
+  visible,
   className,
 }: ProjectShowcaseStepperProps) {
   return (
-    <div
-      className={clsx("project-stepper", className)}
-      style={DOT_TIMING}
-      role="group"
-      aria-label="Kontrole slajdera projekata"
-    >
+    <>
       <button
         type="button"
-        className="project-arrow"
-        data-dir="prev"
+        className="project-arrow project-arrow--prev"
         aria-label="Prethodni projekat"
+        data-visible={visible}
+        tabIndex={visible ? 0 : -1}
         onClick={() => onStep(-1)}
       >
         <ArrowCaret direction={-1} />
       </button>
+      <button
+        type="button"
+        className="project-arrow project-arrow--next"
+        aria-label="Sledeći projekat"
+        data-visible={visible}
+        tabIndex={visible ? 0 : -1}
+        onClick={() => onStep(1)}
+      >
+        <ArrowCaret direction={1} />
+      </button>
 
-      <div className="project-dots">
+      <div
+        className={clsx("project-dots", className)}
+        style={DOT_TIMING}
+        role="group"
+        aria-label="Kontrole slajdera projekata"
+      >
         {projects.map((project, position) => (
           <button
             key={project.id}
@@ -69,16 +93,6 @@ export default function ProjectShowcaseStepper({
           />
         ))}
       </div>
-
-      <button
-        type="button"
-        className="project-arrow"
-        data-dir="next"
-        aria-label="Sledeći projekat"
-        onClick={() => onStep(1)}
-      >
-        <ArrowCaret direction={1} />
-      </button>
-    </div>
+    </>
   );
 }

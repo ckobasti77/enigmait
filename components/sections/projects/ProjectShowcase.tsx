@@ -216,6 +216,7 @@ export default function ProjectShowcase({ children }: { children?: ReactNode }) 
           activeIndex={activeIndex}
           onStep={step}
           onSelect={goTo}
+          visible={isIntersecting}
         />
       </div>
 

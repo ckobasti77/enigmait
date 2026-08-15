@@ -3617,13 +3617,15 @@ select.float-field-input {
 .project-viewport {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  /* PLAFON VISINE, i on je razlog zašto kamera ume da se uklapa.
-     Bez njega 16/10 na punoj širini kontejnera daje 800px, što na laptopu od
-     900px popuni ceo ekran - a strelice i tekst projekta padnu ispod preloma, pa
-     posetilac gleda scenu i ne vidi čime da je pomeri. `dvh` a ne `vh`: na
-     telefonu se traka adrese uvlači i `vh` bi merio ekran koji se ne vidi ceo. */
-  max-height: min(62dvh, 640px);
+  /* ODNOS STRANICA JE ODNOS SAMOG KLASTERA (3.22 / 1.88), ne slobodan izbor.
+     Kutija šira od klastera znači da kamera uklapa po visini, pa ostaje praznina
+     levo i desno a uređaji se smanje. Ovako kadar prati oblik kompozicije i
+     mockapi idu punom širinom kontejnera.
+     `max-height` postoji samo za niske prozore, i namerno je visok: tekst je od
+     1280px UNUTAR scene, pa ispod nje treba prostora još samo za rampu sa
+     tačkama. `dvh` a ne `vh` - na telefonu se traka adrese uvlači. */
+  aspect-ratio: 15 / 8;
+  max-height: 86dvh;
   touch-action: pan-y pinch-zoom;
 }
 
@@ -3716,29 +3718,19 @@ select.float-field-input {
   height: 2px;
 }
 
-/* Rampa kontrola. `--service-caret` mora da stoji OVDE: `ArrowCaret` renderuje
-   `.service-arrow-caret`, koji čita tu promenljivu, a ni `.service-carousel` ni
-   `.disciplines` nisu preci ovog steppera - bez nje bi SVG ostao bez veličine. */
-.project-stepper {
-  --project-control: 2.25rem;
-  --project-dot: 0.5rem;
-  --project-dot-active: 1.6rem;
-  --service-caret: 1.5rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.project-dots {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.6rem;
-}
-
+/* STRELICE UZ IVICE EKRANA, kao na karuselu usluga.
+   `position: fixed` na pola visine, pa ruka ne mora da se vraća pod scenu za
+   svaki korak. Zato im treba `data-visible`: bez njega bi lebdele nad hero-om i
+   nad završnim CTA-om. `--service-caret` mora da stoji OVDE - `ArrowCaret`
+   renderuje `.service-arrow-caret` koji čita tu promenljivu, a ni
+   `.service-carousel` ni `.disciplines` nisu preci ovih dugmadi. */
 .project-arrow {
+  --project-control: 3.25rem;
+  --service-caret: 2.25rem;
+  position: fixed;
+  top: 50%;
+  z-index: 40;
+  translate: 0 -50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3749,11 +3741,57 @@ select.float-field-input {
   background: none;
   cursor: pointer;
   color: var(--card-trace);
+  transition: opacity 0.3s ease, visibility 0.3s ease, color 0.25s ease;
+}
+
+.project-arrow--prev {
+  left: max(0.375rem, env(safe-area-inset-left));
+}
+
+.project-arrow--next {
+  right: max(0.375rem, env(safe-area-inset-right));
+}
+
+.project-arrow[data-visible="false"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .project-arrow:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 3px;
+}
+
+@media (max-width: 639px) {
+  .project-arrow {
+    /* 44px dodirne zone je pod, ne preporuka. */
+    --project-control: 2.75rem;
+    --service-caret: 1.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .project-arrow--prev {
+    left: 1.25rem;
+  }
+
+  .project-arrow--next {
+    right: 1.25rem;
+  }
+}
+
+/* Paginacija ostaje dole, pod scenom: tačke broje listu i moraju da stoje uz
+   sadržaj koji broje, za razliku od strelica koje su komanda. */
+.project-dots {
+  --project-dot: 0.5rem;
+  --project-dot-active: 1.6rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding-block: 0.5rem;
 }
 
 /* Iskra u strelici se povlači iz zgloba ka vrhovima. Pravilo koje to radi za

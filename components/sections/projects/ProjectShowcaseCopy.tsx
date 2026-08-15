@@ -313,24 +313,29 @@ export default function ProjectShowcaseCopy({
         {firstSentence(project.summary)}
       </p>
 
-      <div ref={ctaRef} className="flex flex-wrap items-center gap-3">
+      <div
+        ref={ctaRef}
+        className="flex w-full flex-wrap items-center justify-end gap-5"
+      >
+        {/* Go link, bez rama: izvor koda je sekundarna radnja i ne sme da se
+            takmiči sa CTA-om pored sebe. Renderuje se samo kad `repo` stvarno
+            postoji - link koji ne vodi nigde je gori od linka kojeg nema. Adresa
+            se dodaje kao `repo` u `constants/projects.ts`. */}
+        {project.repo ? (
+          <a
+            href={project.repo}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex w-fit items-center gap-2 font-accent text-xs text-theme-muted transition-colors hover:text-cyan-300"
+          >
+            Otvori kod
+            <span aria-hidden>↗</span>
+          </a>
+        ) : null}
         {/* Podrazumevana veličina, ne `sm`: h-11 je 44px dodirne zone. */}
         <CtaButton href={project.url} target="_blank" rel="noreferrer">
           Otvori sajt
         </CtaButton>
-        {/* Samo kad izvor stvarno postoji - dugme koje ne vodi nigde je gore od
-            dugmeta kojeg nema. Adresa se dodaje kao `repo` u
-            `constants/projects.ts`. */}
-        {project.repo ? (
-          <CtaButton
-            href={project.repo}
-            target="_blank"
-            rel="noreferrer"
-            variant="secondary"
-          >
-            Otvori kod
-          </CtaButton>
-        ) : null}
       </div>
     </div>
   );
