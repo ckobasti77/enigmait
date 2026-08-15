@@ -74,6 +74,7 @@ const entryFor = (
 /** Where the connector grows *from* - the spine end, never the card end. */
 const connectorOrigin: Record<BorderTraceEntry, string> = {
   top: "50% 0%",
+  bottom: "50% 100%",
   left: "0% 50%",
   right: "100% 50%",
 };

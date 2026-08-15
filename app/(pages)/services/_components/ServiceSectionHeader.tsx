@@ -1,5 +1,7 @@
 "use client";
 
+import clsx from "clsx";
+
 import AutoTypingConsole from "@/components/ui/auto-typing-console";
 import type { ServiceSectionIntro } from "@/constants/services/types";
 
@@ -12,12 +14,19 @@ import type { ServiceSectionIntro } from "@/constants/services/types";
 export default function ServiceSectionHeader({
   intro,
   typed = false,
+  centered = false,
 }: {
   intro: ServiceSectionIntro;
   typed?: boolean;
+  centered?: boolean;
 }) {
   return (
-    <header className="max-w-2xl space-y-4">
+    <header
+      className={clsx(
+        "max-w-2xl space-y-4",
+        centered && "mx-auto text-center"
+      )}
+    >
       <span className="text-xs uppercase tracking-[0.6em] text-cyan-400">
         {intro.kicker}
       </span>
@@ -25,7 +34,7 @@ export default function ServiceSectionHeader({
         <AutoTypingConsole
           as="h2"
           text={intro.title}
-          className="text-left text-2xl md:text-3xl"
+          className={clsx("text-2xl md:text-3xl", centered ? "text-center" : "text-left")}
         />
       ) : (
         <h2 className="text-2xl leading-snug text-theme-primary md:text-3xl">

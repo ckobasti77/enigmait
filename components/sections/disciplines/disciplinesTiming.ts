@@ -41,33 +41,35 @@ export const AMBIENT_FLOAT_SPEED = TAU / AMBIENT_FLOAT_SECONDS;
  */
 
 /**
- * The model's resting yaw: where it sits with the cursor at the far LEFT of the window, and
- * where it sits with no cursor at all - first paint, a touch device, a pointer that never
- * enters the window.
+ * The model's resting yaw: where it sits with the cursor at the horizontal CENTRE of the
+ * window, and where it sits with no cursor at all - first paint, a touch device, a pointer
+ * that never enters the window.
  *
- * Not zero. Dead square to the camera flattens a machined object into an elevation drawing;
- * a few degrees off-axis is what keeps a second face in the frame and the bevels catching
- * light. Negative turns the model's front slightly towards screen-left.
+ * Zero: square to the camera, looking straight ahead. The pointer now turns the model off this
+ * pose symmetrically in both directions, so the rest state has to be the centre of that travel,
+ * not an offset from it - the cursor at the middle of the screen means the model looks straight
+ * back at it.
  */
-export const MODEL_BASE_YAW = -0.1; // rad, ~6 deg
+export const MODEL_BASE_YAW = 0; // rad
 
 /**
- * Yaw, and the whole of the model's turning.
+ * Yaw, and the whole of the model's turning. SYMMETRIC about the centre.
  *
- * It is NOT symmetric. The cursor's x runs 0..1 across the WINDOW, and the model travels from
- * `MODEL_BASE_YAW` at the left edge to `MODEL_BASE_YAW + POINTER_YAW_MAX` at the right edge.
- * One-directional on purpose: the model has a rest pose it can be found in, and the cursor
- * only ever turns it away from that pose and back.
+ * The cursor's x runs -1..1 across the WINDOW with 0 at the middle, and the model travels from
+ * `-POINTER_YAW_MAX` (front turned towards screen-left) at the left edge, through the rest pose
+ * at the centre, to `+POINTER_YAW_MAX` (front towards screen-right) at the right edge. The model
+ * follows the cursor to whichever side it sits on.
  *
  * Measured against the window rather than against the canvas because the yaw is described in
- * terms of the window - cursor at the left edge of the screen means the rest pose, cursor at
- * the right edge means fully turned. Measured against the canvas, the model would hit full
- * yaw somewhere in the middle of the page and then sit there for the whole right-hand half.
+ * terms of the window - cursor on the left half looks left, on the right half looks right, dead
+ * centre looks straight ahead. Measured against the canvas the neutral point would drift up the
+ * page as it scrolls.
  *
- * 30 degrees is the whole travel. Far enough to read as the object turning, short enough that
- * the screen never rotates out of legibility at the far end.
+ * ~12 degrees each way. A nod towards the cursor rather than a full turn - far enough to read as
+ * the object following the pointer, short enough that the screen never rotates out of
+ * legibility at either extreme.
  */
-export const POINTER_YAW_MAX = 0.5236; // rad, 30 deg
+export const POINTER_YAW_MAX = 0.2094; // rad, 12 deg
 
 /**
  * Tilt. This one IS symmetric, measured about the centre of the CANVAS rather than the
@@ -110,7 +112,12 @@ export const WHEEL_STEP_THRESHOLD = 120; // px, after deltaMode normalisation
  */
 export const WHEEL_STEP_COOLDOWN_MS = 450;
 
-/** A gap this long means a new gesture, so the buffer starts from zero again. */
+/**
+ * A gap this long means a new gesture. That restarts the step buffer from zero,
+ * and it also refills the wheel's capture budget (`WHEEL_CAPTURE_BUDGET` in
+ * `useDisciplineIndex.ts`) - the budget is spent by ONE uninterrupted scroll, so
+ * a pause between pushes hands it back and model-to-model browsing never runs dry.
+ */
 export const WHEEL_BUFFER_RESET_MS = 200;
 
 /**

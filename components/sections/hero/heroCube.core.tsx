@@ -14,6 +14,7 @@
 
 import { useEffect } from "react";
 import type { RefObject } from "react";
+import type { ThreeEvent } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import {
   ClampToEdgeWrapping,
@@ -254,6 +255,11 @@ export const useGradientCleanup = (
 /**
  * The one place the shader is wired to the geometry. Both consumers render this,
  * so `side`, the uniform object and the two GLSL strings cannot drift apart.
+ *
+ * The pointer handlers are optional and land on the mesh, so R3F only fires them
+ * off a real ray/tube intersection - a grab catches only where a line is, never
+ * the empty space between. The hero passes them to make the cube draggable; the
+ * navbar mark leaves them off and stays inert.
  */
 export function HeroCubeShape({
   geometry,
@@ -262,6 +268,9 @@ export function HeroCubeShape({
   materialRef,
   rotationY,
   scale = 1,
+  onPointerDown,
+  onPointerOver,
+  onPointerOut,
 }: {
   geometry: BufferGeometry;
   uniforms: HeroCubeUniforms;
@@ -269,10 +278,19 @@ export function HeroCubeShape({
   materialRef: RefObject<ShaderMaterial | null>;
   rotationY: number;
   scale?: number;
+  onPointerDown?: (event: ThreeEvent<PointerEvent>) => void;
+  onPointerOver?: (event: ThreeEvent<PointerEvent>) => void;
+  onPointerOut?: (event: ThreeEvent<PointerEvent>) => void;
 }) {
   return (
     <group ref={groupRef} scale={scale} rotation-y={rotationY}>
-      <mesh geometry={geometry} dispose={null}>
+      <mesh
+        geometry={geometry}
+        dispose={null}
+        onPointerDown={onPointerDown}
+        onPointerOver={onPointerOver}
+        onPointerOut={onPointerOut}
+      >
         <shaderMaterial
           ref={materialRef}
           vertexShader={heroCubeVertexShader}

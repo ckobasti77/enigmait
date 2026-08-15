@@ -21,6 +21,7 @@ import {
   useHeroCubeGeometry,
 } from "./heroCube.core";
 import { HERO_REVEAL_DURATION } from "./heroTiming";
+import { useHeroCubeSpin } from "./useHeroCubeSpin";
 
 // Quarter turn on top of the logo angle. The camera stays exactly where the spec put it -
 // turning the mesh leaves the projection untouched and only changes which faces point at
@@ -149,6 +150,14 @@ function CubeMesh({
 
   const uniforms = useMemo(() => createUniforms(CUBE_ROTATION_Y), []);
 
+  // Grab-to-spin: owns the rotation angle from here on. Disabled on the frozen
+  // still, where there is no live frame to drive the physics.
+  const spin = useHeroCubeSpin({
+    baseAngle: CUBE_ROTATION_Y,
+    idleSpeed: SPIN_SPEED,
+    enabled: !frozen,
+  });
+
   useEffect(() => {
     camera.position.set(...HERO_CUBE_CAMERA_POSITION);
     camera.lookAt(0, 0, 0);
@@ -209,15 +218,14 @@ function CubeMesh({
     const group = groupRef.current;
     const material = materialRef.current;
     if (frozen || !group || !material) return;
-    elapsedRef.current += Math.min(delta, 0.05);
+    const step = Math.min(delta, 0.05);
+    elapsedRef.current += step;
     const { head, gap } = pathWindow(elapsedRef.current);
     material.uniforms.uHead.value = head;
     material.uniforms.uGap.value = gap;
-    applyRotation(
-      group,
-      material,
-      CUBE_ROTATION_Y + elapsedRef.current * SPIN_SPEED
-    );
+    // The line keeps its own clock (elapsed); the rotation is the physics angle,
+    // which is the idle spin until the user grabs and throws it.
+    applyRotation(group, material, spin.advance(step));
   });
 
   if (!geometry) return null;
@@ -230,6 +238,9 @@ function CubeMesh({
       materialRef={materialRef}
       rotationY={CUBE_ROTATION_Y}
       scale={scale}
+      onPointerDown={frozen ? undefined : spin.onPointerDown}
+      onPointerOver={frozen ? undefined : spin.onPointerOver}
+      onPointerOut={frozen ? undefined : spin.onPointerOut}
     />
   );
 }

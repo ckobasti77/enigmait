@@ -9,7 +9,11 @@
     "start": "next start",
     "lint": "eslint",
     "capture": "node scripts/capture-showcase.mjs",
-    "encode": "node scripts/encode-showcase.mjs"
+    "encode": "node scripts/encode-showcase.mjs",
+    "lens-logos": "node scripts/build-lens-logo-atlas.mjs",
+    "social-logos": "node scripts/build-social-logo-atlas.mjs",
+    "lens-hint": "node scripts/build-lens-hint.mjs",
+    "branding-billboard": "node scripts/build-branding-billboard.mjs"
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.8",

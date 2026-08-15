@@ -55,15 +55,16 @@ const Timeline = () => {
     <section
       id="timeline-spine"
       ref={containerRef}
-      className="site-gutter theme-section relative flex flex-col items-center overflow-hidden py-24"
+      className="site-gutter theme-section relative flex flex-col items-center py-24"
     >
-      <div
-        className="pointer-events-none absolute left-1/2 top-12 h-[420px] w-[420px] -translate-x-1/2 rounded-full glow-accent blur-[140px]"
-        aria-hidden
-      />
+      {/* Heading glow. It bleeds up over the section above and stays under the
+          cards (z-0; `.process-rows` is z-1). The section no longer clips its
+          overflow, so the top edge is no longer cut into a hard line - the
+          global `overflow-x: clip` still keeps the blur from widening the page. */}
+      <div aria-hidden className="section-heading-glow" />
 
       <div className="site-container relative">
-        <header className="mx-auto mb-16 max-w-3xl space-y-6 text-center overflow-auto">
+        <header className="mx-auto mb-16 max-w-3xl space-y-6 text-center">
           <span className="text-xs uppercase tracking-[0.6em] text-cyan-400">
             Kako gradimo zamah
           </span>

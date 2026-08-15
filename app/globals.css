@@ -800,10 +800,6 @@ html.lenis body {
   opacity: 0;
 }
 
-.btn-blur {
-  background-color: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(4px);
-}
 /* ── Theme change: hard-edged clip-path circle (View Transitions API) ─────────
    The new theme is revealed by a circle growing at a constant speed from the
    theme button; the old theme sits static underneath. No gradient, shadow or
@@ -1303,6 +1299,36 @@ html.theme-vt-active *::after {
     background: radial-gradient(circle at center, var(--glow-accent-1) 0%, var(--glow-accent-2) 45%, transparent 80%);
   }
 
+  /* One soft radial behind a section's header, standardised so every heading on
+     the site catches the same light. Two rules of engagement, both load-bearing:
+
+       - It BLEEDS UP over the section above (top is negative), so the section
+         carrying it must NOT clip its overflow. That is the whole fix for the
+         hard horizontal line the clip used to cut across the top of the glow -
+         `html, body { overflow-x: clip }` already keeps the wide blur from ever
+         widening the page, so a section does not need its own overflow guard.
+       - It sits UNDER that section's cards: it is `z-index: 0`, so the header
+         and any card row need `position: relative` with a z-index above 0 (the
+         .service-faq-cta glow/body split is the same move). The reduced blur
+         radius and tokens are the ones already proven in all three palettes. */
+  .section-heading-glow {
+    position: absolute;
+    left: 50%;
+    top: var(--heading-glow-top, -5rem);
+    z-index: 0;
+    width: var(--heading-glow-width, min(46rem, 92vw));
+    height: var(--heading-glow-height, 26rem);
+    translate: -50% 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at center,
+      var(--glow-accent-1) 0%,
+      var(--glow-accent-2) 42%,
+      transparent 78%
+    );
+    filter: blur(140px);
+  }
+
   .transition-theme {
     transition-property: background-color, color, border-color, box-shadow, transform, translate, filter;
     transition-duration: 0.5s;
@@ -1315,6 +1341,40 @@ html.theme-vt-active *::after {
      all three palettes. */
   .shadow-theme {
     box-shadow: 0 18px 48px var(--shadow-elevated);
+  }
+
+  /* Icon "orb" - a circular badge with the cyan trace ring, the same glyph
+     treatment `.service-panel-bullet` and `.discipline-hint` already use for
+     the service hero's scope icons. Shared here so the footer contact icons,
+     the scroll-to-top launcher and the bottom-left social trigger read as one
+     system instead of three ad-hoc button styles. Only size and glyph size
+     are left to the instance (Tailwind h-* and w-* on the element). Lift uses
+     `transform`, deliberately not `translate` - callers that also toggle
+     visibility with Tailwind's translate-y-* utilities (which write the
+     independent `translate` property) need that axis free to compose with
+     this hover lift instead of fighting it for the same property. */
+  .icon-orb {
+    border: 1px solid color-mix(in srgb, var(--card-trace) 30%, var(--border-strong));
+    background: var(--surface-card-muted);
+    color: var(--card-trace);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--card-trace) 18%, transparent),
+      0 0 14px var(--card-trace-glow);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease,
+      color 0.3s ease, transform 0.3s ease, opacity 0.3s ease, translate 0.3s ease;
+  }
+
+  .icon-orb:hover,
+  .icon-orb:focus-visible {
+    border-color: color-mix(in srgb, var(--card-trace) 65%, var(--border-strong));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--card-trace) 35%, transparent),
+      0 0 28px var(--card-trace-glow);
+    transform: translateY(-2px);
+  }
+
+  .icon-orb[data-active="true"] {
+    border-color: color-mix(in srgb, var(--card-trace) 70%, var(--border-strong));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--card-trace) 40%, transparent),
+      0 0 30px var(--card-trace-glow);
   }
 }
 

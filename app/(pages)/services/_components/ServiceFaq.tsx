@@ -30,9 +30,13 @@ export default function ServiceFaq({
   const [active, setActive] = useState<number | null>(0);
 
   return (
-    <section className="site-gutter theme-section border-t border-theme py-20 transition-theme sm:py-24">
-      <div className="site-container space-y-12">
-        <ServiceSectionHeader intro={intro} />
+    <section className="site-gutter theme-section relative py-20 transition-theme sm:py-24">
+      {/* Heading glow: bleeds up over the section above, sits under the FAQ card
+          (z-0; the relative container below paints on top). */}
+      <div aria-hidden className="section-heading-glow" />
+
+      <div className="site-container relative space-y-16">
+        <ServiceSectionHeader intro={intro} centered />
 
         <Card data-reveal="off">
           {/* The divider between two questions is each item's own bottom line

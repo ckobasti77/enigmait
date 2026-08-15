@@ -13,11 +13,12 @@
  * handover is invisible.
  *
  * The two axes are measured against different boxes, and that is not an oversight - see
- * `disciplinesTiming.ts` for the why. `x` is 0..1 across the WINDOW (yaw): far-left cursor is
- * the rest pose, far-right is fully turned. `y` is -1..1 about the CANVAS centre (pitch),
- * because the tilt reacts to where the cursor sits relative to the model, which travels up the
- * screen as the page scrolls. `x` starts at 0 so with no cursor - first paint, touch, a
- * pointer that never enters - the models rest exactly where the far-left cursor would put them.
+ * `disciplinesTiming.ts` for the why. `x` is -1..1 across the WINDOW (yaw) with 0 at the
+ * horizontal CENTRE: far-left cursor turns the model left, far-right turns it right, and the
+ * centre is the rest pose the model looks straight ahead from. `y` is -1..1 about the CANVAS
+ * centre (pitch), because the tilt reacts to where the cursor sits relative to the model, which
+ * travels up the screen as the page scrolls. `x` starts at 0 so with no cursor - first paint,
+ * touch, a pointer that never enters - the models rest dead centre, looking straight ahead.
  */
 
 const FINE_POINTER_QUERY = "(pointer: fine)";
@@ -40,9 +41,9 @@ function attach(canvas: HTMLCanvasElement): () => void {
   const onPointerMove = (event: PointerEvent) => {
     const width = window.innerWidth;
     if (width === 0 || rect.height === 0) return;
-    const x = event.clientX / width;
+    const x = (event.clientX / width) * 2 - 1;
     const y = (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-    target.x = Math.min(1, Math.max(0, x));
+    target.x = Math.min(1, Math.max(-1, x));
     target.y = Math.min(1, Math.max(-1, y));
   };
 

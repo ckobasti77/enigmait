@@ -16,9 +16,10 @@ import { DISCIPLINE_ORDER, disciplines } from "@/constants/disciplines";
  *
  * Two things are deliberately NOT here:
  *
- * - The lens. `seo-geo`'s second primitive is glass with no UVs, so it has no image to
- *   fetch and its `screenImage` is never read. Prefetching it would spend a slot on a
- *   texture nothing samples.
+ * - The lens's own `screenImage`. `seo-geo`'s second primitive is glass with no UVs, so
+ *   there is nothing to map onto it and that field is never read. Prefetching it would
+ *   spend a slot on a texture nothing samples. Its `backdropImage` IS fetched - that one is
+ *   real geometry standing behind the glass, and it is the content of the model.
  * - Anything that runs during render. Every call below is scheduled from an effect, on
  *   idle, so a step never pays for the step after it.
  */
@@ -94,10 +95,21 @@ function disposeTexture(url: string) {
 const modelUrl = (index: number) =>
   disciplines[DISCIPLINE_ORDER[index]].modelPath;
 
-/** The screen image of a model, or null where the second primitive is a lens. */
-const screenUrl = (index: number) => {
+/**
+ * Every texture one discipline needs - which is at most one, and for the magnifier is a
+ * different one than for the other five.
+ *
+ * Five models carry a screen image mapped onto an authored primitive. `seo-geo` carries none
+ * (its second primitive is glass with no UVs) and instead carries the logo atlas that stands
+ * BEHIND that glass. Both cases are one texture, so they go through one list and the prefetch
+ * and eviction below stay indifferent to which kind a model has.
+ */
+const textureUrls = (index: number): string[] => {
   const discipline = disciplines[DISCIPLINE_ORDER[index]];
-  return discipline.screenKind === "lens" ? null : discipline.screenImage;
+  const urls: string[] = [];
+  if (discipline.screenKind !== "lens") urls.push(discipline.screenImage);
+  if (discipline.backdropImage) urls.push(discipline.backdropImage);
+  return urls;
 };
 
 const inRange = (index: number) =>
@@ -117,10 +129,10 @@ export function preloadDiscipline(index: number) {
     useGLTF.preload(model);
   }
 
-  const screen = screenUrl(index);
-  if (screen && !inFlight.has(screen)) {
-    inFlight.add(screen);
-    useTexture.preload(screen);
+  for (const texture of textureUrls(index)) {
+    if (inFlight.has(texture)) continue;
+    inFlight.add(texture);
+    useTexture.preload(texture);
   }
 }
 
@@ -141,21 +153,21 @@ function releaseDiscipline(index: number) {
     useGLTF.clear(model);
   }
 
-  const screen = screenUrl(index);
   // Five of the six screens share one placeholder image today. Clearing it because one
   // model walked out of range would take it out from under the model still using it, so a
   // URL still claimed by an in-range discipline is left alone.
-  if (screen && !urlStillNeeded(screen, index) && inFlight.delete(screen)) {
-    disposeTexture(screen);
-    useTexture.clear(screen);
+  for (const texture of textureUrls(index)) {
+    if (urlStillNeeded(texture, index)) continue;
+    if (!inFlight.delete(texture)) continue;
+    disposeTexture(texture);
+    useTexture.clear(texture);
   }
 }
 
 const urlStillNeeded = (url: string, exceptIndex: number) =>
-  DISCIPLINE_ORDER.some((key, position) => {
+  DISCIPLINE_ORDER.some((_, position) => {
     if (position === exceptIndex) return false;
-    const discipline = disciplines[key];
-    return discipline.screenKind !== "lens" && discipline.screenImage === url;
+    return textureUrls(position).includes(url);
   });
 
 type IdleHandle = { cancel: () => void };

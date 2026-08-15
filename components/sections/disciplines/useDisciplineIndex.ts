@@ -119,11 +119,20 @@ export function useDisciplineIndex({ count }: DisciplineIndexOptions) {
      * cursor parked over the model eats every delta forever and the visitor can
      * never reach the footer. That is not an ugly bug, it is a blocked site.
      *
-     * So the wheel gets a budget instead: one list's worth of steps per visit to
-     * the section, after which the deltas are left alone and the page scrolls
-     * on. `count - 1` is the same journey the old ends allowed - first model to
-     * last - and the budget is refilled when the stage leaves the viewport, so
-     * coming back to the section gives it back.
+     * So the wheel gets a budget instead: `count - 1` steps - first model to
+     * last - after which the deltas are left alone and the page scrolls on.
+     *
+     * The budget is scoped to ONE UNINTERRUPTED SCROLL, not to the whole visit.
+     * A pause between pushes (a new gesture) or a change of direction refills it;
+     * only a single sustained scroll in one direction can run it dry. This is the
+     * distinction that matters: browsing model to model - which always pauses,
+     * however briefly, between notches, or turns back to re-read one - never runs
+     * out, so the strip does not go dead near the end of the list. What still runs
+     * out is the one gesture that means "get me past this section": a long,
+     * uninterrupted push, which then hands the page back and the footer stays
+     * reachable. (Before, the budget was per-visit and only refilled when the
+     * stage left the viewport, so the last model or two became a spot where the
+     * wheel simply stopped answering until you scrolled away and came back.)
      *
      * The budget is the WHEEL's alone. Dots, arrows, the keyboard and the swipe
      * wrap without limit, because none of them is competing with the page's own
@@ -131,6 +140,8 @@ export function useDisciplineIndex({ count }: DisciplineIndexOptions) {
      */
     const WHEEL_CAPTURE_BUDGET = count - 1;
     let capturedSteps = 0;
+    /** Direction of the last committed step, so a reversal can refill the budget. */
+    let lastStepDirection = 0;
 
     const onWheel = (event: WheelEvent) => {
       // Touch and narrow viewports never capture: there the vertical gesture is
@@ -146,6 +157,19 @@ export function useDisciplineIndex({ count }: DisciplineIndexOptions) {
       // found the section, which is all the hint was there to help with.
       markInteracted();
 
+      const now = performance.now();
+      // A gap since the last wheel event ends the previous gesture and begins a
+      // new one - which resets the buffer AND refills the step budget. Refilling
+      // here is what keeps the budget scoped to a single uninterrupted scroll
+      // (see WHEEL_CAPTURE_BUDGET above): the moment the visitor pauses and pushes
+      // again, the wheel answers, instead of staying dead until the section leaves
+      // the viewport.
+      if (now - lastEventAt > WHEEL_BUFFER_RESET_MS) {
+        buffer = 0;
+        capturedSteps = 0;
+      }
+      lastEventAt = now;
+
       if (capturedSteps >= WHEEL_CAPTURE_BUDGET) {
         buffer = 0;
         return;
@@ -157,10 +181,6 @@ export function useDisciplineIndex({ count }: DisciplineIndexOptions) {
       // Our listener sits on the element, Lenis' sits on the window, so this is
       // what keeps Lenis out of it - and keeps Lenis alive for everything else.
       event.stopPropagation();
-
-      const now = performance.now();
-      if (now - lastEventAt > WHEEL_BUFFER_RESET_MS) buffer = 0;
-      lastEventAt = now;
 
       // Inside the cooldown the delta is eaten but NOT banked. A trackpad flick
       // keeps firing long after the fingers lift; banking that tail is exactly
@@ -174,8 +194,13 @@ export function useDisciplineIndex({ count }: DisciplineIndexOptions) {
       if (Math.abs(buffer) <= WHEEL_STEP_THRESHOLD) return;
 
       const stepDirection: SlideDirection = buffer > 0 ? 1 : -1;
+      // Turning back the way you came is browsing, not leaving: a reversal refills
+      // the budget so stepping back through the models is never blocked by budget
+      // already spent going forward.
+      if (stepDirection !== lastStepDirection) capturedSteps = 0;
       buffer = 0;
       lastStepAt = now;
+      lastStepDirection = stepDirection;
       capturedSteps += 1;
       goTo(indexRef.current + stepDirection, stepDirection);
     };

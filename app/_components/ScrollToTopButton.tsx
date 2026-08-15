@@ -64,14 +64,13 @@ const ScrollToTopButton = () => {
       aria-label="Vrati se na vrh"
       onClick={handleClick}
       className={clsx(
-        "btn-blur fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 text-white shadow-lg transition-all duration-300",
-        "hover:border-white/60 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+        "icon-orb fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full opacity-0 translate-y-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/30 sm:h-14 sm:w-14",
         isVisible
           ? "pointer-events-auto opacity-100 translate-y-0"
-          : "pointer-events-none opacity-0 translate-y-2"
+          : "pointer-events-none"
       )}
     >
-      <ChevronUp aria-hidden="true" className="h-5 w-5" />
+      <ChevronUp aria-hidden="true" className="h-5 w-5 sm:h-6 sm:w-6" />
     </button>
   );
 };

@@ -3,8 +3,12 @@ import {
   MeshPhysicalMaterial,
   MeshStandardMaterial,
   SRGBColorSpace,
+  Vector3,
+  type BufferGeometry,
   type Texture,
 } from "three";
+
+import type { Vec3 } from "@/constants/disciplines";
 
 export type DisciplineTheme = "dark" | "light";
 export type BodyMaterialKind = "anodized" | "steel";
@@ -92,14 +96,34 @@ export type ScreenKind = "display" | "lens";
  * The lens on `seo-geo`. The only transmission element on the whole section, and the single
  * reason that model is allowed a fourth draw call (SECTION_SPEC section 3).
  *
- * `thickness` is not a taste value: the lens is modelled biconvex with 0.055 W of sag per
- * side, so it is 0.11 W thick, which is 0.104 in object space after the bbox normalisation.
- * Transmission uses it to work out how far light travels through the volume, so a number
- * pulled out of the air here would tint and bend the view through the glass by the wrong
- * amount. It is measured, like everything else on this model.
+ * THICKNESS IS AN OPTICAL SETTING, NOT A MEASUREMENT - and it used to be the other way round.
  *
- * `ior` 1.5 is crown glass. `roughness` stays very low: a scratched magnifier is a defect,
- * not a texture.
+ * The physical figure is 0.104: the lens is biconvex with 0.055 W of sag per side, so 0.11 W
+ * thick, which is 0.104 after the bbox normalisation. That is honest and it magnified nothing.
+ * three.js does not march a ray through the volume - it refracts ONCE at the front face and
+ * then travels a straight `thickness * modelScale` before projecting back to screen space
+ * (`getVolumeTransmissionRay`). For a convex face the rays converge, so the backdrop is
+ * magnified by
+ *
+ *     m = 1 - (1 - 1/ior) * thickness * S / R          magnification M = 1 / m
+ *
+ * where `S` is the world scale (`displayScale`, 1.06) and `R` is the radius of curvature of
+ * the FRONT face - `(r^2 + s^2) / 2s` for r = 0.5 W and s = 0.055 W, i.e. 2.30 W, 2.18
+ * normalised. At the measured thickness that gives m = 0.983, M = 1.017: seventeen thousandths,
+ * invisible. The glass was real and did nothing, which is the worst of both.
+ *
+ * ~3.0 puts M near 2, which is what makes it read as a magnifier. It is roughly thirty times
+ * the physical value and that is fine - the number is the knob three.js actually exposes, not
+ * a distance light travels. Keep it well under ~6.2: that is where m reaches 0 and the image
+ * first goes flat and then INVERTS.
+ *
+ * `attenuationDistance` is left at its default (Infinity), so a large thickness costs no
+ * darkening - `volumeAttenuation` returns 1 and the glass stays clear.
+ *
+ * `ior` 1.5 is crown glass. `roughness` has to be near zero, and now for a second reason
+ * beyond taste: it picks the mip the transmission sample is read from
+ * (`lod = log2(width) * roughness`), so 0.04 was pulling almost half the sample out of a
+ * half-resolution mip and softening the very detail the lens exists to enlarge.
  */
 const LENS_SPECS: Record<
   DisciplineTheme,
@@ -111,41 +135,79 @@ const LENS_SPECS: Record<
     envMapIntensity: number;
   }
 > = {
-  // Cooler and slightly denser on the dark palette, where the glass has to be visible
-  // against a dark backdrop rather than disappear into it.
+  /**
+   * COLOURLESS, both themes. It used to be a pale blue-white per palette, back when the glass
+   * had nothing behind it and needed a tint of its own to be visible at all.
+   *
+   * With transmission at 1 the diffuse colour IS the transmittance: every pixel the lens shows
+   * gets multiplied by it. A 0.9-ish tint was therefore dimming and cooling the brand colours
+   * behind the glass, so the magnified Google card did not match the one beside it. A magnifier
+   * magnifies; it does not grade. White is the only value that leaves the cards alone.
+   */
+  /**
+   * `envMapIntensity` is low - down from 1.4 and 0.9 - but be careful what you credit it with.
+   *
+   * It was the obvious suspect for the wash through the glass and it was measured NOT to be:
+   * taking it to 0 outright left the darkest pixel inside the lens at (42, 44, 51), the same to
+   * the count as at 0.22. What actually flattened the view was tone mapping (see
+   * `createLensMaterial`). This is kept low because a mirror-sharp reflection at `roughness:
+   * 0.01` competes with the cards for no gain, not because it was the bug.
+   *
+   * Not zero either. The bevel and the rim still need something to catch, or the glass stops
+   * reading as a physical object and the model looks like a ring with a hole in it.
+   */
   dark: {
-    color: "#dce6f0",
+    color: "#ffffff",
     ior: 1.5,
-    thickness: 0.104,
-    roughness: 0.04,
-    envMapIntensity: 1.4,
+    thickness: 2.2,
+    roughness: 0.01,
+    envMapIntensity: 0.22,
   },
   light: {
-    color: "#eef4fa",
+    color: "#ffffff",
     ior: 1.5,
-    thickness: 0.104,
-    roughness: 0.05,
-    envMapIntensity: 0.9,
+    thickness: 2.2,
+    roughness: 0.01,
+    envMapIntensity: 0.18,
   },
 };
 
 const LENS_TRANSMISSION = 1;
 
 /**
- * The two numbers the transmission pass is budgeted at.
+ * The transmission budget, as a FRACTION OF THE DRAWING BUFFER.
  *
- * They are NOT settable on a bare `MeshPhysicalMaterial` - three.js sizes the transmission
- * render target from the renderer (`WebGLRenderer.transmissionResolutionScale`), and the
- * blur sample count only exists on drei's `MeshTransmissionMaterial`. So they live here as
- * the single place the budget is written down, and whichever of the two paths the render
- * layer takes reads them from here rather than inventing its own pair.
+ * This used to be a single `256`, read as a pixel height and converted against the live buffer
+ * by the render layer. The unit changed because the meaning did: three.js takes
+ * `WebGLRenderer.transmissionResolutionScale` as a fraction, and now that the lens magnifies
+ * ~2x there is a second multiplier on it - effective sharpness through the glass is
+ * `scale / magnification`. At the old 256 against a ~840-tall buffer that worked out at 0.28,
+ * so the magnified card was being read at about a seventh of native and the wordmark was mush.
+ *
+ * Wide screens therefore sample the buffer at full size. The cost is real - the scene is
+ * re-rendered into that target every frame - but this scene is 13k triangles and four
+ * materials, so it is a cheap frame to pay twice.
+ *
+ * Narrow screens keep a low fraction. The lens is no longer switched off there (see
+ * `supportsLensTransmission`), so this is where the phone's share of the bill is set: if the
+ * frame rate suffers on a real device, drop this first, before touching the glass itself.
  */
 export const LENS_TRANSMISSION_SAMPLES = 4;
-export const LENS_TRANSMISSION_RESOLUTION = 256;
+export const LENS_TRANSMISSION_SCALE_WIDE = 1;
+export const LENS_TRANSMISSION_SCALE_NARROW = 0.4;
 
 /**
- * Below this the lens goes opaque and the model drops back to three draw calls. Transmission
- * is the most expensive material in three.js and a phone is the last place to spend it.
+ * The line between the two budgets above - and, until this change, the line at which the lens
+ * stopped being glass at all.
+ *
+ * It no longer gates transmission, because there is now something behind the glass worth
+ * seeing and a phone that renders an opaque steel disc where the logos should be is not a
+ * cheaper version of the section, it is a broken one. The opaque branch stays in
+ * `createLensMaterial` for the case where that trade has to be made again.
+ *
+ * A side effect worth naming: with the gate gone, the material no longer depends on device
+ * class at all, so the latent bug where a window dragged across this width kept its old lens
+ * material - the memo key is `[theme]` - cannot happen.
  */
 export const LENS_TRANSMISSION_MIN_WIDTH = 768;
 
@@ -242,25 +304,48 @@ export function createScreenMaterial(
 }
 
 /**
- * Whether this device should pay for transmission. Read at call time rather than at module
- * scope: this module is imported by a client component whose `useMemo` can in principle run
- * where there is no `window`, and a media query evaluated once at import would then be
- * frozen at whatever the first environment answered.
+ * Whether this device should pay for transmission - and the answer is now always yes.
+ *
+ * It used to be a width test. That was the right call while the glass had nothing behind it:
+ * an empty lens costs the most expensive material in three.js to show a slightly brighter
+ * disc, and a phone was the last place to spend that. Now there are three brand cards behind
+ * it and the glass is the only thing that magnifies them, so a device that skipped
+ * transmission would not get a cheaper version of the model - it would get a steel plate where
+ * the content is. The phone's share of the cost is taken out of
+ * `LENS_TRANSMISSION_SCALE_NARROW` instead, which is a dial rather than a switch.
+ *
+ * Kept as a function, and still reading `window` at call time rather than at module scope, so
+ * the opaque path stays one edit away: this module is imported by a client component whose
+ * `useMemo` can in principle run where there is no `window`, and a media query evaluated once
+ * at import would freeze at whatever the first environment answered.
  */
 export function supportsLensTransmission() {
+  return true;
+}
+
+/**
+ * How much of the drawing buffer the transmission pass gets on this device. The same 768px
+ * line as the DPR budgets in `DisciplineStage`, and live rather than sampled for the same
+ * reason - a window dragged across it should re-answer.
+ */
+export function lensTransmissionScale() {
   if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
-    return false;
+    return LENS_TRANSMISSION_SCALE_NARROW;
   }
-  return window.matchMedia(`(min-width: ${LENS_TRANSMISSION_MIN_WIDTH}px)`)
-    .matches;
+  return window.matchMedia(`(min-width: ${LENS_TRANSMISSION_MIN_WIDTH}px)`).matches
+    ? LENS_TRANSMISSION_SCALE_WIDE
+    : LENS_TRANSMISSION_SCALE_NARROW;
 }
 
 /**
  * The magnifier's lens, and the one place on the section where glass is real rather than
  * suggested by a clearcoat layer.
  *
- * Below 768px it falls back to opaque steel and the model returns to three draw calls, which
- * is the trade SECTION_SPEC section 3 already committed to.
+ * The opaque-steel fallback is no longer reached by default - see `supportsLensTransmission`,
+ * which now answers yes everywhere because there are cards behind the glass that only the
+ * glass magnifies. It is kept, and kept correct, because it is one argument away: pass
+ * `false` and the model drops to three draw calls, which is the trade SECTION_SPEC section 3
+ * originally committed to.
  *
  * TWO THINGS THE FALLBACK IS NOT.
  *
@@ -300,9 +385,112 @@ export function createLensMaterial(
     thickness: spec.thickness,
     ior: spec.ior,
     envMapIntensity: spec.envMapIntensity,
+    /**
+     * THE GLASS HAS TO BE BLENDABLE, or its alpha is thrown away.
+     *
+     * `WebGLState.setMaterial` reads `material.blending === NormalBlending && transparent ===
+     * false ? NoBlending : ...`, so a transmissive material left at the default writes its
+     * colour to the canvas OPAQUELY. Every alpha the transmission shader computes -
+     * `1 - (1 - sampled.a) * transmittanceFactor`, the one term that says "there was nothing
+     * behind me" - was being discarded, which is why the lens could only ever paint SOME
+     * colour and never show the page through itself.
+     *
+     * With this on, the alpha survives, and the empty space around the cards (stamped to
+     * alpha 0 by `LensBackdropFill`) makes the glass genuinely see-through there.
+     */
+    transparent: true,
+    /**
+     * THE LENS IS NOT GRADED, and this is the line that makes the magnified image match the
+     * un-magnified one beside it.
+     *
+     * The canvas tone maps with AgX, whose toe lifts and desaturates shadows. The backdrop
+     * cards are already exempt (`toneMapped: false`, so brand colours survive), but the light
+     * they transmit leaves through THIS material's fragment - so with the default on, every
+     * pixel the lens showed got AgX applied on top and the same card came out lighter and
+     * flatter inside the glass than immediately outside it, which is the one comparison a
+     * magnifier cannot afford to lose.
+     *
+     * Measured, darkest pixel inside the lens: (64, 67, 74) before, (42, 44, 51) after, against
+     * a real page background of (10, 15, 27). So this is the single biggest term and it is not
+     * the only one - a neutral lift of roughly thirty counts survives it, and it is NOT the
+     * environment reflection (zeroing `envMapIntensity` moved nothing) and NOT the fill colour
+     * (the fill was proved to reach the lens with a magenta probe, and darkening it moved
+     * almost nothing). Something in the transmission path still floors the blacks. Left as is:
+     * the pale wash the section was actually suffering from is gone, and the remainder reads as
+     * glass haze rather than as a grade.
+     */
+    toneMapped: false,
   });
   material.name = `DISC_LENS_${theme}`;
   return material;
+}
+
+/**
+ * Give the lens back the normals the file could not carry.
+ *
+ * The GLB is meshopt-compressed, which stores NORMAL octahedrally in a BYTE - roughly a degree
+ * of angular resolution. On every other model that is invisible: a normal feeds a lighting term
+ * and a degree of error is a fraction of a shade. On this one it feeds `refract()`, and the
+ * refracted ray then travels `thickness * scale` before it is projected back to screen space to
+ * pick a pixel. At the thickness this lens now runs, a degree of quantisation lands several
+ * percent of a card away from where it should - so the magnified wordmark came out doubled and
+ * the marks smeared, worst at the rim where the normals turn fastest.
+ *
+ * Nothing is wrong with the geometry: the front face is a sphere cap and its normal is exactly
+ * `normalize(v - sphereCentre)`. Since the rim circle is the widest part of a symmetric
+ * biconvex lens, that centre sits on the axis at `sqrt(R^2 - r^2)` behind the mid-plane, which
+ * needs no sag term and no measurement beyond the two already recorded on the discipline.
+ *
+ * Recomputing it here rather than re-exporting from Blender keeps the fix where its cause is -
+ * the compression, not the model - and costs one pass over 1,840 vertices, once, guarded by a
+ * flag on the geometry because drei hands every consumer the same instance.
+ *
+ * Both caps are done even though the material is `FrontSide` and only the front is ever shaded:
+ * a half-corrected normal buffer is a trap for whoever next turns the glass double-sided.
+ */
+export function refineLensNormals(
+  geometry: BufferGeometry,
+  centre: Vec3,
+  axis: Vec3,
+  aperture: number,
+  curvature: number
+) {
+  if (geometry.userData.lensNormalsRefined) return geometry;
+
+  const position = geometry.getAttribute("position");
+  const normal = geometry.getAttribute("normal");
+  if (!position || !normal) return geometry;
+
+  // Beyond the aperture there is no sphere to speak of, and a curvature that cannot reach its
+  // own rim would put the centre in an imaginary place. Leave such a lens alone.
+  const offset = curvature * curvature - aperture * aperture;
+  if (offset <= 0) return geometry;
+  const axial = Math.sqrt(offset);
+
+  const n = new Vector3(...axis).normalize();
+  const mid = new Vector3(...centre);
+  const front = mid.clone().addScaledVector(n, -axial);
+  const back = mid.clone().addScaledVector(n, axial);
+
+  const vertex = new Vector3();
+  const corrected = new Vector3();
+
+  for (let i = 0; i < position.count; i++) {
+    vertex.fromBufferAttribute(position, i);
+    // Which cap a vertex belongs to is decided by which side of the mid-plane it sits on, not
+    // by its stored normal - the stored normal is the thing being replaced, and at the rim it
+    // is an average of the two caps and belongs to neither.
+    // Each cap's own sphere centre already puts the normal on the outside of that cap - the
+    // back cap's centre sits in front of it, so `vertex - centre` points backwards, which is
+    // exactly the outward direction there. No sign correction is needed on either side.
+    const front_ = corrected.subVectors(vertex, mid).dot(n) >= 0;
+    corrected.subVectors(vertex, front_ ? front : back).normalize();
+    normal.setXYZ(i, corrected.x, corrected.y, corrected.z);
+  }
+
+  normal.needsUpdate = true;
+  geometry.userData.lensNormalsRefined = true;
+  return geometry;
 }
 
 /**
@@ -314,6 +502,26 @@ export function createLensMaterial(
 export function prepareScreenTexture(texture: Texture, anisotropy: number) {
   texture.colorSpace = SRGBColorSpace;
   texture.flipY = false;
+  texture.anisotropy = anisotropy;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+/**
+ * The same preparation for the lens backdrop atlas, minus the one line that matters.
+ *
+ * `flipY` is LEFT ALONE here, and that is the entire difference. The rule above is about
+ * glTF's UV origin, and it applies to textures mapped onto authored primitives. The backdrop
+ * quads are built in code (`lensBackdrop.ts`) with the DOM convention the loader already
+ * hands over, so flipping would stand the cards on their heads.
+ *
+ * It is a separate function rather than a flag on the one above because it is also where the
+ * texture mutation is allowed to live: the React Compiler forbids a component mutating a value
+ * a hook returned, so both callers launder the same write through a helper here - which is the
+ * pattern `prepareScreenTexture` was already establishing.
+ */
+export function prepareBackdropTexture(texture: Texture, anisotropy: number) {
+  texture.colorSpace = SRGBColorSpace;
   texture.anisotropy = anisotropy;
   texture.needsUpdate = true;
   return texture;

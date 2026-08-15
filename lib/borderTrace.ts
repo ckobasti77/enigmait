@@ -18,7 +18,7 @@
  */
 
 /** Which edge the connector arrives on. */
-export type BorderTraceEntry = "top" | "left" | "right";
+export type BorderTraceEntry = "top" | "bottom" | "left" | "right";
 
 /** Normalised length every trace path is rendered at. */
 export const TRACE_LENGTH = 1000;
@@ -72,6 +72,19 @@ export function buildBorderTracePaths(
       [M(cx, y0), L(x1 - r, y0), arc(x1, y0 + r, 1), L(x1, y1 - r), arc(x1 - r, y1, 1), L(cx, y1)].join(" "),
       // left side down
       [M(cx, y0), L(x0 + r, y0), arc(x0, y0 + r, 0), L(x0, y1 - r), arc(x0 + r, y1, 0), L(cx, y1)].join(" "),
+    ];
+  }
+
+  if (entry === "bottom") {
+    // Mirror of "top": same split, run from the bottom edge midpoint instead,
+    // for panels that unfurl upward from a trigger below them. Vertical
+    // mirroring reverses the traversal direction, which is what flips the arc
+    // sweep flags relative to the "top" case.
+    return [
+      // right side up
+      [M(cx, y1), L(x1 - r, y1), arc(x1, y1 - r, 0), L(x1, y0 + r), arc(x1 - r, y0, 0), L(cx, y0)].join(" "),
+      // left side up
+      [M(cx, y1), L(x0 + r, y1), arc(x0, y1 - r, 1), L(x0, y0 + r), arc(x0 + r, y0, 1), L(cx, y0)].join(" "),
     ];
   }
 

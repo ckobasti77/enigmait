@@ -12,7 +12,7 @@ const primaryLinks = navLinks.filter((link) => !link.dropdownLinks && !link.cta)
 const serviceColumns = [services.slice(0, 3), services.slice(3)];
 
 const CHIP =
-  "group relative flex h-10 w-10 items-center justify-center rounded-full border border-theme bg-card text-theme-muted transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-400/50 hover:text-cyan-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/30";
+  "icon-orb group relative flex h-10 w-10 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/30";
 
 const TOOLTIP =
   // Anchored to the chip's right edge: the cluster sits on the right end of the

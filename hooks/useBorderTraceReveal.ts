@@ -146,18 +146,26 @@ export function useBorderTraceReveal(
       if (hasTrace) {
         gsap.set(traces, { strokeDashoffset: TRACE_DASH, autoAlpha: 0 });
 
-        timeline.to(traces, { autoAlpha: 1, duration: 0.08 }).to(
-          traces,
-          {
-            // Past the end of the path the streak is clipped away entirely, so
-            // it arrives at the meeting point and vanishes there rather than
-            // needing a fade of its own.
-            strokeDashoffset: -TRACE_LENGTH,
-            duration: 1.05,
-            ease: "power1.inOut",
-          },
-          "<"
-        );
+        timeline
+          .to(traces, { autoAlpha: 1, duration: 0.08 })
+          .to(
+            traces,
+            {
+              strokeDashoffset: -TRACE_LENGTH,
+              duration: 1.05,
+              ease: "power1.inOut",
+            },
+            "<"
+          )
+          // The dash gap (`TRACE_LENGTH`) equals the path length, so the "empty"
+          // dash state is a knife's edge: it can only clear the path by landing a
+          // round-capped endpoint on each end at once - a dot at the top centre
+          // where the streaks are born AND one at the bottom centre where they
+          // meet. Offsetting further cannot escape it (the period is
+          // `TRACE_DASH + TRACE_LENGTH`, so any full-period shift returns to the
+          // same picture). Fading the streak out as it converges at the bottom is
+          // what actually removes both dots - it arrives, meets, and is gone.
+          .to(traces, { autoAlpha: 0, duration: 0.22 }, 0.85);
       }
 
       timeline.to(

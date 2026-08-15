@@ -129,8 +129,12 @@ export default function DisciplinesShell({
       ref={sectionRef}
       className="site-gutter disciplines relative theme-section py-24 transition-theme"
     >
-      <div className="site-container">
-        <header className="mb-14 flex max-w-3xl flex-col gap-4">
+      {/* Heading glow: bleeds up over the section above, sits under the slider
+          cards (z-0; the relative container below paints on top). */}
+      <div aria-hidden className="section-heading-glow" />
+
+      <div className="site-container relative">
+        <header className="mx-auto mb-14 flex max-w-3xl flex-col items-center gap-4 text-center">
           <span className="font-broken-console text-xs uppercase tracking-[0.4em] text-cyan-400">
             {SECTION_KICKER}
           </span>

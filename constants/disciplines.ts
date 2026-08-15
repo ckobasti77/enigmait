@@ -37,6 +37,39 @@ export type Discipline = {
    * ships without UVs.
    */
   screenImage: string;
+  /**
+   * Atlas of brand cards standing BEHIND the glass, for `screenKind: "lens"` only.
+   *
+   * The magnifier is the one model with something to look at rather than something to show,
+   * and this is what it looks at. Absent on the other five - they have a screen, which is a
+   * surface, not a scene behind one. See `components/sections/disciplines/lensBackdrop.ts`.
+   */
+  backdropImage?: string;
+  /**
+   * Measured centre of the lens, object space - the anchor the backdrop is placed from.
+   *
+   * Only meaningful with `screenKind: "lens"`. It was a comment for a long time; it became a
+   * field the moment something other than prose needed it, so the backdrop and the accent ring
+   * now read the same two numbers (this and `accentAxis`) instead of each carrying a copy.
+   */
+  lensCentre?: Vec3;
+  /**
+   * Clear aperture radius of the glass, and the radius of curvature of its front face - the two
+   * numbers that describe the lens as a sphere cap.
+   *
+   * They exist because the GLB cannot describe it precisely enough to refract through.
+   * `EXT_meshopt_compression` stores normals octahedrally in a BYTE, about a degree of angular
+   * resolution, and transmission turns a normal directly into a sample offset. At the thickness
+   * the magnifier now runs, one degree is several percent of a card - which is why the magnified
+   * wordmark ghosted and the marks smeared toward the rim. With these two the exact normal can
+   * be recomputed; see `refineLensNormals` in `materials.ts`.
+   *
+   * Both derive from the Blender source (`blender/scripts/ops/build_seo_geo.py`): diameter 1.0 W
+   * and 0.055 W of sag per side, so R = (r^2 + s^2) / 2s = 2.30 W, and the bbox normalisation
+   * scales W by 0.9485.
+   */
+  lensAperture?: number;
+  lensCurvature?: number;
   modelPath: string;
   stillPath: string;
   material: "anodized" | "steel";
@@ -167,7 +200,10 @@ export const disciplines: Record<DisciplineKey, Discipline> = {
     key: "ui-ux-design",
     meshName: "ui-ux-design",
     screenMeshName: "ui-ux-design_screen",
-    screenImage: PLACEHOLDER_SCREEN,
+    // Wireframe mockup grid, cover-cropped to the tablet's 16:9 panel. Same one-line swap
+    // the placeholder exists for. Source drop is `ui-ux-screen.webp`; the 1280x720 crop it
+    // is fitted to is `ui-ux-design.webp`.
+    screenImage: "/assets/screens/disciplines/ui-ux-design.webp",
     modelPath: modelPath("ui-ux-design"),
     stillPath: stillPath("ui-ux-design"),
     material: "steel",
@@ -204,7 +240,10 @@ export const disciplines: Record<DisciplineKey, Discipline> = {
     key: "mobile-app-development",
     meshName: "mobile-app-development",
     screenMeshName: "mobile-app-development_screen",
-    screenImage: PLACEHOLDER_SCREEN,
+    // The Enigma IT task app, portrait, mapped whole onto the phone panel. Source drop is
+    // `mobile-apps.webp`; the served copy has the two personal-name occurrences blurred out
+    // (see the blur regions in the one-off crop step). Same one-line swap as the others.
+    screenImage: "/assets/screens/disciplines/mobile-app-development.webp",
     modelPath: modelPath("mobile-app-development"),
     stillPath: stillPath("mobile-app-development"),
     material: "anodized",
@@ -235,6 +274,14 @@ export const disciplines: Record<DisciplineKey, Discipline> = {
     // Never read for this key. Kept so the row stays the same shape as the other five;
     // the lens has no UVs and nothing to sample.
     screenImage: PLACEHOLDER_SCREEN,
+    // What the magnifier is actually held over: Google for classical search, ChatGPT and
+    // Claude for the AI kind - the two audiences the lede names, as three cards standing
+    // behind the glass. Built by `scripts/build-lens-logo-atlas.mjs`.
+    backdropImage: "/assets/screens/disciplines/seo-geo-logos.webp",
+    // Measured off the mesh in Faza C, same basis as the accent ring below.
+    lensCentre: [-0.2657, 0.4783, -0.0715],
+    lensAperture: 0.474,
+    lensCurvature: 2.18,
     modelPath: modelPath("seo-geo"),
     stillPath: stillPath("seo-geo"),
     material: "steel",
@@ -306,7 +353,11 @@ export const disciplines: Record<DisciplineKey, Discipline> = {
     key: "branding",
     meshName: "branding",
     screenMeshName: "branding_screen",
-    screenImage: PLACEHOLDER_SCREEN,
+    // The site's own navbar lockup with the identity removed - neutral mark, "VAŠ" where
+    // "ENIGMA" goes, "BREND" carrying the gradient "IT" carries. A billboard showing this
+    // studio's logo would be a signature; showing the same construction around someone else's
+    // name is the discipline itself. Built by `scripts/build-branding-billboard.mjs`.
+    screenImage: "/assets/screens/disciplines/branding-billboard.webp",
     modelPath: modelPath("branding"),
     stillPath: stillPath("branding"),
     material: "anodized",
@@ -345,7 +396,12 @@ export const disciplines: Record<DisciplineKey, Discipline> = {
     // 1536x910 (three 512x910 tiles side by side). Any other aspect stretches,
     // because the panel geometry derives its 0.94 x 1.6707 screen from exactly
     // that tile ratio.
-    screenImage: "/assets/screens/disciplines/social-placeholder.webp",
+    //
+    // The three plates carry one white platform mark each on that platform's own
+    // background - TikTok (black), Instagram (gradient), Facebook (blue), left to
+    // right, matching the left/middle/right thirds of the atlas. Built by
+    // `scripts/build-social-logo-atlas.mjs` (`npm run social-logos`).
+    screenImage: "/assets/screens/disciplines/social-media-logos.webp",
     modelPath: modelPath("social-media"),
     stillPath: stillPath("social-media"),
     material: "steel",
