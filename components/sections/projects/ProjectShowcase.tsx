@@ -14,10 +14,8 @@ import ProjectMockupCluster from "@/components/ui/project-mockup-cluster";
 import { projects } from "@/constants/projects";
 import {
   LAYOUT_NARROW,
-  LAYOUT_SPLIT,
   LAYOUT_WIDE,
   NARROW_QUERY,
-  SPLIT_QUERY,
   TEXTURE_WINDOW,
 } from "@/constants/projectShowcase3D";
 import { SWIPE_DOMINANCE, SWIPE_THRESHOLD_PX } from "@/components/sections/disciplines/disciplinesTiming";
@@ -55,14 +53,9 @@ export default function ProjectShowcase({ children }: { children?: ReactNode }) 
   const prefersReducedMotion = usePrefersReducedMotion();
   const webglSupported = useWebGLSupport();
   const narrow = useMediaQuery(NARROW_QUERY);
-  /**
-   * Tri preseta, dve linije preloma, i obe su iste one koje koristi CSS: ispod
-   * 768 portretni klaster, od 1024 kadar pomeren ulevo da tekst dobije mesto
-   * desno, između njih centriran kadar sa tekstom ispod. Ako se ove dve
-   * vrednosti raziđu od `globals.css`, tekst sedne na neki od uređaja.
-   */
-  const split = useMediaQuery(SPLIT_QUERY);
-  const layout = narrow ? LAYOUT_NARROW : split ? LAYOUT_SPLIT : LAYOUT_WIDE;
+  // Dva preseta, jedna linija preloma. Kadar se NE pomera zbog teksta - raspored
+  // i veličine uređaja su fiksni, a tekst se uklapa u prazninu koju ostavljaju.
+  const layout = narrow ? LAYOUT_NARROW : LAYOUT_WIDE;
 
   const { ref: viewportRef, isIntersecting } = useIntersectionActive<HTMLDivElement>({
     threshold: 0,

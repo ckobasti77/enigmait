@@ -209,29 +209,15 @@ export const LAYOUT_NARROW: ShowcaseLayout = {
 };
 
 /**
- * ≥1024px. Isti uređaji i isti raspored kao `LAYOUT_WIDE` - pomera se samo kadar.
+ * Ista 768 linija kao `DPR_NARROW` i `LENS_TRANSMISSION_MIN_WIDTH`.
  *
- * Kamera uklapa širi boks čiji je centar desno od klastera, pa klaster sedne u
- * levi deo kadra a desna trećina ostane prazna. Ta praznina NIJE vazduh nego
- * mesto za tekst projekta, koji od `lg` naviše stoji preko scene umesto ispod
- * nje. Kad bi tekst bio pozicioniran preko nepromenjenog kadra, na svakom drugom
- * odnosu stranica pao bi na neki od uređaja.
+ * Iznad nje postoji tačno JEDAN kadar. Postojala je verzija koja je od `lg`
+ * pomerala kameru udesno da napravi mesto tekstu - i time menjala i pozicije i
+ * veličine uređaja, što je bilo pogrešno: kompozicija je fiksna, a tekst se
+ * uklapa u prazninu koju ona ostavlja gore desno (iznad poklopca laptopa, desno
+ * od monitora). Ne obrnuto.
  */
-export const LAYOUT_SPLIT: ShowcaseLayout = {
-  camera: {
-    direction: [0, 0.05, 1],
-    fov: 30,
-    target: [0.68, 0.09, 0.1],
-    fit: { width: 4.91, height: 1.95 },
-  },
-  devices: LAYOUT_WIDE.devices,
-};
-
-/** Ista 768 linija kao `DPR_NARROW` i `LENS_TRANSMISSION_MIN_WIDTH`. */
 export const NARROW_QUERY = "(max-width: 767px)";
-
-/** `lg` iz Tailwind-a: odavde tekst ide preko scene, a ne ispod nje. */
-export const SPLIT_QUERY = "(min-width: 1024px)";
 
 /** Dva budžeta piksela, isti kao `DisciplineStage` i `ServiceModelStage`. */
 export const DPR_DESKTOP: [number, number] = [1, 1.75];

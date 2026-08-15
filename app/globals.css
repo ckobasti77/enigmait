@@ -3657,15 +3657,24 @@ select.float-field-input {
   max-width: 42rem;
 }
 
-@media (min-width: 1024px) {
+/* TRAKA IZNAD POKLOPCA LAPTOPA, DESNO OD MONITORA.
+
+   Brojevi nisu proizvoljni: klaster je fiksan (`LAYOUT_WIDE`), a ovo je jedina
+   praznina koju ostavlja - od ~57% širine kadra nadesno, i samo do ~34% visine,
+   jer ispod toga počinje poklopac laptopa. Otuda blok koji je ŠIROK I NIZAK, a ne
+   uska kolona: kolona bi morala da se spusti i sela bi na laptop. Sve je u
+   procentima kutije scene, pa traka prati kadar i kad ga `max-height` skrati.
+
+   PRAG JE 1280, NE `lg`. Ispod toga kadar postaje relativno viši, klaster se u
+   njemu penje, i traka se stisne toliko da dugme sedne na poklopac laptopa -
+   provereno na 1024. Tamo tekst ide pod scenu, gde ima sav prostor koji mu treba. */
+@media (min-width: 1280px) {
   .project-copy {
     position: absolute;
-    /* Uvučeno od obe ivice, a ne prislonjeno uz njih: blok tako sedi U kadru
-       scene, umesto da izgleda kao da je odložen pored njega. Odstojanja su u
-       procentima kutije scene, pa se ćošak drži i kad `max-height` skrati kadar. */
-    top: 4%;
-    right: 3%;
-    width: min(32%, 22rem);
+    top: 3.5%;
+    right: 1%;
+    width: min(43%, 34rem);
+    gap: 0.75rem;
     margin-top: 0;
     max-width: none;
   }
