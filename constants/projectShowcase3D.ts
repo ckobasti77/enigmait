@@ -68,6 +68,53 @@ export const DEVICE_GEOMETRY: Record<ProjectMockupSize, DeviceGeometry> = {
   mobile: { body: [0.4, 0.82, 0.024], bodyRadius: 0.03, bezel: 0.012 },
 };
 
+/* ---------------------------------------------------------------------------
+   Gotovi modeli.
+
+   Monitor i telefon NISU pravljeni ovde - to su isti GLB-ovi koje vrti sekcija
+   disciplina na početnoj (`constants/disciplines.ts`). Modelovan uređaj sa
+   pravim proporcijama, stalkom i dugmadima pobeđuje zaobljenu kutiju u svakom
+   kadru, a usput je i konzistentno: ista scena, isti uređaji, dve strane sajta.
+
+   Tablet i laptop ostaju proceduralni. Tablet zato što je `ui-ux-design.glb`
+   PEJZAŽNI i nosi olovku zalepljenu u isti mesh kao telo - okrenut u portret
+   olovka bi štrčala uvis, a ostavljen pejzažno ne bi primio portretni tablet
+   snimak. Laptop zato što ga u toj kolekciji nema kao uređaj sa odvojenim
+   ekranom.
+
+   `screenAspect` se NE meri iz geometrije: ekran monitora je blago zakrivljen i
+   nagnut, pa bi bbox po x/y dao netačan odnos. Stoji kao broj, jer je to broj
+   koji uređaj i ima.
+   --------------------------------------------------------------------------- */
+
+export type GlbDevice = {
+  url: string;
+  /** Ime mesh-a tela u GLB-u. */
+  mesh: string;
+  /** Ime mesh-a ekrana. Njemu ide slajd šejder. */
+  screen: string;
+  /** Visina celog modela u svetskim jedinicama, po kojoj se skalira. */
+  height: number;
+  screenAspect: number;
+};
+
+export const GLB_DEVICES: Partial<Record<ProjectMockupSize, GlbDevice>> = {
+  desktop: {
+    url: "/assets/models/disciplines/web-development.glb",
+    mesh: "web-development",
+    screen: "web-development_screen",
+    height: 1.22,
+    screenAspect: 16 / 9,
+  },
+  mobile: {
+    url: "/assets/models/disciplines/mobile-app-development.glb",
+    mesh: "mobile-app-development",
+    screen: "mobile-app-development_screen",
+    height: 0.86,
+    screenAspect: 9 / 19.5,
+  },
+};
+
 /**
  * Ravan ekrana, IZVEDENA iz tela - i to je jedini način da ne štrči.
  *
@@ -107,24 +154,6 @@ export const screenAspect = (size: ProjectMockupSize) => {
   return width / height;
 };
 
-/** Vrat i postolje monitora, u lokalnom prostoru grupe (koren = centar panela). */
-export const MONITOR_STAND = {
-  neck: {
-    radiusTop: 0.045,
-    radiusBottom: 0.055,
-    height: 0.34,
-    segments: 12,
-    position: [0, -0.74, -0.02] as [number, number, number],
-  },
-  base: {
-    radiusTop: 0.26,
-    radiusBottom: 0.3,
-    height: 0.028,
-    segments: 24,
-    position: [0, -0.925, -0.02] as [number, number, number],
-  },
-} as const;
-
 /**
  * Šarka laptopa.
  *
@@ -141,19 +170,6 @@ export const LAPTOP_HINGE = {
     radius: 0.012,
     position: [0, -0.52, 0.4] as [number, number, number],
   },
-} as const;
-
-/** Ostrvo kamere na telefonu - jedini detalj koji uređaj čini prepoznatljivim. */
-export const PHONE_ISLAND = {
-  size: [0.1, 0.026] as [number, number],
-  // 86% naviše po ekranu. Vezano za `screenSize`, ne ukucano: ekran se sad računa
-  // iz tela, pa bi fiksan broj posle svakog podešavanja rama završio ili na ivici
-  // ili van nje.
-  position: [0, screenSize("mobile")[1] * 0.43, screenZ("mobile") + 0.0005] as [
-    number,
-    number,
-    number,
-  ],
 } as const;
 
 /* ---------------------------------------------------------------------------
@@ -224,9 +240,9 @@ export const LAYOUT_WIDE: ShowcaseLayout = {
     fit: { width: 3.55, height: 1.9 },
   },
   devices: {
-    desktop: { position: [-0.72, 0.42, -0.35], rotation: [-0.02, 0.16, 0], scale: 1 },
+    desktop: { position: [-0.72, 0.24, -0.35], rotation: [-0.02, 0.16, 0], scale: 1 },
     laptop: { position: [0.66, -0.06, 0.02], rotation: [0, -0.19, 0], scale: 1 },
-    tablet: { position: [-1.06, -0.3, 0.42], rotation: [-0.03, 0.26, 0.03], scale: 1 },
+    tablet: { position: [-1.06, -0.26, 0.42], rotation: [-0.03, 0.26, 0.03], scale: 1 },
     // Telefon stoji NA palmrestu laptopa: y je izabran tako da mu donja ivica
     // sedne na gornju stranu palmresta, umesto da lebdi ili da prođe kroz njega.
     mobile: { position: [1.26, -0.155, 0.66], rotation: [-0.02, -0.28, -0.03], scale: 1 },

@@ -34,6 +34,17 @@ uniform float uDir;          // +1 napred, -1 nazad
 uniform float uSheen;
 uniform vec3 uSheenColor;
 
+/**
+ * 1 kad je gore na ekranu \`v = 1\`, 0 kad je \`v = 0\`.
+ *
+ * Dva izvora geometrije, dve konvencije. \`PlaneGeometry\` pravljena u kodu daje
+ * gornjem vrhu \`uv.v = 1\`; ekrani iz glTF-a, sa \`flipY = false\` kako ih i
+ * \`DisciplineModel\` koristi, imaju \`v = 0\` na vrhu. Uniforma umesto \`#define\`
+ * jer nema dohvata teksture u grananju - samo jedan \`mix\` nad koordinatom - pa
+ * ne treba drugi program.
+ */
+uniform float uFlipV;
+
 #ifdef HAS_VIDEO
 uniform sampler2D uVideo;
 uniform float uVideoAspect;
@@ -79,7 +90,7 @@ void main() {
   // GL-ov v raste naviše, a redovi snimka naniže, i \`flipY\` je isključen
   // (vidi \`prepareMockupTexture\`). Jedan flip ovde stavlja ostatak šejdera u DOM
   // prostor i tu ga drži.
-  vec2 duv = vec2(vUv.x, 1.0 - vUv.y);
+  vec2 duv = vec2(vUv.x, mix(vUv.y, 1.0 - vUv.y, uFlipV));
 
   // GURANJE. uDir = +1 znači da trenutni snimak odlazi ULEVO a sledeći dolazi
   // ZDESNA. Dve koordinate se razlikuju za tačno jednu širinu ravni, pa je u

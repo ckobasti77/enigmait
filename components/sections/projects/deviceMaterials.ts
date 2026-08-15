@@ -140,6 +140,7 @@ export type ScreenUniforms = {
   uDir: { value: number };
   uSheen: { value: number };
   uSheenColor: { value: Color };
+  uFlipV: { value: number };
   uVideo?: { value: Texture };
   uVideoAspect?: { value: number };
   uVideoMix?: { value: number };
@@ -157,7 +158,9 @@ export type ScreenUniforms = {
  */
 export function createScreenSlideMaterial(
   planeAspect: number,
-  hasVideo: boolean
+  hasVideo: boolean,
+  /** 1 za `PlaneGeometry` pravljenu u kodu, 0 za ekran iz glTF-a. */
+  flipV: number
 ) {
   const empty = blankTexture();
 
@@ -171,6 +174,7 @@ export function createScreenSlideMaterial(
     uDir: { value: 1 },
     uSheen: { value: SCREEN_SHEEN },
     uSheenColor: { value: new Color(...SCREEN_SHEEN_COLOR) },
+    uFlipV: { value: flipV },
   };
 
   if (hasVideo) {

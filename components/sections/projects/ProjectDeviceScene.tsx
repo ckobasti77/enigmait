@@ -1,14 +1,17 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { RoundedBox } from "@react-three/drei";
+import { Suspense, useEffect, useMemo } from "react";
+import { RoundedBox, useGLTF } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import {
   ClampToEdgeWrapping,
   SRGBColorSpace,
+  Vector3,
   VideoTexture,
+  type Mesh,
+  type MeshStandardMaterial,
   type ShaderMaterial,
   type Texture,
 } from "three";
@@ -21,16 +24,16 @@ import type { ProjectMockupSize } from "@/constants/projectMockups";
 import {
   DEVICE_GEOMETRY,
   DEVICE_ORDER,
+  GLB_DEVICES,
   LAPTOP_HINGE,
   LIGHTS,
-  MONITOR_STAND,
   MOCKUP_ASPECT,
-  PHONE_ISLAND,
   VIDEO_FADE_IN,
   VIDEO_FADE_OUT,
   screenAspect,
   screenSize,
   screenZ,
+  type GlbDevice as GlbDeviceSpec,
   type ShowcaseLayout,
 } from "@/constants/projectShowcase3D";
 
@@ -54,6 +57,10 @@ gsap.registerPlugin(CustomEase);
  * je tiho preklapanje koje niko ne očekuje.
  */
 const SLIDE_EASE = CustomEase.create("projectSlide", SLIDE_EASE_PATH);
+
+// Isti URL-ovi koje vrti sekcija disciplina, pa je ovo najčešće pogodak u
+// drei-jev keš a ne nov prenos.
+for (const spec of Object.values(GLB_DEVICES)) useGLTF.preload(spec.url);
 
 type ScreenMaterials = Record<ProjectMockupSize, ShaderMaterial>;
 
@@ -113,6 +120,61 @@ type ProjectDeviceSceneProps = {
   videoPlaying: boolean;
 };
 
+/**
+ * Uređaj iz gotovog GLB-a: monitor i telefon.
+ *
+ * Renderuju se GEOMETRIJE iz `nodes`, ne kloniran scene graph - isti postupak
+ * koji `DisciplineModel` koristi na početnoj, i jedini koji dopušta da se
+ * materijali zamene bez diranja onoga što drei-jev keš deli sa ostatkom sajta.
+ * Otuda i `dispose={null}`: geometrija pripada tom kešu i ne sme da je oslobodi
+ * odjava ove komponente.
+ *
+ * Skalira se po VISINI TELA, jer je to jedina mera koju layout zna. Model dolazi
+ * normalizovan na 2.0 po najdužoj osi, ali kod monitora ta osa nije ista kao kod
+ * telefona, pa je fiksan faktor bio pogađanje.
+ */
+function GlbDevice({
+  spec,
+  screenMaterial,
+  casing,
+}: {
+  spec: GlbDeviceSpec;
+  screenMaterial: ShaderMaterial;
+  casing: MeshStandardMaterial;
+}) {
+  const { nodes } = useGLTF(spec.url);
+
+  const body = (nodes[spec.mesh] as Mesh | undefined)?.geometry;
+  const screen = (nodes[spec.screen] as Mesh | undefined)?.geometry;
+
+  const fit = useMemo(() => {
+    if (!body) return { scale: 1, offset: [0, 0, 0] as [number, number, number] };
+
+    body.computeBoundingBox();
+    const box = body.boundingBox;
+    if (!box) return { scale: 1, offset: [0, 0, 0] as [number, number, number] };
+
+    const size = box.getSize(new Vector3());
+    const centre = box.getCenter(new Vector3());
+
+    return {
+      scale: spec.height / Math.max(size.y, 1e-6),
+      offset: [-centre.x, -centre.y, -centre.z] as [number, number, number],
+    };
+  }, [body, spec.height]);
+
+  if (!body || !screen) return null;
+
+  return (
+    <group scale={fit.scale}>
+      <group position={fit.offset}>
+        <mesh geometry={body} material={casing} dispose={null} />
+        <mesh geometry={screen} material={screenMaterial} dispose={null} />
+      </group>
+    </group>
+  );
+}
+
 /** Ravan snimka. Uža od kućišta - razlika je bezel, i zato nije nacrtan posebno. */
 function ScreenPlane({
   size,
@@ -152,9 +214,12 @@ export default function ProjectDeviceScene({
   const materials = useMemo(() => {
     const built = {} as ScreenMaterials;
     for (const size of DEVICE_ORDER) {
+      const glb = GLB_DEVICES[size];
       built[size] = createScreenSlideMaterial(
-        screenAspect(size),
-        size === "laptop"
+        glb ? glb.screenAspect : screenAspect(size),
+        size === "laptop",
+        // Ekran iz glTF-a ima `v = 0` na vrhu, `PlaneGeometry` iz koda `v = 1`.
+        glb ? 0 : 1
       );
       built[size].uniforms.uCurrAspect.value = MOCKUP_ASPECT[size];
       built[size].uniforms.uNextAspect.value = MOCKUP_ASPECT[size];
@@ -304,14 +369,10 @@ export default function ProjectDeviceScene({
 
   const shell = getCasingMaterial(theme, "shell");
   const deck = getCasingMaterial(theme, "deck");
-  const stand = getCasingMaterial(theme, "stand");
-  const island = getCasingMaterial(theme, "island");
 
   const place = layout.devices;
-  const monitor = DEVICE_GEOMETRY.desktop;
   const lid = DEVICE_GEOMETRY.laptop;
   const tablet = DEVICE_GEOMETRY.tablet;
-  const phone = DEVICE_GEOMETRY.mobile;
 
   return (
     <>
@@ -325,40 +386,22 @@ export default function ProjectDeviceScene({
         intensity={LIGHTS.fill.intensity}
       />
 
-      {/* Monitor: panel, vrat, postolje. Koren grupe je centar panela. */}
+      {/* Monitor i telefon dolaze iz kolekcije disciplina - modelovani uređaji sa
+          stalkom, dugmadima i pravim proporcijama. Svaki ima svoj `Suspense`, a ne
+          jedan zajednički: suspenzija oko cele scene bi na svako učitavanje
+          sklonila i tablet i laptop, koji ne čekaju ništa. */}
       <group
         position={place.desktop.position}
         rotation={place.desktop.rotation}
         scale={place.desktop.scale}
       >
-        <RoundedBox
-          args={monitor.body}
-          radius={monitor.bodyRadius}
-          smoothness={3}
-          bevelSegments={2}
-          material={shell}
-        />
-        <ScreenPlane size="desktop" material={materials.desktop} />
-        <mesh position={MONITOR_STAND.neck.position} material={stand}>
-          <cylinderGeometry
-            args={[
-              MONITOR_STAND.neck.radiusTop,
-              MONITOR_STAND.neck.radiusBottom,
-              MONITOR_STAND.neck.height,
-              MONITOR_STAND.neck.segments,
-            ]}
+        <Suspense fallback={<group />}>
+          <GlbDevice
+            spec={GLB_DEVICES.desktop!}
+            screenMaterial={materials.desktop}
+            casing={shell}
           />
-        </mesh>
-        <mesh position={MONITOR_STAND.base.position} material={stand}>
-          <cylinderGeometry
-            args={[
-              MONITOR_STAND.base.radiusTop,
-              MONITOR_STAND.base.radiusBottom,
-              MONITOR_STAND.base.height,
-              MONITOR_STAND.base.segments,
-            ]}
-          />
-        </mesh>
+        </Suspense>
       </group>
 
       {/* Laptop. Poklopac se okreće oko donje ivice, pa mu treba zaseban pivot -
@@ -410,17 +453,13 @@ export default function ProjectDeviceScene({
         rotation={place.mobile.rotation}
         scale={place.mobile.scale}
       >
-        <RoundedBox
-          args={phone.body}
-          radius={phone.bodyRadius}
-          smoothness={3}
-          bevelSegments={2}
-          material={shell}
-        />
-        <ScreenPlane size="mobile" material={materials.mobile} />
-        <mesh position={PHONE_ISLAND.position} material={island}>
-          <planeGeometry args={PHONE_ISLAND.size} />
-        </mesh>
+        <Suspense fallback={<group />}>
+          <GlbDevice
+            spec={GLB_DEVICES.mobile!}
+            screenMaterial={materials.mobile}
+            casing={shell}
+          />
+        </Suspense>
       </group>
     </>
   );
