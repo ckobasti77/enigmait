@@ -57,15 +57,32 @@ export type DeviceGeometry = {
   /** `RoundedBox args` tela (kod laptopa: poklopca). */
   body: [number, number, number];
   bodyRadius: number;
-  /** Ravan ekrana, u istim jedinicama. Uža od tela - razlika JE bezel. */
-  screen: [number, number];
+  /** Vidljiv ram oko ekrana, po ivici RAVNE prednje strane - vidi `screenSize`. */
+  bezel: number;
 };
 
 export const DEVICE_GEOMETRY: Record<ProjectMockupSize, DeviceGeometry> = {
-  desktop: { body: [1.92, 1.15, 0.055], bodyRadius: 0.022, screen: [1.8, 1.01] },
-  laptop: { body: [1.56, 1.02, 0.032], bodyRadius: 0.016, screen: [1.46, 0.92] },
-  tablet: { body: [0.74, 1.02, 0.026], bodyRadius: 0.03, screen: [0.68, 0.94] },
-  mobile: { body: [0.4, 0.82, 0.024], bodyRadius: 0.048, screen: [0.362, 0.775] },
+  desktop: { body: [1.92, 1.15, 0.055], bodyRadius: 0.022, bezel: 0.036 },
+  laptop: { body: [1.56, 1.02, 0.032], bodyRadius: 0.016, bezel: 0.032 },
+  tablet: { body: [0.74, 1.02, 0.026], bodyRadius: 0.026, bezel: 0.024 },
+  mobile: { body: [0.4, 0.82, 0.024], bodyRadius: 0.03, bezel: 0.012 },
+};
+
+/**
+ * Ravan ekrana, IZVEDENA iz tela - i to je jedini način da ne štrči.
+ *
+ * `RoundedBox` iz drei-ja ekstrudira zaobljen pravougaonik sa `bevelSize =
+ * radius`, pa je njegova RAVNA prednja strana manja od siluete za `radius` sa
+ * SVAKE strane: telo od 0.40 sa radijusom 0.048 ima prednju stranu od samo 0.304.
+ * Ekran zadat kao broj lako promaši tu granicu - telefonu je ranije bio 0.362 i
+ * ivice slike su visile preko oboda, što se na snimku vidi kao da slika ne stoji
+ * u ekranu. Otuda računanje umesto kucanja: širina siluete, minus dva radijusa
+ * (bevel), minus dva bezela.
+ */
+export const screenSize = (size: ProjectMockupSize): [number, number] => {
+  const { body, bodyRadius, bezel } = DEVICE_GEOMETRY[size];
+  const inset = 2 * (bodyRadius + bezel);
+  return [body[0] - inset, body[1] - inset];
 };
 
 /**
@@ -85,8 +102,10 @@ export const screenZ = (size: ProjectMockupSize) =>
   DEVICE_GEOMETRY[size].body[2] / 2 + SCREEN_LIFT;
 
 /** Odnos stranica same ravni ekrana - druga polovina `cover` računa u šejderu. */
-export const screenAspect = (size: ProjectMockupSize) =>
-  DEVICE_GEOMETRY[size].screen[0] / DEVICE_GEOMETRY[size].screen[1];
+export const screenAspect = (size: ProjectMockupSize) => {
+  const [width, height] = screenSize(size);
+  return width / height;
+};
 
 /** Vrat i postolje monitora, u lokalnom prostoru grupe (koren = centar panela). */
 export const MONITOR_STAND = {
@@ -127,7 +146,14 @@ export const LAPTOP_HINGE = {
 /** Ostrvo kamere na telefonu - jedini detalj koji uređaj čini prepoznatljivim. */
 export const PHONE_ISLAND = {
   size: [0.1, 0.026] as [number, number],
-  position: [0, 0.335, screenZ("mobile") + 0.0005] as [number, number, number],
+  // 86% naviše po ekranu. Vezano za `screenSize`, ne ukucano: ekran se sad računa
+  // iz tela, pa bi fiksan broj posle svakog podešavanja rama završio ili na ivici
+  // ili van nje.
+  position: [0, screenSize("mobile")[1] * 0.43, screenZ("mobile") + 0.0005] as [
+    number,
+    number,
+    number,
+  ],
 } as const;
 
 /* ---------------------------------------------------------------------------

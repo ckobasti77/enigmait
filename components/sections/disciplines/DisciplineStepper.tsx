@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+} from "react";
 import clsx from "clsx";
 
 import { DISCIPLINE_ORDER, disciplines } from "@/constants/disciplines";
@@ -47,6 +53,34 @@ export default function DisciplineStepper({
   className,
 }: DisciplineStepperProps) {
   const last = DISCIPLINE_ORDER.length - 1;
+
+  /**
+   * The arrows are `position: fixed` at the screen edges, so they have to be told
+   * when the section is on screen - otherwise they hang over the whole homepage.
+   *
+   * The rail observes ITSELF rather than being handed `stageVisible` from
+   * `Disciplines`: the rail sits directly under the model, so "the rail is in
+   * view" and "the section is in view" are the same fact, and keeping the wiring
+   * inside this file means the section shell does not have to know the arrows
+   * moved.
+   */
+  const railRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      // Grown upwards so the arrows are already there while the model is being
+      // read, not only once the rail itself clips the fold.
+      { rootMargin: "60% 0px 0px 0px", threshold: 0 }
+    );
+
+    observer.observe(rail);
+    return () => observer.disconnect();
+  }, []);
 
   const dotRefs = useRef<Array<HTMLButtonElement | null>>([]);
   /**
@@ -106,11 +140,17 @@ export default function DisciplineStepper({
   };
 
   return (
-    <div className={clsx("discipline-stepper", className)} style={DOT_TIMING}>
+    <div
+      ref={railRef}
+      className={clsx("discipline-stepper", className)}
+      style={DOT_TIMING}
+    >
       <button
         type="button"
         className="discipline-arrow"
         data-dir="prev"
+        data-visible={visible}
+        tabIndex={visible ? 0 : -1}
         aria-label="Previous discipline"
         onClick={() => onStep(-1)}
       >
@@ -148,6 +188,8 @@ export default function DisciplineStepper({
         type="button"
         className="discipline-arrow"
         data-dir="next"
+        data-visible={visible}
+        tabIndex={visible ? 0 : -1}
         aria-label="Next discipline"
         onClick={() => onStep(1)}
       >

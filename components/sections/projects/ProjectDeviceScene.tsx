@@ -29,6 +29,7 @@ import {
   VIDEO_FADE_IN,
   VIDEO_FADE_OUT,
   screenAspect,
+  screenSize,
   screenZ,
   type ShowcaseLayout,
 } from "@/constants/projectShowcase3D";
@@ -120,7 +121,7 @@ function ScreenPlane({
   size: ProjectMockupSize;
   material: ShaderMaterial;
 }) {
-  const [width, height] = DEVICE_GEOMETRY[size].screen;
+  const [width, height] = screenSize(size);
 
   return (
     <mesh position={[0, 0, screenZ(size)]} material={material}>
