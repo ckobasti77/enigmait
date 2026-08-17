@@ -1,15 +1,20 @@
 'use server';
 
+import crypto from 'crypto';
+import { headers, cookies } from 'next/headers';
 import nodemailer from 'nodemailer';
 
 import {
   CONTACT_INTEREST_LABELS,
   CONTACT_INTERESTS_FIELD,
 } from '@/constants/contactInterests';
+import { sendMetaCapiLeadEvent } from '@/lib/metaCapi';
 
-type ContactFormState = {
+export type ContactFormState = {
   status: 'idle' | 'success' | 'error';
   message: string;
+  eventId?: string;
+  leadValue?: number;
 };
 
 const requiredEnv = [
@@ -144,9 +149,56 @@ export async function submitContact(
       ].join(''),
     });
 
+    const eventId = crypto.randomUUID();
+    const rawLeadValue =
+      process.env.LEAD_VALUE_EUR || process.env.NEXT_PUBLIC_LEAD_VALUE_EUR;
+    const parsedLeadValue = rawLeadValue
+      ? Number.parseFloat(rawLeadValue)
+      : undefined;
+    const leadValue =
+      typeof parsedLeadValue === 'number' && !Number.isNaN(parsedLeadValue)
+        ? parsedLeadValue
+        : undefined;
+
+    let clientIp: string | undefined;
+    let userAgent: string | undefined;
+    let sourceUrl: string | undefined;
+    let fbp: string | undefined;
+    let fbc: string | undefined;
+
+    try {
+      const headerList = await headers();
+      clientIp =
+        headerList.get('x-forwarded-for')?.split(',')[0].trim() ||
+        headerList.get('x-real-ip') ||
+        undefined;
+      userAgent = headerList.get('user-agent') || undefined;
+      sourceUrl = headerList.get('referer') || undefined;
+
+      const cookieStore = await cookies();
+      fbp = cookieStore.get('_fbp')?.value;
+      fbc = cookieStore.get('_fbc')?.value;
+    } catch {
+      // Gracefully continue if headers/cookies are unavailable
+    }
+
+    await sendMetaCapiLeadEvent({
+      eventId,
+      email,
+      name,
+      leadValue,
+      clientIp,
+      userAgent,
+      sourceUrl,
+      fbp,
+      fbc,
+    });
+
     return {
       status: 'success',
       message: 'Hvala! Vaša poruka je poslata.',
+      eventId,
+      leadValue,
     };
   } catch (error) {
     console.error('Contact form error', error);

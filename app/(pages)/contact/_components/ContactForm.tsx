@@ -2,17 +2,13 @@
 
 import { Fragment, useActionState, useEffect, useRef } from "react";
 import { Send } from "lucide-react";
+import { sendGAEvent } from "@next/third-parties/google";
 
 import {
   CONTACT_INTERESTS,
   CONTACT_INTERESTS_FIELD,
 } from "@/constants/contactInterests";
-import { submitContact } from "../actions";
-
-type ContactFormState = {
-  status: "idle" | "success" | "error";
-  message: string;
-};
+import { submitContact, type ContactFormState } from "../actions";
 
 const initialState: ContactFormState = {
   status: "idle",
@@ -47,8 +43,25 @@ export default function ContactForm() {
   useEffect(() => {
     if (state.status === "success") {
       formRef.current?.reset();
+      sendGAEvent("event", "generate_lead");
+
+      if (
+        typeof window !== "undefined" &&
+        typeof (window as unknown as { fbq?: Function }).fbq === "function"
+      ) {
+        (window as unknown as { fbq: Function }).fbq(
+          "track",
+          "Lead",
+          {
+            ...(state.leadValue != null
+              ? { value: state.leadValue, currency: "EUR" }
+              : {}),
+          },
+          state.eventId ? { eventID: state.eventId } : undefined
+        );
+      }
     }
-  }, [state.status]);
+  }, [state.status, state.eventId, state.leadValue]);
 
   return (
     <div className="contact-glass overflow-hidden p-6 sm:p-7">

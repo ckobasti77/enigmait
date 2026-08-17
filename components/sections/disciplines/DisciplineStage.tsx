@@ -323,10 +323,30 @@ function DisciplineReel({
     // with an outgoing model there are frames to travel in.
   }, [pair, invalidate]);
 
+  /**
+   * KEYED BY DISCIPLINE INDEX, AND THAT KEY IS LOAD-BEARING - it is what makes the swap
+   * clean rather than twitching on its first frame.
+   *
+   * At rest only the `to` slot renders, so it is the SECOND child. Without keys React
+   * reconciles the two slots by array position: when a step starts, the freshly-appearing
+   * `from` slot takes child-slot 0 and the on-screen model's slot (child 1) has its `index`
+   * mutated from the old model to the NEW one. The result is that the model actually on
+   * screen gets torn off its component instance - a brand-new `DisciplineModel` mounts for
+   * the outgoing model with `floatPhaseRef` reset to 0, so its `position.y` snaps from the
+   * live float value (up to +-`AMBIENT_FLOAT_AMPLITUDE`) to `sin(0)=0` on the exact frame the
+   * slide begins. That is the vertical pop.
+   *
+   * Keying by index makes React match on identity instead: the resting model keeps its
+   * instance as it becomes the outgoing `from` slot (float phase intact, no pop, it just
+   * slides), and only the genuinely-new incoming model mounts - off screen, where a float
+   * starting at 0 is invisible. The same identity carries the incoming model from sliding
+   * into rest, so the handover at the END of the slide is seamless too.
+   */
   return (
     <group ref={reelRef}>
       {pair.from !== null ? (
         <ReelSlot
+          key={pair.from}
           index={pair.from}
           position={slotPosition(0)}
           theme={theme}
@@ -334,6 +354,7 @@ function DisciplineReel({
         />
       ) : null}
       <ReelSlot
+        key={pair.to}
         index={pair.to}
         position={slotPosition(
           pair.from === null ? 0 : pair.direction * MODEL_SLOT_SPAN

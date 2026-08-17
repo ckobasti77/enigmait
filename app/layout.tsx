@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import MetaPixel from "./_components/MetaPixel";
 import "./globals.css";
 import Navbar from "./_components/Navbar";
 import ScrollToTopButton from "./_components/ScrollToTopButton";
@@ -168,6 +170,18 @@ export default function RootLayout({
             </ThemeProvider>
           </LanguageProvider>
         </CookieConsentProvider>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
+        {(process.env.NEXT_PUBLIC_META_PIXEL_ID ||
+          process.env.META_PIXEL_ID) && (
+          <MetaPixel
+            pixelId={
+              (process.env.NEXT_PUBLIC_META_PIXEL_ID ||
+                process.env.META_PIXEL_ID)!
+            }
+          />
+        )}
       </body>
     </html>
   );

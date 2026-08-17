@@ -59,6 +59,162 @@ const technologies: TechItem[] = [
     glowColor: "rgba(162, 89, 255, 0.12)",
     eli5: "Digitalna sveska u kojoj crtamo i dizajniramo tačan izgled tvog sajta pre nego što ga napravimo.",
   },
+
+  // — Dizajn —
+  {
+    id: "photoshop",
+    name: "Photoshop",
+    glowColor: "rgba(49, 168, 255, 0.14)",
+    eli5: "Čarobna radionica u kojoj retuširamo fotografije i činimo da svaka slika izgleda savršeno.",
+  },
+  {
+    id: "illustrator",
+    name: "Illustrator",
+    glowColor: "rgba(255, 154, 0, 0.14)",
+    eli5: "Alat kojim crtamo logotipe i ilustracije koje ostaju oštre koliko god ih uvećaš.",
+  },
+  {
+    id: "xd",
+    name: "Adobe XD",
+    glowColor: "rgba(255, 38, 190, 0.12)",
+    eli5: "Digitalna tabla na kojoj sklapamo kako aplikacija izgleda i kako se klikće kroz nju.",
+  },
+  {
+    id: "blender",
+    name: "Blender",
+    glowColor: "rgba(234, 118, 0, 0.13)",
+    eli5: "3D radionica u kojoj oblikujemo i oživljavamo predmete kao da su od gline.",
+  },
+
+  // — Video / Montaža —
+  {
+    id: "aftereffects",
+    name: "After Effects",
+    glowColor: "rgba(153, 153, 255, 0.14)",
+    eli5: "Filmska kuhinja u kojoj dodajemo pokret, efekte i animacije da video oživi.",
+  },
+  {
+    id: "premierepro",
+    name: "Premiere Pro",
+    glowColor: "rgba(170, 120, 255, 0.14)",
+    eli5: "Montažni sto na kome sečemo i spajamo snimke u priču koja teče glatko.",
+  },
+  {
+    id: "capcut",
+    name: "CapCut",
+    glowColor: "rgba(0, 231, 255, 0.12)",
+    eli5: "Brzi alat kojim pravimo dinamične klipove za mreže, sa titlovima i muzikom.",
+  },
+  {
+    id: "davinci",
+    name: "DaVinci Resolve",
+    glowColor: "rgba(157, 180, 204, 0.12)",
+    eli5: "Majstor za boje koji svakom snimku daje bogat, filmski ton.",
+  },
+
+  // — Društvene mreže —
+  {
+    id: "instagram",
+    name: "Instagram",
+    glowColor: "rgba(225, 48, 108, 0.14)",
+    eli5: "Izlog na kome tvoj brend blista kroz slike i priče koje ljudi vole da prate.",
+  },
+  {
+    id: "tiktok",
+    name: "TikTok",
+    glowColor: "rgba(254, 44, 85, 0.12)",
+    eli5: "Igralište kratkih videa gde se najbrže postaje viralan i primećen.",
+  },
+  {
+    id: "youtube",
+    name: "YouTube",
+    glowColor: "rgba(255, 0, 0, 0.12)",
+    eli5: "Najveća bioskopska sala interneta gde tvoji videi žive i rastu godinama.",
+  },
+  {
+    id: "facebook",
+    name: "Facebook",
+    glowColor: "rgba(24, 119, 242, 0.14)",
+    eli5: "Gradski trg na kome brend priča sa zajednicom i pronalazi nove kupce.",
+  },
+  {
+    id: "linkedin",
+    name: "LinkedIn",
+    glowColor: "rgba(10, 102, 194, 0.14)",
+    eli5: "Poslovni skup na kome se brend povezuje sa firmama i profesionalcima.",
+  },
+
+  // — SEO / Marketing / Analitika —
+  {
+    id: "google",
+    name: "Google",
+    glowColor: "rgba(66, 133, 244, 0.12)",
+    eli5: "Najveća biblioteka sveta u kojoj se trudimo da tvoj sajt bude na prvoj strani.",
+  },
+  {
+    id: "googleanalytics",
+    name: "Google Analytics",
+    glowColor: "rgba(249, 171, 0, 0.12)",
+    eli5: "Detektiv koji nam tačno kaže ko posećuje sajt i šta na njemu radi.",
+  },
+  {
+    id: "googleads",
+    name: "Google Ads",
+    glowColor: "rgba(251, 188, 5, 0.12)",
+    eli5: "Zvučnik kojim tvoju ponudu čuju baš oni koji je traže na Google-u.",
+  },
+  {
+    id: "searchconsole",
+    name: "Search Console",
+    glowColor: "rgba(120, 170, 255, 0.12)",
+    eli5: "Kontrolna tabla koja pokazuje kako Google vidi i rangira tvoj sajt.",
+  },
+  {
+    id: "ahrefs",
+    name: "Ahrefs",
+    glowColor: "rgba(255, 136, 0, 0.13)",
+    eli5: "Špijunski durbin kojim proučavamo konkurenciju i nalazimo prave reči za pretragu.",
+  },
+  {
+    id: "semrush",
+    name: "Semrush",
+    glowColor: "rgba(255, 100, 45, 0.12)",
+    eli5: "Švajcarski nožić za marketing koji otkriva kako da nadmašiš konkurenciju.",
+  },
+  {
+    id: "meta",
+    name: "Meta",
+    glowColor: "rgba(0, 129, 251, 0.12)",
+    eli5: "Komandni centar reklama koji tvoju poruku šalje pravim ljudima na Instagramu i Facebook-u.",
+  },
+
+  // — Web / Dev —
+  {
+    id: "typescript",
+    name: "TypeScript",
+    glowColor: "rgba(49, 120, 198, 0.14)",
+    eli5: "Strogi učitelj koda koji hvata greške pre nego što se pojave na sajtu.",
+  },
+  {
+    id: "nodejs",
+    name: "Node.js",
+    glowColor: "rgba(83, 158, 67, 0.13)",
+    eli5: "Neumorni motor u pozadini koji pokreće servere i logiku sajta.",
+  },
+
+  // — Mobilne —
+  {
+    id: "swift",
+    name: "Swift",
+    glowColor: "rgba(240, 81, 56, 0.13)",
+    eli5: "Jezik kojim pravimo brze i uglačane aplikacije baš za iPhone.",
+  },
+  {
+    id: "kotlin",
+    name: "Kotlin",
+    glowColor: "rgba(167, 116, 255, 0.12)",
+    eli5: "Jezik kojim gradimo moderne i stabilne aplikacije za Android telefone.",
+  },
 ];
 
 // Double the items array to ensure seamless infinite looping marquee
@@ -131,7 +287,7 @@ export function TechSection() {
       {/* Subtle Title Badge */}
       <div className="text-center z-10 mb-6 sm:mb-8">
         <span className="font-accent text-[9px] md:text-[10.5px] tracking-[0.25em] text-theme-muted opacity-60 uppercase font-bold">
-          TEHNOLOGIJE KOJE KORISTIMO
+          Tehnologije koje koristimo
         </span>
       </div>
 
