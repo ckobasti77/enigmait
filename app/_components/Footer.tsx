@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CtaButton from "@/components/ui/cta-button";
+import CookieSettingsLink from "./CookieSettingsLink";
 import { navLinks } from "@/constants/navLinks";
 import { socialLinks } from "@/constants/socialLinks";
 import { ArrowUpRight } from "lucide-react";
@@ -118,6 +119,7 @@ export default function Footer() {
             <Link href="/brand" className="transition-theme hover:text-theme-primary">
               Smernice brenda
             </Link>
+            <CookieSettingsLink />
           </div>
         </div>
       </div>

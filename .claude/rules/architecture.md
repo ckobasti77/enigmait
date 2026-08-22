@@ -9,7 +9,7 @@ Service slugs: `web-development`, `ui-ux-design`, `mobile-app-development`, `seo
 ## Layout Shell (`app/layout.tsx`)
 
 The root layout wraps everything in:
-1. `CookieConsentProvider` - manages cookie consent state
+1. `ConsentProvider` - GA4 (analytics) + Meta Pixel (marketing) consent, stored in localStorage (`enigma_consent_v1`). Google Consent Mode v2 is set all-denied in `<head>` (`CONSENT_DEFAULT_SCRIPT`) before gtag can load; `CookieConsent` is the banner, `ConsentedAnalytics` is the gate that renders each tracker only after its category is granted. Theme/language cookies persist independently (functional preferences), not gated on this.
 2. `ThemeProvider` - custom light/dark theme system (not next-themes)
 3. `div.app-shell` - contains `VideoBackgroundGlobal` (fixed z-0) and content layer (z-10)
 

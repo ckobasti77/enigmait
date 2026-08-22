@@ -9,7 +9,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { useCookieConsent } from "./CookieConsentProvider";
 import {
   DEFAULT_LOCALE,
   LANGUAGE_COOKIE_MAX_AGE,
@@ -143,8 +142,6 @@ const translateNodeTree = (root: Node, locale: Locale) => {
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
   const localeRef = useRef(locale);
-  const { consent, hasResponded } = useCookieConsent();
-  const canUseFunctionalCookies = hasResponded && consent.functional;
 
   useEffect(() => {
     localeRef.current = locale;
@@ -190,26 +187,23 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return () => observer.disconnect();
   }, [locale]);
 
+  // Language is a functional preference, persisted unconditionally (Consent
+  // Mode's functionality_storage is granted by default). Stored locale wins on
+  // mount; otherwise the default (sr) stands.
   useEffect(() => {
     if (typeof document === "undefined") return;
 
-    if (canUseFunctionalCookies) {
-      const storedLocale = getCookieValue(LANGUAGE_COOKIE_NAME);
-      if (isLocale(storedLocale) && storedLocale !== localeRef.current) {
-        setLocaleState(storedLocale);
-      } else {
-        writeLanguageCookie(localeRef.current);
-      }
-      return;
+    const storedLocale = getCookieValue(LANGUAGE_COOKIE_NAME);
+    if (isLocale(storedLocale) && storedLocale !== localeRef.current) {
+      setLocaleState(storedLocale);
+    } else {
+      writeLanguageCookie(localeRef.current);
     }
-
-    writeLanguageCookie(null);
-  }, [canUseFunctionalCookies]);
+  }, []);
 
   useEffect(() => {
-    if (!canUseFunctionalCookies) return;
     writeLanguageCookie(locale);
-  }, [canUseFunctionalCookies, locale]);
+  }, [locale]);
 
   const setLocale = useCallback((nextLocale: Locale) => {
     setLocaleState(nextLocale);

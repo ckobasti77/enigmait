@@ -21,7 +21,7 @@
 
 - Never hardcode colors. Use CSS variables (`--color-primary`, `--text-muted`) or theme-aware utility classes.
 - Don't use Tailwind's `dark:` prefix — this project uses a custom `html[data-theme]` system, not Tailwind's built-in dark mode.
-- Theme cookie writes are gated on `functional` cookie consent. Don't bypass.
+- Theme (and language) cookies are functional preferences and persist unconditionally — Consent Mode's `functionality_storage` is granted by default. The `ConsentProvider` banner only gates GA4/Meta Pixel (analytics/marketing), not these.
 
 ## "use client"
 

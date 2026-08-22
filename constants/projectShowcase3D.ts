@@ -295,12 +295,18 @@ export const LIGHTS = {
 } as const;
 
 /**
- * Odsjaj stakla u šejderu ekrana.
+ * Odsjaj stakla u šejderu ekrana - UGAŠEN.
  *
- * Ekrani ne primaju svetlo, pa bi bez ovoga izgledali kao četiri nalepnice.
- * Namerno slabo i namerno neutralno: obojen odsjaj bi tonirao tuđ brend.
+ * Stajao je na 0.06 da ekran ne bi izgledao kao nalepnica. Ali odsjaj je aditivan
+ * i pokriva ceo gornji levi kvadrant snimka (`smoothstep(0.55, 0.0, x + 0.6y)`),
+ * pa je to bio plavičast veo preko tuđeg brenda - tačno ono što se na snimku vidi
+ * kao "posivljeno". Snimak sada izlazi tačno onakav kakav je u fajlu.
+ *
+ * Ostaje kao broj, ne kao obrisan kod: uniforma i grana u šejderu su i dalje tu,
+ * pa je povratak jedna vrednost. Ako ekranu ikad zatreba površina, bolje je da
+ * dođe od zasebne tanke ravni ispred njega nego od vela preko slike.
  */
-export const SCREEN_SHEEN = 0.06;
+export const SCREEN_SHEEN = 0;
 export const SCREEN_SHEEN_COLOR: [number, number, number] = [0.78, 0.86, 1];
 
 /* ---------------------------------------------------------------------------

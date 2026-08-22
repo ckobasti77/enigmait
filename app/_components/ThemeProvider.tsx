@@ -9,8 +9,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { useCookieConsent } from "./CookieConsentProvider";
-
 type ThemeMode = "light" | "dark";
 type ThemeToggleOrigin = { x: number; y: number };
 type ThemeToggleOptions = {
@@ -181,27 +179,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Synchronous re-entrancy guard: `isTransitioning` only blocks the button
   // after React re-renders, this blocks a second call in the same frame.
   const transitionInFlightRef = useRef(false);
-  const { consent, hasResponded } = useCookieConsent();
-  const canUseFunctionalCookies = hasResponded && consent.functional;
   const themeRef = useRef(theme);
 
   useEffect(() => {
     themeRef.current = theme;
   }, [theme]);
 
+  // Theme is a functional preference, persisted unconditionally (Consent Mode's
+  // functionality_storage is granted by default - it does not gate on the
+  // analytics/marketing banner).
   const commitTheme = useCallback((value: ThemeMode) => {
     setThemeState(value);
 
     if (typeof document !== "undefined") {
       applyDocumentTheme(value);
-
-      if (canUseFunctionalCookies) {
-        writeThemeCookie(value);
-      } else {
-        writeThemeCookie(null);
-      }
+      writeThemeCookie(value);
     }
-  }, [canUseFunctionalCookies]);
+  }, []);
 
   const changeTheme = useCallback(
     (target: ThemeMode, options?: ThemeToggleOptions) => {
@@ -270,27 +264,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     const currentTheme = themeRef.current;
 
-    if (!hasResponded) {
-      if (currentTheme !== "dark") {
-        commitTheme("dark");
+    // Stored choice wins; otherwise follow the OS scheme. Default stays dark.
+    const storedTheme = getCookieValue(THEME_COOKIE_NAME);
+
+    if (isThemeMode(storedTheme)) {
+      if (storedTheme !== currentTheme) {
+        commitTheme(storedTheme);
       } else {
-        applyDocumentTheme("dark");
-        writeThemeCookie(null);
+        applyDocumentTheme(currentTheme);
       }
       return;
-    }
-
-    if (canUseFunctionalCookies) {
-      const storedTheme = getCookieValue(THEME_COOKIE_NAME);
-
-      if (isThemeMode(storedTheme)) {
-        if (storedTheme !== currentTheme) {
-          commitTheme(storedTheme);
-        } else {
-          applyDocumentTheme(currentTheme);
-        }
-        return;
-      }
     }
 
     const prefersDark = window.matchMedia(
@@ -301,16 +284,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     if (nextTheme !== currentTheme) {
       commitTheme(nextTheme);
-    } else if (!canUseFunctionalCookies) {
-      writeThemeCookie(null);
+    } else {
+      applyDocumentTheme(currentTheme);
     }
-  }, [commitTheme, canUseFunctionalCookies, hasResponded]);
+  }, [commitTheme]);
 
   useEffect(() => {
-    if (!canUseFunctionalCookies) return;
-
     writeThemeCookie(theme);
-  }, [canUseFunctionalCookies, theme]);
+  }, [theme]);
 
   const value = useMemo(
     () => ({

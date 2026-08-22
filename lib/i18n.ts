@@ -521,15 +521,26 @@ export const englishToSerbianEntries = [
   ["Download accessibility checklist", "Preuzmite checklist-u pristupačnosti"],
 
   // Cookie banner
-  ["Manage your cookie preferences", "Upravljajte podešavanjima kolačića"],
+  ["We respect your privacy", "Poštujemo vašu privatnost"],
   [
-    "We use essential cookies to keep our site running. Enable functional cookies to remember choices like your theme or language preferences.",
-    "Koristimo neophodne kolačiće da bi sajt radio. Omogućite funkcionalne kolačiće da zapamtimo izbore kao što su tema ili jezik.",
+    "We use essential cookies to keep the site running. With your consent we also use analytics and marketing cookies to understand visits and measure campaigns. You choose what you allow.",
+    "Koristimo neophodne kolačiće da sajt radi. Uz vaš pristanak koristimo i kolačiće za analitiku i marketing kako bismo razumeli posete i merili kampanje. Vi birate šta dozvoljavate.",
   ],
-  ["Functional cookies", "Funkcionalni kolačići"],
-  ["Accept all", "Prihvati sve"],
-  ["Save selection", "Sačuvaj izbor"],
+  ["Cookie Policy", "Politika kolačića"],
+  ["Analytics", "Analitika"],
+  [
+    "Measuring visits and behaviour on the site (Google Analytics).",
+    "Merenje poseta i ponašanja na sajtu (Google Analytics).",
+  ],
+  [
+    "Measuring and optimising our ads (Meta Pixel).",
+    "Merenje i optimizacija oglasa (Meta Pixel).",
+  ],
+  ["Accept all", "Prihvatam sve"],
   ["Essential only", "Samo neophodni"],
+  ["Settings", "Podešavanja"],
+  ["Save selection", "Sačuvaj izbor"],
+  ["Cookie settings", "Podešavanja kolačića"],
 
   // Legal and brand pages
   ["Privacy Policy", "Politika privatnosti"],

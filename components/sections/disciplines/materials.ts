@@ -1,5 +1,6 @@
 import {
   Color,
+  MeshBasicMaterial,
   MeshPhysicalMaterial,
   MeshStandardMaterial,
   SRGBColorSpace,
@@ -56,34 +57,31 @@ const EMISSIVE_SPECS: Record<
 
 /**
  * The screen. This material sits OUTSIDE the three above: those describe the casing, this
- * is glass with an image behind it - a different kind of surface, one extra shared
- * material, and it does not open the door to a fourth metal skin.
+ * is the image itself - a different kind of surface, one extra shared material, and it does
+ * not open the door to a fourth metal skin.
  *
- * The recipe is SECTION_SPEC Faza E, "Materijal ekrana", verbatim, and the two lines that
- * matter most are the last two. Without the clearcoat layer the image reads as printed on
- * plastic; `clearcoat: 1` + `clearcoatRoughness: 0.05` is what puts it behind glass. The
- * screen mesh is modelled recessed 0.0156 behind the front plane of the frame for the same
- * reason - the glass needs somewhere to be.
+ * THE SCREEN IS NOT LIT, and that is the whole recipe now.
  *
- * `emissiveMap` is the same image at low intensity: a display lights itself. Without it
- * the screen is a sticker waiting for someone to point a lamp at it; too much of it and
- * the screen becomes a lamp. Hence "low", as a named number.
+ * It used to be a `MeshPhysicalMaterial`: `map` + `emissiveMap` under a `clearcoat: 1` layer,
+ * so the panel read as glass with a picture behind it. Physically that is what a display is,
+ * and it looked wrong for the one reason that outranks it - a lit surface is a GRADED surface.
+ * The diffuse term multiplied the mockup by the environment dome, AgX then pulled the result
+ * toward grey, and the clearcoat laid the dome's brightest lobe over the top. The screenshot
+ * of a real site came out dimmed, washed and tinted - the same complaint on every model, worst
+ * on the ones tilted toward the key light.
+ *
+ * `MeshBasicMaterial` + `toneMapped: false` is the fix and it is exact, not approximate: the
+ * texel is decoded from sRGB by the hardware and written straight back out by
+ * `colorspace_fragment`, so the pixel on the screen is the pixel in the file. No lighting, no
+ * tone map, no reflection. The client's brand colours survive, and the mockup reads as flat
+ * artwork sitting on the panel - which is what was asked for.
+ *
+ * What this deliberately gives up: the screen no longer catches the room, so it cannot say
+ * "there is glass here" on its own. That job now belongs entirely to the casing around it,
+ * which is still fully lit metal - the contrast between graded frame and ungraded panel is
+ * what sells the display. Adding light back to this material re-introduces the wash; if a
+ * highlight is ever wanted, put it on a separate thin quad in front of the screen instead.
  */
-const SCREEN_SPECS: Record<
-  DisciplineTheme,
-  { emissive: string; emissiveIntensity: number; envMapIntensity: number }
-> = {
-  // `envMapIntensity` is lower here than on the casing, and lower again in light mode. The
-  // panel is glossy and tilted back, so it reflects the brightest part of the dome straight
-  // at the camera; left at the casing's value the reflection wins and the image behind the
-  // glass disappears under a grey wash. Glass you can see through, not a mirror.
-  dark: { emissive: "#ffffff", emissiveIntensity: 0.62, envMapIntensity: 0.95 },
-  light: { emissive: "#ffffff", emissiveIntensity: 0.5, envMapIntensity: 0.6 },
-};
-
-const SCREEN_ROUGHNESS = 0.15;
-const SCREEN_CLEARCOAT = 1;
-const SCREEN_CLEARCOAT_ROUGHNESS = 0.05;
 
 /**
  * What the second primitive of a model actually is. Five of the six are `"display"`; the
@@ -287,17 +285,10 @@ export function createScreenMaterial(
 ) {
   if (kind === "lens") return createLensMaterial(theme);
 
-  const spec = SCREEN_SPECS[theme];
-  const material = new MeshPhysicalMaterial({
+  const material = new MeshBasicMaterial({
     map: texture,
-    emissive: new Color(spec.emissive),
-    emissiveMap: texture,
-    emissiveIntensity: spec.emissiveIntensity,
-    metalness: 0,
-    roughness: SCREEN_ROUGHNESS,
-    clearcoat: SCREEN_CLEARCOAT,
-    clearcoatRoughness: SCREEN_CLEARCOAT_ROUGHNESS,
-    envMapIntensity: spec.envMapIntensity,
+    // See the block comment above: unlit AND untone-mapped, or the image is graded twice.
+    toneMapped: false,
   });
   material.name = `DISC_SCREEN_${theme}`;
   return material;
