@@ -19,6 +19,7 @@ import {
   TEXT_REVEAL_ARM_SCRIPT,
   buildTextRevealCss,
 } from "@/constants/textRevealConfig";
+import { EID_CAPTURE_SCRIPT } from "@/constants/metaPixelConfig";
 
 const deltha = localFont({
   src: [
@@ -128,6 +129,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sr-Latn-RS" suppressHydrationWarning>
+      <head>
+        {/* Shortlinks append ?eid=<id> - the event_id the server already sent
+            via the Conversions API. This must run before the Pixel/GA4
+            afterInteractive scripts so it can stash the id on window and
+            strip it from the URL before either of them reads location. */}
+        <script
+          id="eid-capture"
+          dangerouslySetInnerHTML={{ __html: EID_CAPTURE_SCRIPT }}
+        />
+      </head>
       <body
         className={`${deltha.variable} ${terminal.variable} ${aeonik.variable} ${brokenConsole.variable} ${microgramma.variable} font-aeonik antialiased`}
       >

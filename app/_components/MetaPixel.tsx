@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { META_PIXEL_EID_GLOBAL } from "@/constants/metaPixelConfig";
 
 interface MetaPixelProps {
   pixelId: string;
@@ -23,7 +24,13 @@ export default function MetaPixel({ pixelId }: MetaPixelProps) {
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '${pixelId}');
-            fbq('track', 'PageView');
+                        if (window.${META_PIXEL_EID_GLOBAL}) {
+              fbq('track', 'PageView', {}, { eventID: window.${META_PIXEL_EID_GLOBAL} });
+              try { delete window.${META_PIXEL_EID_GLOBAL}; }
+              catch (e) { window.${META_PIXEL_EID_GLOBAL} = undefined; }
+            } else {
+              fbq('track', 'PageView');
+            }
           `,
         }}
       />
